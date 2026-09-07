@@ -130,29 +130,9 @@ local function IsGearItem(itemLink)
     return equipLoc ~= nil and GEAR_EQUIP_LOCS[equipLoc] == true
 end
 
--- Legacy power-system items (Legion artifact weapons, Heart of Azeroth)
--- track their real level through their own expansion-specific system
--- instead of the item link, so C_Item.GetDetailedItemLevelInfo returns a
--- stale/wrong base value for them. Modern items that reuse the "Artifact"
--- quality label (e.g. Reshii Wraps in The War Within) are not affected, so
--- the check is quality AND expansion, not quality alone.
-local function IsLegacyPowerItem(itemLink)
-    local quality = select(3, GetItemInfo(itemLink))
-    local expacID  = select(15, GetItemInfo(itemLink))
-    return quality == Enum.ItemQuality.Artifact
-       and (expacID == LE_EXPANSION_LEGION or expacID == LE_EXPANSION_BATTLE_FOR_AZEROTH)
-end
-
--- Heirlooms scale with the character level. The item link carries their base
--- level, so C_Item.GetDetailedItemLevelInfo reports the value the item had at
--- the lowest level. The tooltip shows the level the item actually has now.
-local function IsHeirloom(itemLink)
-    return select(3, GetItemInfo(itemLink)) == Enum.ItemQuality.Heirloom
-end
-
 -- Reads the "Item Level" tooltip line, locale-independent via ITEM_LEVEL.
--- Used as a fallback for legacy power-system items: the tooltip computes
--- their real, current level live, unlike C_Item.GetDetailedItemLevelInfo.
+-- This is the number the game itself puts on screen, so it is the one source
+-- that is right for every kind of item.
 local function GetTooltipItemLevel(tooltipData)
     if not (tooltipData and ITEM_LEVEL_PATTERN) then return nil end
     for _, line in ipairs(tooltipData.lines) do
@@ -162,15 +142,43 @@ local function GetTooltipItemLevel(tooltipData)
     return nil
 end
 
--- Item level lookup used everywhere ilvl badges/averages are computed from
--- an itemLink. tooltipData (C_TooltipInfo.*) is optional and only used as
--- the legacy-power-item fallback described above.
-local function GetGearItemLevel(itemLink, tooltipData)
-    if not itemLink or not GetDetailedItemLvl then return nil end
-    if IsLegacyPowerItem(itemLink) or IsHeirloom(itemLink) then
-        return GetTooltipItemLevel(tooltipData)
-    end
-    return GetDetailedItemLvl(itemLink)
+-- The item link carries the level the item was created with. Gear from old
+-- expansions is scaled by the game afterwards, so that number can be far off
+-- what the tooltip shows. Only the location based API reports the level an
+-- item actually has right now, and it needs a real slot to look at.
+local function GetItemLevelAtLocation(itemLocation)
+    if not (itemLocation and C_Item and C_Item.GetCurrentItemLevel) then return nil end
+    if C_Item.DoesItemExist and not C_Item.DoesItemExist(itemLocation) then return nil end
+    local ok, ilvl = pcall(C_Item.GetCurrentItemLevel, itemLocation)
+    if ok and ilvl and ilvl > 0 then return ilvl end
+    return nil
+end
+
+-- Item level lookup used everywhere ilvl badges and averages are computed.
+-- The tooltip comes first because it carries the level the game displays,
+-- with all scaling applied. Neither the item link nor the slot report that
+-- for gear from old expansions, for heirlooms or for legacy artifacts:
+-- the link keeps the level the item was created with, and both item level
+-- APIs return that same unscaled value.
+-- tooltipData (C_TooltipInfo.*) and itemLocation are optional. The guild bank
+-- and inspected players have neither, there the item link has to do.
+local function GetGearItemLevel(itemLink, tooltipData, itemLocation)
+    if not itemLink then return nil end
+    return GetTooltipItemLevel(tooltipData)
+        or GetItemLevelAtLocation(itemLocation)
+        or (GetDetailedItemLvl and GetDetailedItemLvl(itemLink))
+end
+
+-- Equipment slots and bag slots of the player, the only places the location
+-- based lookup can be used. Inspect targets and the guild bank have none.
+local function EquipmentLocation(unit, slotID)
+    if unit ~= "player" or not ItemLocation then return nil end
+    return ItemLocation:CreateFromEquipmentSlot(slotID)
+end
+
+local function BagLocation(bag, slot)
+    if not ItemLocation or not bag or not slot then return nil end
+    return ItemLocation:CreateFromBagAndSlot(bag, slot)
 end
 
 local itemLoadQueue = {} -- itemId -> array of pending update descriptors
@@ -269,7 +277,7 @@ local function ComputeAverageItemLevel(unit)
         local itemLink = GetInventoryItemLink(unit, slotID)
         if itemLink then
             local tooltipData = C_TooltipInfo and C_TooltipInfo.GetInventoryItem and C_TooltipInfo.GetInventoryItem(unit, slotID)
-            local ilvl = GetGearItemLevel(itemLink, tooltipData)
+            local ilvl = GetGearItemLevel(itemLink, tooltipData, EquipmentLocation(unit, slotID))
             if ilvl and ilvl > 0 then
                 sum = sum + ilvl
                 count = count + 1
@@ -309,7 +317,7 @@ local function UpdateSlotForReal(unit, slotID, button)
     local tooltipData = C_TooltipInfo and C_TooltipInfo.GetInventoryItem and C_TooltipInfo.GetInventoryItem(unit, slotID)
 
     -- Item level in quality color
-    local ilvl = GetGearItemLevel(itemLink, tooltipData)
+    local ilvl = GetGearItemLevel(itemLink, tooltipData, EquipmentLocation(unit, slotID))
     if ilvl and ilvl > 0 then
         local quality = GetInvItemQuality(unit, slotID)
         local hex = quality and select(4, GetItemQualCol(quality))
@@ -426,7 +434,7 @@ local function UpdateContainerButtonForReal(bag, slot, button)
     end
 
     local tooltipData = C_TooltipInfo and C_TooltipInfo.GetBagItem and C_TooltipInfo.GetBagItem(bag, slot)
-    local ilvl = GetGearItemLevel(itemLink, tooltipData)
+    local ilvl = GetGearItemLevel(itemLink, tooltipData, BagLocation(bag, slot))
     if ilvl and ilvl > 0 then
         if AklimeMod_GearCheckDebug then
             print("|cFFFFD100[GearCheck DEBUG]|r", itemLink, "equipLoc=" .. tostring(select(4, GetItemInfoInstant(itemLink))), "ilvl=" .. ilvl)

@@ -1,3 +1,19 @@
+## 1.3.2
+
+Item levels on gear from older expansions were far too high. / Bei Ausrüstung aus älteren Erweiterungen war die Gegenstandsstufe viel zu hoch.
+
+**EN**
+
+Gear Check
+
+* Fixed: Item levels on gear from older expansions were far too high. Both item level APIs report the level an item was created with, and the game scales that value afterwards. The badge reads the tooltip now, which is the number the game itself puts on screen. That also replaces the separate handling heirlooms and legacy artifact weapons needed.
+
+**DE**
+
+Ausrüstungs-Prüfung
+
+* Behoben: Bei Ausrüstung aus älteren Erweiterungen war die Gegenstandsstufe viel zu hoch. Beide Schnittstellen für die Gegenstandsstufe melden den Wert, mit dem ein Gegenstand erzeugt wurde, und den skaliert das Spiel nachträglich. Gelesen wird jetzt der Tooltip, also die Zahl, die das Spiel selbst anzeigt. Damit entfällt auch die Sonderbehandlung für Erbstücke und alte Artefaktwaffen.
+
 ## 1.3.1
 
 A new option to skip the non-refundable warning, plus a fix for the mana warning in instances where the game hides mana values. / Eine neue Option, um die Warnung zum Verfall der Rückerstattung zu überspringen, dazu ein Fix für die Mana-Warnung in Instanzen, in denen das Spiel die Manawerte verbirgt.
