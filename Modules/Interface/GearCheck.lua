@@ -101,6 +101,11 @@ local GS_SLOT_IDS = {
     INVSLOT_MAINHAND, INVSLOT_OFFHAND,
 }
 
+-- The same slots as a lookup. The character frame runs its slot update for the
+-- bag buttons too, and those carry an item level that says nothing about gear.
+local GS_SLOT_LOOKUP = {}
+for _, slotID in ipairs(GS_SLOT_IDS) do GS_SLOT_LOOKUP[slotID] = true end
+
 -- Equip locations counted as "gear" for the bag item level badge: armor and
 -- weapon slots only. Everything else (materials, consumables, quest items,
 -- bags, shirt, tabard, profession tools, ...) is excluded by not being listed.
@@ -117,6 +122,14 @@ local GEAR_EQUIP_LOCS = {
     INVTYPE_RELIC = true,
 }
 
+-- Equipment only: true for armor/weapon equip locations, false for everything
+-- else (materials, consumables, quest items, bags, shirt, tabard, ...).
+-- Legacy power-system items are handled separately in GetGearItemLevel.
+local function IsGearItem(itemLink)
+    local equipLoc = select(4, GetItemInfoInstant(itemLink))
+    return equipLoc ~= nil and GEAR_EQUIP_LOCS[equipLoc] == true
+end
+
 -- Legacy power-system items (Legion artifact weapons, Heart of Azeroth)
 -- track their real level through their own expansion-specific system
 -- instead of the item link, so C_Item.GetDetailedItemLevelInfo returns a
@@ -128,6 +141,13 @@ local function IsLegacyPowerItem(itemLink)
     local expacID  = select(15, GetItemInfo(itemLink))
     return quality == Enum.ItemQuality.Artifact
        and (expacID == LE_EXPANSION_LEGION or expacID == LE_EXPANSION_BATTLE_FOR_AZEROTH)
+end
+
+-- Heirlooms scale with the character level. The item link carries their base
+-- level, so C_Item.GetDetailedItemLevelInfo reports the value the item had at
+-- the lowest level. The tooltip shows the level the item actually has now.
+local function IsHeirloom(itemLink)
+    return select(3, GetItemInfo(itemLink)) == Enum.ItemQuality.Heirloom
 end
 
 -- Reads the "Item Level" tooltip line, locale-independent via ITEM_LEVEL.
@@ -147,7 +167,7 @@ end
 -- the legacy-power-item fallback described above.
 local function GetGearItemLevel(itemLink, tooltipData)
     if not itemLink or not GetDetailedItemLvl then return nil end
-    if IsLegacyPowerItem(itemLink) then
+    if IsLegacyPowerItem(itemLink) or IsHeirloom(itemLink) then
         return GetTooltipItemLevel(tooltipData)
     end
     return GetDetailedItemLvl(itemLink)
@@ -277,7 +297,7 @@ local function UpdateSlotForReal(unit, slotID, button)
     EnsureOverlays(button)
 
     local itemLink = GetInventoryItemLink(unit, slotID)
-    if not itemLink then
+    if not itemLink or not IsGearItem(itemLink) then
         HideOverlays(button)
         return
     end
@@ -360,6 +380,11 @@ local function UpdateSlot(unit, slotID, button)
     if not button then return end
     if not AklimeMod_GearCheck.IsEnabled() then return end
     local itemLink = GetInventoryItemLink(unit, slotID)
+    if itemLink and not (GS_SLOT_LOOKUP[slotID] and IsGearItem(itemLink)) then
+        EnsureOverlays(button)
+        HideOverlays(button)
+        return
+    end
     if itemLink then
         local itemId = GetItemInfoInstant(itemLink)
         if itemId then
@@ -387,14 +412,6 @@ local function EnsureBagOverlay(button)
     ilvl:SetJustifyH("RIGHT")
     ilvl:Hide()
     button._gearBagILvl = ilvl
-end
-
--- Equipment only: true for armor/weapon equip locations, false for
--- everything else (materials, consumables, quest items, bags, ...).
--- Legacy power-system items are handled separately in GetGearItemLevel.
-local function IsGearItem(itemLink)
-    local equipLoc = select(4, GetItemInfoInstant(itemLink))
-    return equipLoc ~= nil and GEAR_EQUIP_LOCS[equipLoc] == true
 end
 
 local function UpdateContainerButtonForReal(bag, slot, button)

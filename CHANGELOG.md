@@ -22,10 +22,16 @@ Quest Tracker
 
 Character Tracker
 
+* Changed: The gold overview shows exact amounts down to the copper instead of rounded values like 84.7k. Gold, silver and copper each sit in their own column, so they line up across all rows.
 * New: The currencies of Midnight season 2 are tracked: the five Mistcrests, Venomblight Manaflux, Tidal Spark Dust and the Corrosive Coin.
 * Fixed: The Hero Dawncrest never showed up. It was collected under the right id but looked up under a wrong one when displayed, so the row stayed empty on every character.
 * Fixed: In the Great Vault the rows for raids, dungeons and world activities always showed 0/3, even on characters that had long since unlocked slots. Only the "Reward" row was right. The addon asked the game for the three categories in a way that stopped working with a patch and got nothing back. The values are correct again as soon as the character in question logs in once.
 * Fixed: A typo in the German raid tooltip, "Bezwunden" instead of "Bezwungen".
+
+Gear Check
+
+* Fixed: Heirlooms showed the wrong item level. They scale with your character level, and the shown number was the one they start out with.
+* Fixed: Your bags showed an item level. That number says nothing about your gear, it is gone. Shirt and tabard lose it as well, for the same reason.
 
 Merchant Window
 
@@ -44,6 +50,7 @@ Auto Accept Non-Refundable Warning
 
 Mana Warning
 
+* Work in progress: this feature is not finished yet.
 * Fixed: In instances where the game hides mana values, the "out of mana" warning never reached the group. The game blocked it because it went out from inside one of its own routines. It is sent correctly again.
 * Changed: The warnings now use the game's current chat function. The old one is only kept as a fallback, Blizzard is phasing it out.
 
@@ -67,10 +74,16 @@ Quest-Tracker
 
 Charakter-Tracker
 
+* Geändert: Die Goldübersicht zeigt genaue Beträge bis auf den Kupfer statt gerundeter Werte wie 84,7k. Gold, Silber und Kupfer stehen in eigenen Spalten und damit über alle Zeilen untereinander.
 * Neu: Die Währungen aus Season 2 von Midnight werden mitgezählt: die fünf Nebelwappen, der Gifthauchmanaflux, der Gezeitenfunkenstaub und die Korrosive Münze.
 * Behoben: Das Morgenlichtwappen des Helden tauchte nie auf. Es wurde unter der richtigen Kennung eingesammelt, bei der Anzeige aber unter einer falschen gesucht, deshalb blieb die Zeile bei jedem Charakter leer.
 * Behoben: Bei der Großen Schatzkammer standen Schlachtzüge, Dungeons und Weltaktivitäten immer auf 0/3, auch bei Charakteren, die längst Plätze freigeschaltet hatten. Nur die Zeile "Belohnung" stimmte. Das Addon hat die drei Kategorien auf eine Art beim Spiel abgefragt, die seit einem Patch nicht mehr funktioniert, und bekam nichts zurück. Die Werte stimmen wieder, sobald der jeweilige Charakter einmal einloggt.
 * Behoben: Tippfehler im Raid-Tooltip, dort stand "Bezwunden" statt "Bezwungen".
+
+Ausrüstungs-Prüfung
+
+* Behoben: Erbstücke zeigten die falsche Gegenstandsstufe. Sie wachsen mit deiner Stufe mit, angezeigt wurde aber der Wert, mit dem sie anfangen.
+* Behoben: An den Taschen stand eine Gegenstandsstufe. Die sagt nichts über deine Ausrüstung aus und ist weg. Hemd und Wappenrock verlieren sie aus demselben Grund.
 
 Händlerfenster
 
@@ -89,6 +102,7 @@ Warnung zum Verfall der Rückerstattung annehmen
 
 Mana-Warnung
 
+* Baustelle: an dieser Funktion wird noch gearbeitet.
 * Behoben: In Instanzen, in denen das Spiel die Manawerte verbirgt, kam die "kein Mana mehr"-Warnung nie in der Gruppe an. Das Spiel hat sie blockiert, weil sie aus einer seiner eigenen Routinen heraus verschickt wurde. Sie geht jetzt wieder korrekt raus.
 * Geändert: Die Warnungen nutzen jetzt die aktuelle Chat-Funktion des Spiels. Die alte bleibt nur noch als Rückfallebene, Blizzard schafft sie ab.
 

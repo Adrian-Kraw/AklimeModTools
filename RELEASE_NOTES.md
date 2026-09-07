@@ -4,88 +4,100 @@
 
 Colorizer
 
-* Fixed: The colored border around buff icons caused a flood of Lua errors, on the buff bar as well as on target and focus auras. The border was a backdrop frame anchored to the icon, and since the game hides aura sizes as secret values, Blizzard's backdrop code failed on every resize. The border is now drawn with four plain textures, which need no size calculation. It looks a little crisper than before.
+* Fixed: The colored border on buff icons spammed Lua errors. Rebuilt, and a bit crisper now.
 
 Center Raid Frames
 
-* New: Recentering now also happens during combat, so a group turning into a raid or a new group appearing mid fight no longer leaves the frames off center until the fight ends. The raid container is a protected frame that an addon may not move in combat, so this runs through a secure snippet inside the game's own restricted environment.
-* Fixed: When a party turned into a raid, the frames stayed off center. The single attempt after the roster change ran while the raid container was still hidden or its groups were not laid out yet, and nothing tried again afterwards. Centering now also reacts to the container appearing and to it changing size.
-* Fixed: The frames could end up off center, especially with a raid frame size other than the default. The width was estimated from the number of groups times one group's width, which ignored that size setting and fell back to a fixed guess when the group frames were not found. The container's own width is used now.
+* New: Frames recenter during combat too.
+* Fixed: Frames stayed off center when a party turned into a raid.
+* Fixed: Frames were off center with a raid frame size other than the default.
 
 Quest Tracker
 
-* Fixed: On characters whose quests are all campaign quests, the count was invisible. Campaign quests have their own section in the tracker, and the count was pinned to the header of the normal quest section, which is hidden on such a character. It now attaches to whichever quest header is actually on screen.
-* Fixed: On some characters no quest count appeared at all. It was only calculated half a second after login, and the quest log arrives from the server later than that, so the result was zero and the display stayed hidden. The count now recalculates whenever the quest log changes.
-* Fixed: The quest count in the tracker header did not match the quest log. World quests and bonus objectives are entries in the quest log too, but they are not quests and do not count against the limit of 35. The count now uses the same rule the quest log itself uses to decide what is a quest.
+* Fixed: The quest count was missing on some characters.
+* Fixed: The count did not match the quest log. World quests and bonus objectives no longer count.
 
 Character Tracker
 
-* New: The currencies of Midnight season 2 are tracked: the five Mistcrests, Venomblight Manaflux, Tidal Spark Dust and the Corrosive Coin.
-* Fixed: The Hero Dawncrest never showed up. It was collected under the right id but looked up under a wrong one when displayed, so the row stayed empty on every character.
-* Fixed: In the Great Vault the rows for raids, dungeons and world activities always showed 0/3, even on characters that had long since unlocked slots. Only the "Reward" row was right. The addon asked the game for the three categories in a way that stopped working with a patch and got nothing back. The values are correct again as soon as the character in question logs in once.
-* Fixed: A typo in the German raid tooltip, "Bezwunden" instead of "Bezwungen".
+* Changed: The gold overview is exact down to the copper, with gold, silver and copper in their own columns.
+* New: The Midnight season 2 currencies are tracked, the five Mistcrests included.
+* Fixed: The Hero Dawncrest row stayed empty.
+* Fixed: The Great Vault always showed 0/3 for raids, dungeons and world activities.
+* Fixed: A typo in the German raid tooltip.
+
+Gear Check
+
+* Fixed: Heirlooms showed the wrong item level.
+* Fixed: Bags, shirt and tabard no longer show an item level.
 
 Merchant Window
 
-* Changed: The bottom of the widened vendor window was rebuilt. Instead of two small boxes in the right corner there is now one panel across the full width, split into two rows by a separator. The upper row carries the paging on the left and the buyback slot, sell junk and the repair buttons on the right, the lower row carries your gold at the left with the currencies this vendor accepts running to the right.
-* Fixed: Only four vendor currencies were ever shown, vendors that take more than four left the rest invisible. The number now comes from the game instead of a fixed four.
-* Fixed: The gold display vanished at vendors that take no gold, and the currencies then slid to the left edge. Gold now keeps its place at the left and is always shown.
-* Fixed: The bottom edge of the window ended in the middle. That border is built for the original window width and was never stretched along when the window was widened.
+* Changed: One bar across the bottom now. Paging on the left, buyback and repair on the right, your gold and the vendor currencies below.
+* Fixed: Vendors that take more than four currencies hid the rest.
+* Fixed: Gold vanished at vendors that take no gold.
+* Fixed: The bottom edge of the window ended in the middle.
 
 Auto Accept Summons
 
-* New: A delay slider from 0 to 10 seconds. At "Instant" the summon is accepted right away as before, that stays the default. With a delay you keep the chance to answer the dialog yourself during the wait, and nothing is accepted if you already did.
+* New: A delay slider from 0 to 10 seconds, so you can still answer yourself.
 
 Auto Accept Non-Refundable Warning
 
-* New: A third option next to the purchase and refund confirmations. It confirms the warning that an item can no longer be refunded, so the popup no longer appears. Covers all four cases that show it: equipping, using, socketing and mailing. Off by default, because that warning is the last chance to stop.
+* New: Confirms the warning that an item can no longer be refunded. Off by default.
 
 Mana Warning
 
-* Fixed: In instances where the game hides mana values, the "out of mana" warning never reached the group. The game blocked it because it went out from inside one of its own routines. It is sent correctly again.
-* Changed: The warnings now use the game's current chat function. The old one is only kept as a fallback, Blizzard is phasing it out.
+* Work in progress: this feature is not finished yet.
+* Fixed: The out of mana warning never reached the group in some instances.
+* Changed: Warnings use the game's current chat function.
 
 **DE**
 
 Einfärber
 
-* Behoben: Der farbige Rahmen um Buff-Icons löste eine Flut von Lua-Fehlern aus, sowohl an der Buffleiste als auch bei Ziel- und Fokus-Auren. Der Rahmen war ein Backdrop-Frame, der an das Icon geheftet war, und da das Spiel Aurengrößen als geheime Werte behandelt, scheiterte Blizzards Backdrop-Code bei jeder Größenänderung. Der Rahmen besteht jetzt aus vier einfachen Texturen, die keine Größenberechnung brauchen. Er wirkt dadurch etwas klarer als vorher.
+* Behoben: Der farbige Rahmen an Buff-Icons warf massenhaft Lua-Fehler. Neu gebaut und etwas klarer.
 
 Gruppenrahmen zentrieren
 
-* Neu: Die Zentrierung greift jetzt auch im Kampf. Wird mitten im Kampf aus einer Gruppe ein Schlachtzug oder kommt eine Gruppe dazu, stehen die Rahmen nicht mehr bis Kampfende schief. Der Schlachtzugsrahmen ist ein geschütztes Frame, das ein Addon im Kampf nicht bewegen darf, das läuft deshalb über ein Secure Snippet in der geschützten Umgebung des Spiels.
-* Behoben: Wurde aus einer Gruppe ein Schlachtzug, blieben die Rahmen unzentriert. Der einzelne Versuch nach der Gruppenänderung lief zu früh, da war der Schlachtzugsrahmen noch ausgeblendet oder seine Gruppen noch nicht angeordnet, und danach passierte nichts mehr. Die Zentrierung reagiert jetzt auch darauf, dass der Rahmen erscheint und dass er seine Größe ändert.
-* Behoben: Die Rahmen konnten daneben landen, vor allem bei einer anderen Rahmengröße als der Voreinstellung. Die Breite wurde aus Gruppenanzahl mal Breite einer Gruppe geschätzt, das ignorierte die eingestellte Größe und fiel auf einen festen Schätzwert zurück, wenn die Gruppenrahmen nicht gefunden wurden. Jetzt wird die tatsächliche Breite des Rahmens verwendet.
+* Neu: Die Zentrierung greift auch im Kampf.
+* Behoben: Wurde aus einer Gruppe ein Schlachtzug, blieben die Rahmen schief.
+* Behoben: Bei anderer Rahmengröße als der Voreinstellung standen die Rahmen daneben.
 
 Quest-Tracker
 
-* Behoben: Bei Charakteren, deren Quests alle Kampagnenquests sind, war die Zahl unsichtbar. Kampagnenquests haben im Tracker einen eigenen Abschnitt, die Zahl hing aber an der Kopfzeile des normalen Quest-Abschnitts, und die ist bei so einem Charakter ausgeblendet. Sie hängt sich jetzt an die Quest-Kopfzeile, die tatsächlich zu sehen ist.
-* Behoben: Bei manchen Charakteren stand gar keine Questzahl da. Sie wurde nur eine halbe Sekunde nach dem Login berechnet, das Questlog kommt aber später vom Server. Das Ergebnis war dann null und die Anzeige blieb ausgeblendet. Jetzt wird bei jeder Änderung am Questlog neu gezählt.
-* Behoben: Die Questzahl in der Kopfzeile passte nicht zum Questlog. Weltquests und Bonusziele sind dort ebenfalls Einträge, zählen aber nicht als Quest und nicht gegen das Limit von 35. Gezählt wird jetzt nach derselben Regel, mit der auch das Questlog entscheidet, was eine Quest ist.
+* Behoben: Bei manchen Charakteren fehlte die Questzahl.
+* Behoben: Die Zahl passte nicht zum Questlog. Weltquests und Bonusziele zählen nicht mehr mit.
 
 Charakter-Tracker
 
-* Neu: Die Währungen aus Season 2 von Midnight werden mitgezählt: die fünf Nebelwappen, der Gifthauchmanaflux, der Gezeitenfunkenstaub und die Korrosive Münze.
-* Behoben: Das Morgenlichtwappen des Helden tauchte nie auf. Es wurde unter der richtigen Kennung eingesammelt, bei der Anzeige aber unter einer falschen gesucht, deshalb blieb die Zeile bei jedem Charakter leer.
-* Behoben: Bei der Großen Schatzkammer standen Schlachtzüge, Dungeons und Weltaktivitäten immer auf 0/3, auch bei Charakteren, die längst Plätze freigeschaltet hatten. Nur die Zeile "Belohnung" stimmte. Das Addon hat die drei Kategorien auf eine Art beim Spiel abgefragt, die seit einem Patch nicht mehr funktioniert, und bekam nichts zurück. Die Werte stimmen wieder, sobald der jeweilige Charakter einmal einloggt.
-* Behoben: Tippfehler im Raid-Tooltip, dort stand "Bezwunden" statt "Bezwungen".
+* Geändert: Die Goldübersicht ist auf den Kupfer genau, Gold, Silber und Kupfer stehen in eigenen Spalten.
+* Neu: Die Währungen aus Season 2 von Midnight werden mitgezählt, die fünf Nebelwappen inklusive.
+* Behoben: Die Zeile für das Morgenlichtwappen des Helden blieb leer.
+* Behoben: Die Große Schatzkammer stand bei Schlachtzügen, Dungeons und Weltaktivitäten immer auf 0/3.
+* Behoben: Tippfehler im Raid-Tooltip.
+
+Ausrüstungs-Prüfung
+
+* Behoben: Erbstücke zeigten die falsche Gegenstandsstufe.
+* Behoben: An Taschen, Hemd und Wappenrock steht keine Gegenstandsstufe mehr.
 
 Händlerfenster
 
-* Geändert: Der untere Teil des verbreiterten Händlerfensters wurde neu aufgebaut. Statt zweier kleiner Kästen in der rechten Ecke gibt es jetzt eine Leiste über die volle Breite, durch eine Trennlinie in zwei Zeilen geteilt. Oben sitzt links das Blättern und rechts Rückkauf, Müll verkaufen und die Reparaturknöpfe, unten links dein Gold und daneben nach rechts die Währungen, die dieser Händler nimmt.
-* Behoben: Es wurden immer nur vier Händlerwährungen angezeigt, bei Händlern mit mehr blieb der Rest unsichtbar. Die Anzahl kommt jetzt vom Spiel statt aus einer festen Vier.
-* Behoben: Die Goldanzeige verschwand bei Händlern, die kein Gold nehmen, und die Währungen rutschten dann an den linken Rand. Gold behält jetzt seinen Platz links und wird immer angezeigt.
-* Behoben: Der untere Fensterrand hörte auf halber Strecke auf. Diese Leiste ist für die ursprüngliche Fensterbreite gebaut und wurde beim Verbreitern nie mitgezogen.
+* Geändert: Unten sitzt jetzt eine durchgehende Leiste. Links das Blättern, rechts Rückkauf und Reparatur, darunter dein Gold und die Währungen des Händlers.
+* Behoben: Bei Händlern mit mehr als vier Währungen fehlte der Rest.
+* Behoben: Bei Händlern ohne Goldpreise verschwand die Goldanzeige.
+* Behoben: Der untere Fensterrand hörte auf halber Strecke auf.
 
 Beschwörungen automatisch annehmen
 
-* Neu: Ein Regler für die Verzögerung von 0 bis 10 Sekunden. Bei "Sofort" wird wie bisher direkt angenommen, das bleibt der Standard. Mit Verzögerung hast du während der Wartezeit noch die Möglichkeit, selbst auf den Dialog zu reagieren, und es wird nichts mehr angenommen, wenn du das getan hast.
+* Neu: Ein Regler für 0 bis 10 Sekunden Verzögerung, damit du noch selbst reagieren kannst.
 
 Warnung zum Verfall der Rückerstattung annehmen
 
-* Neu: Eine dritte Option neben der Kauf- und der Rückerstattungsbestätigung. Sie bestätigt die Warnung, dass ein Gegenstand nicht mehr zurückerstattet werden kann, das Fenster erscheint damit nicht mehr. Deckt alle vier Fälle ab, in denen es auftaucht: Anlegen, Benutzen, Sockeln und Verschicken per Post. Standardmäßig aus, weil diese Warnung die letzte Möglichkeit zum Abbrechen ist.
+* Neu: Bestätigt die Warnung, dass ein Gegenstand nicht mehr zurückerstattet werden kann. Standardmäßig aus.
 
 Mana-Warnung
 
-* Behoben: In Instanzen, in denen das Spiel die Manawerte verbirgt, kam die "kein Mana mehr"-Warnung nie in der Gruppe an. Das Spiel hat sie blockiert, weil sie aus einer seiner eigenen Routinen heraus verschickt wurde. Sie geht jetzt wieder korrekt raus.
-* Geändert: Die Warnungen nutzen jetzt die aktuelle Chat-Funktion des Spiels. Die alte bleibt nur noch als Rückfallebene, Blizzard schafft sie ab.
+* Baustelle: an dieser Funktion wird noch gearbeitet.
+* Behoben: In manchen Instanzen kam die "kein Mana mehr"-Warnung nie in der Gruppe an.
+* Geändert: Die Warnungen nutzen die aktuelle Chatfunktion des Spiels.
