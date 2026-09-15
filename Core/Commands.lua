@@ -10,8 +10,6 @@ AklimeMod_Commands = {
     { cmd = "/akm todo",    desc = L["cmd_todo"]       or "Open / close ToDo list"              },
     { cmd = "/akm ignore",  desc = L["cmd_ignore"]     or "Open / close extended ignore list"   },
     { cmd = "/akm played",  desc = L["cmd_played"]     or "Show played time for all characters" },
-    { cmd = "/akmana",      desc = L["cmd_mana"]       or "Show Mana Warning status"            },
-    { cmd = "/akmana test", desc = L["cmd_mana_test"]  or "Send Mana Warning test message"      },
 }
 
 -- /akm help — prints all commands in chat

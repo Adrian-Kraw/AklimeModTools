@@ -20,8 +20,6 @@ L["dash_cmd_help"]   = "Show all commands in chat"
 L["cmd_todo"]        = "Open / close ToDo list"
 L["cmd_ignore"]      = "Open / close extended ignore list"
 L["cmd_played"]      = "Show played time for all characters"
-L["cmd_mana"]        = "Show Mana Warning status"
-L["cmd_mana_test"]   = "Send Mana Warning test message"
 L["cmd_header"]      = "Aklime Mod Tools Commands:"
 L["minimap_click"]      = "Click: Open / close menu"
 L["minimap_drag"]       = "Drag: Change position"
@@ -269,6 +267,18 @@ L["info_fade_duration"]  = "Fade Duration:"
 
 -- Category / tab names
 L["cat_collecting"] = "Collecting"
+L["cat_news"]       = "News"
+
+-- News tab, the entries are listed in NEWS_ENTRIES in UI/NewsPanel.lua.
+-- Every line of a news text becomes one bullet.
+L["news_header"]      = "New in version %s"
+L["news_hint"]        = "Version %s is installed. See what's new in /akm under \"News\"."
+L["news_tag_new"]     = "NEW"
+L["news_tag_fixed"]   = "FIXED"
+L["news_tag_changed"] = "CHANGED"
+L["news_action_bars"]       = "Closes the gaps that empty slots leave on action bars 1 to 8.\nEach bar can be aligned left, center or right on its own.\nWorks in combat too, also while dragging abilities and when skyriding.\nRequires \"Always Show Buttons\" to be off in Edit Mode."
+L["news_action_bars_where"] = "Find it under Interface > Move UI Elements > Action Bars"
+L["news_chat_history"]      = "No more flood of Lua errors in instances and combat.\nMessages the game keeps secret are no longer saved, they still show in chat."
 
 -- Currency expansion categories
 L["curr_cat_season"] = "Season"
@@ -416,8 +426,6 @@ if GetLocale() == "deDE" then
     L["cmd_todo"]       = "ToDo-Liste öffnen / schließen"
     L["cmd_ignore"]     = "Erweiterte Ignore-Liste öffnen / schließen"
     L["cmd_played"]     = "Gespielte Zeit aller Chars anzeigen"
-    L["cmd_mana"]       = "Mana-Warnung Status anzeigen"
-    L["cmd_mana_test"]  = "Mana-Warnung Testnachricht senden"
     L["cmd_header"]     = "Aklime Mod Tools Befehle:"
     L["minimap_click"]      = "Klick: Menü öffnen/schließen"
     L["minimap_drag"]       = "Drag: Position ändern"
@@ -638,6 +646,16 @@ if GetLocale() == "deDE" then
     L["info_fade_duration"]  = "Verblassdauer:"
 
     L["cat_collecting"] = "Sammeln"
+    L["cat_news"]       = "Neuigkeiten"
+
+    L["news_header"]      = "Neu in Version %s"
+    L["news_hint"]        = "Version %s ist installiert. Die Neuigkeiten findest du in /akm unter \"Neuigkeiten\"."
+    L["news_tag_new"]     = "NEU"
+    L["news_tag_fixed"]   = "BEHOBEN"
+    L["news_tag_changed"] = "GEÄNDERT"
+    L["news_action_bars"]       = "Schließt die Lücken, die leere Plätze in den Aktionsleisten 1 bis 8 hinterlassen.\nJede Leiste lässt sich einzeln links, mittig oder rechts ausrichten.\nKlappt auch im Kampf, beim Ziehen von Fähigkeiten und beim Dynamischen Fliegen.\nVoraussetzung: \"Schaltflächen immer anzeigen\" ist im Bearbeitungsmodus aus."
+    L["news_action_bars_where"] = "Zu finden unter Interface > UI Elemente verschieben > Aktionsleisten"
+    L["news_chat_history"]      = "Keine Flut von Lua-Fehlern mehr in Instanzen und im Kampf.\nNachrichten, die das Spiel geheim hält, werden nicht mehr gespeichert. Im Chat erscheinen sie weiter."
 
     L["curr_cat_season"] = "Saison"
     L["curr_cat_raids"]  = "Dungeon & Schlachtzug"

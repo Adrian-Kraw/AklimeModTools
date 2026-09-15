@@ -2191,6 +2191,21 @@ function AklimeMod_InitSearch()
 end
 
 -- ============================================================
+-- News
+-- ============================================================
+-- Cards, entries and the chat hint live in UI/NewsPanel.lua
+local function BuildNewsContent()
+    lastCategoryFn = BuildNewsContent
+    currentBuildFn = nil
+    if _G["AklimeModSearchBox"] then _G["AklimeModSearchBox"]:SetText("") end
+    AklimeMod_SetRightHeader(L["cat_news"])
+    ShowScrollView()
+    RSV():SetElementFactory(AklimeMod_RightFactory, function() end)
+    RSV():SetDataProvider(newDP())
+    ShowCustomPanel(AklimeMod_NewsPanel.Get(AklimeModFrame.rightInset))
+end
+
+-- ============================================================
 -- Left category buttons
 -- ============================================================
 local categories = {
@@ -2199,6 +2214,7 @@ local categories = {
     { order=3, name="Quality of Life", callback=BuildQoLContent                              },
     { order=4, name=L["cat_collecting"], callback=BuildCollectingContent                      },
     { order=5, name="PvP",             callback=function() AklimeMod_BuildPvPContent() end   },
+    { order=6, name=L["cat_news"],     callback=BuildNewsContent                             },
 }
 
 local function SetSelected(clickedButton)

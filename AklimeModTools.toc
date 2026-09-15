@@ -78,6 +78,7 @@ Modules\Collecting\CharacterTracker.lua
 
 UI\MainWindow.lua
 UI\ColorizerUI.lua
+UI\NewsPanel.lua
 UI\Categories.lua
 
 AklimeMod.lua
