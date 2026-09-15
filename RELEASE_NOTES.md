@@ -1,3 +1,17 @@
+## 1.4.1
+
+**EN**
+
+Save Chat History
+
+* Fixed: A flood of Lua errors in instances and combat. Messages the game keeps secret are no longer saved. They still show in chat.
+
+**DE**
+
+Chatverlauf speichern
+
+* Behoben: Eine Flut von Lua-Fehlern in Instanzen und im Kampf. Nachrichten, die das Spiel geheim hält, werden nicht mehr gespeichert. Im Chat erscheinen sie weiter.
+
 ## 1.4.0
 
 **EN**

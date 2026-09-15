@@ -1,3 +1,19 @@
+## 1.4.1
+
+Fixes a flood of Lua errors from the chat history. / Behebt eine Flut von Lua-Fehlern durch den Chatverlauf.
+
+**EN**
+
+Save Chat History
+
+* Fixed: A flood of Lua errors, mostly in instances and combat. The game hands some chat messages to addons as secret values, and the chat history tried to measure their length before saving them. Those messages are skipped now. They still show up in chat as usual. They are only missing from the saved history after the next login, since the game does not allow saving them anyway.
+
+**DE**
+
+Chatverlauf speichern
+
+* Behoben: Eine Flut von Lua-Fehlern, vor allem in Instanzen und im Kampf. Das Spiel gibt manche Chatnachrichten als geheime Werte an Addons weiter, und der Chatverlauf wollte ihre Länge messen, bevor er sie speichert. Diese Nachrichten werden jetzt übersprungen. Im Chat erscheinen sie weiter wie gewohnt. Nur im gespeicherten Verlauf fehlen sie nach dem nächsten Login, denn speichern lässt das Spiel sie ohnehin nicht.
+
 ## 1.4.0
 
 Action bars can close the gaps left by empty slots, and item levels on older gear are right again. / Aktionsleisten können die Lücken leerer Plätze schließen, und die Gegenstandsstufe bei älterer Ausrüstung stimmt wieder.

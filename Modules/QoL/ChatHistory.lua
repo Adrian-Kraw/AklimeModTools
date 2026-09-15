@@ -61,6 +61,8 @@ function M:HookFrames()
                     if restoring then return end
                     local db = GetDB()
                     if not db.enabled then return end
+                    -- Secret messages cannot be measured or saved, the chat still shows them
+                    if issecretvalue and issecretvalue(text) then return end
                     -- Truncate overly long messages (e.g. item link spam in trade chat)
                     local t = text
                     if #t > MAX_MSG_LENGTH then
