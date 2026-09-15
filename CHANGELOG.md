@@ -1,14 +1,24 @@
 ## 1.4.1
 
-Fixes a flood of Lua errors from the chat history. / Behebt eine Flut von Lua-Fehlern durch den Chatverlauf.
+A new News tab shows what changed in the installed version, and the chat history no longer floods you with Lua errors. / Ein neuer Reiter Neuigkeiten zeigt, was sich in der installierten Version geändert hat, und der Chatverlauf löst keine Flut von Lua-Fehlern mehr aus.
 
 **EN**
+
+News
+
+* New: A "News" tab in the settings window, below PvP. It shows the most important changes of the installed version as cards, each with a colored label for new, fixed or changed. Long lines wrap on their own, and the list scrolls when there are more cards than space.
+* New: After an update a short chat message points to the tab once, a few seconds after login so the restored chat history does not bury it. It appears once per version.
 
 Save Chat History
 
 * Fixed: A flood of Lua errors, mostly in instances and combat. The game hands some chat messages to addons as secret values, and the chat history tried to measure their length before saving them. Those messages are skipped now. They still show up in chat as usual. They are only missing from the saved history after the next login, since the game does not allow saving them anyway.
 
 **DE**
+
+Neuigkeiten
+
+* Neu: Ein Reiter "Neuigkeiten" im Einstellungsfenster, unter PvP. Er zeigt die wichtigsten Änderungen der installierten Version als Karten, jede mit einer farbigen Markierung für neu, behoben oder geändert. Lange Zeilen brechen selbst um, und die Liste lässt sich scrollen, wenn es mehr Karten als Platz gibt.
+* Neu: Nach einem Update weist eine kurze Chatnachricht einmal auf den Reiter hin. Sie kommt einige Sekunden nach dem Login, damit der wiederhergestellte Chatverlauf sie nicht verdeckt. Sie erscheint einmal pro Version.
 
 Chatverlauf speichern
 

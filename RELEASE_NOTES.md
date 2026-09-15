@@ -2,11 +2,19 @@
 
 **EN**
 
+News
+
+* New: A "News" tab in the settings window shows the most important changes of the installed version. After an update a chat message points to it once.
+
 Save Chat History
 
 * Fixed: A flood of Lua errors in instances and combat. Messages the game keeps secret are no longer saved. They still show in chat.
 
 **DE**
+
+Neuigkeiten
+
+* Neu: Ein Reiter "Neuigkeiten" im Einstellungsfenster zeigt die wichtigsten Änderungen der installierten Version. Nach einem Update weist eine Chatnachricht einmal darauf hin.
 
 Chatverlauf speichern
 
