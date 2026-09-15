@@ -38,6 +38,8 @@ local TAG_COLORS = {
 -- text becomes one bullet. tag is a key of TAG_COLORS.
 local NEWS_ENTRIES = {
     { title = "mod_action_bar_compact", tag = "new",   text = "news_action_bars", where = "news_action_bars_where" },
+    { title = "cat_news",               tag = "new",   text = "news_news" },
+    { title = "mod_gear_check",         tag = "fixed", text = "news_gear_check" },
     { title = "mod_chat_history",       tag = "fixed", text = "news_chat_history" },
 }
 

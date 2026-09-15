@@ -279,6 +279,8 @@ L["news_tag_changed"] = "CHANGED"
 L["news_action_bars"]       = "Closes the gaps that empty slots leave on action bars 1 to 8.\nEach bar can be aligned left, center or right on its own.\nWorks in combat too, also while dragging abilities and when skyriding.\nRequires \"Always Show Buttons\" to be off in Edit Mode."
 L["news_action_bars_where"] = "Find it under Interface > Move UI Elements > Action Bars"
 L["news_chat_history"]      = "No more flood of Lua errors in instances and combat.\nMessages the game keeps secret are no longer saved, they still show in chat."
+L["news_news"]              = "This tab shows the most important changes of the installed version.\nAfter an update a chat message points to it once."
+L["news_gear_check"]        = "Item levels on gear from older expansions were far too high.\nThe number now matches the tooltip."
 
 -- Currency expansion categories
 L["curr_cat_season"] = "Season"
@@ -656,6 +658,8 @@ if GetLocale() == "deDE" then
     L["news_action_bars"]       = "Schließt die Lücken, die leere Plätze in den Aktionsleisten 1 bis 8 hinterlassen.\nJede Leiste lässt sich einzeln links, mittig oder rechts ausrichten.\nKlappt auch im Kampf, beim Ziehen von Fähigkeiten und beim Dynamischen Fliegen.\nVoraussetzung: \"Schaltflächen immer anzeigen\" ist im Bearbeitungsmodus aus."
     L["news_action_bars_where"] = "Zu finden unter Interface > UI Elemente verschieben > Aktionsleisten"
     L["news_chat_history"]      = "Keine Flut von Lua-Fehlern mehr in Instanzen und im Kampf.\nNachrichten, die das Spiel geheim hält, werden nicht mehr gespeichert. Im Chat erscheinen sie weiter."
+    L["news_news"]              = "Dieser Reiter zeigt die wichtigsten Änderungen der installierten Version.\nNach einem Update weist eine Chatnachricht einmal darauf hin."
+    L["news_gear_check"]        = "Bei Ausrüstung aus älteren Erweiterungen war die Gegenstandsstufe viel zu hoch.\nDie Zahl passt jetzt zum Tooltip."
 
     L["curr_cat_season"] = "Saison"
     L["curr_cat_raids"]  = "Dungeon & Schlachtzug"
