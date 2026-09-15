@@ -39,6 +39,17 @@ local function addToggle(node, name, getVal, setVal)
     })
 end
 
+-- options: list of { value = ..., label = ... }
+local function addDropdown(node, name, options, getVal, setVal)
+    node:Insert({
+        Template = "AklimeMod_DropdownTemplate",
+        name     = name,
+        options  = options,
+        getVal   = getVal,
+        setVal   = setVal,
+    })
+end
+
 local INFO_LINE_H = 14  -- GameFontHighlightSmall line height (px)
 
 local function addInfo(node, text)
@@ -313,12 +324,29 @@ local function mouseColorInitializer(button, node)
     end
 end
 
+local function dropdownInitializer(frame, node)
+    local data = node:GetData()
+    if frame.name then frame.name:SetText(data.name or "") end
+    if not frame.dropdown then return end
+    -- Runs again for recycled rows, so the generator always reads this node
+    frame.dropdown:SetupMenu(function(_, rootDescription)
+        for _, option in ipairs(data.options) do
+            rootDescription:CreateRadio(option.label,
+                function() return data.getVal() == option.value end,
+                function() data.setVal(option.value) end
+            )
+        end
+    end)
+end
+
 -- Default factory for QoL and other categories
 function AklimeMod_RightFactory(factory, node)
     local d = node:GetData()
     local t = d.Template
     if t == "AklimeMod_ModuleHeaderTemplate" then
         factory(t, moduleHeaderInitializer)
+    elseif t == "AklimeMod_DropdownTemplate" then
+        factory(t, dropdownInitializer)
     elseif t == "AklimeMod_ToggleTemplate" and d.name then
         -- normal toggle (QoL etc.), has .name instead of .toggleLabel
         factory(t, toggleInitializer)
@@ -454,6 +482,27 @@ local currentBuildFn = nil
 -- ============================================================
 -- Interface tab: Elite/Rare + colorizer tree
 -- ============================================================
+
+-- Action bar gap compression, one alignment dropdown per bar
+local function addActionBarCompactNode(dp)
+    local M = AklimeMod_ActionBarCompact
+    if not M then return end
+    local node = addModule(dp, L["mod_action_bar_compact"],
+        function() return M:IsEnabled() end,
+        function(v) M:SetEnabled(v) end
+    )
+    addInfo(node, L["info_action_bar_compact"])
+    local options = {}
+    for _, mode in ipairs(M.MODES) do
+        options[#options + 1] = { value = mode, label = L["abc_mode_" .. mode] }
+    end
+    for barIndex = 1, M.NUM_BARS do
+        addDropdown(node, string.format(L["dropdown_action_bar"], barIndex), options,
+            function() return M:GetMode(barIndex) end,
+            function(v) M:SetMode(barIndex, v) end
+        )
+    end
+end
 
 -- Only the non colorizer modules (usable for global search)
 local function addInterfaceNodes(dp)
@@ -601,6 +650,8 @@ local function addInterfaceNodes(dp)
         addInfo(toastNode, L["info_bnet_toast_mover"])
     end
 
+    addActionBarCompactNode(dp)
+
     if currentSearchFilter == "" then
         dp:Insert({ Template = "AklimeMod_SeparatorTemplate", label = L["sec_hud_fading"], centered = true })
     end
@@ -688,6 +739,8 @@ local function BuildInterfaceContent(filter)
         local d = node:GetData()
         if d.Template == "AklimeMod_ModuleHeaderTemplate" then
             factory(d.Template, moduleHeaderInitializer)
+        elseif d.Template == "AklimeMod_DropdownTemplate" then
+            factory(d.Template, dropdownInitializer)
         elseif d.Template == "AklimeMod_ToggleTemplate" and d.name then
             factory(d.Template, toggleInitializer)
         elseif d.Template == "AklimeMod_SubColorTemplate" and (d.mouseRingColor or d.mouseTrailColor) then
@@ -931,6 +984,8 @@ local function BuildInterfaceContent(filter)
         end)
         addInfo(toastNode, L["info_bnet_toast_mover"])
     end
+
+    addActionBarCompactNode(dp3)
 
     dp3:Insert({ Template = "AklimeMod_SeparatorTemplate", label = L["sec_hud_fading"], centered = true })
     do

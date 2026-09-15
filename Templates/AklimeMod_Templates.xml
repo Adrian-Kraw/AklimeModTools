@@ -197,6 +197,33 @@
     </Frames>
   </Button>
 
+  <!-- Dropdown row: label left, Blizzard dropdown right -->
+  <Frame name="AklimeMod_DropdownTemplate" virtual="true">
+    <Size y="32"/>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture parentKey="backgroundTexture" file="Interface\BUTTONS\WHITE8X8">
+          <Color r="0.60" g="0.55" b="0.40" a="0.08"/>
+          <Anchors>
+            <Anchor point="TOPLEFT" x="0" y="-1"/>
+            <Anchor point="BOTTOMRIGHT" x="0" y="1"/>
+          </Anchors>
+        </Texture>
+      </Layer>
+      <Layer level="OVERLAY">
+        <FontString parentKey="name" inherits="GameFontNormalLeft">
+          <Anchors><Anchor point="LEFT" x="15" y="0"/></Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <Frames>
+      <DropdownButton parentKey="dropdown" inherits="WowStyle1DropdownTemplate">
+        <Size x="140" y="26"/>
+        <Anchors><Anchor point="RIGHT" x="-10" y="0"/></Anchors>
+      </DropdownButton>
+    </Frames>
+  </Frame>
+
   <!-- Info text -->
   <Button name="AklimeMod_InfoTextTemplate" virtual="true">
     <Size y="24"/>

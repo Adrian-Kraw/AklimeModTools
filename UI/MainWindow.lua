@@ -318,6 +318,7 @@ local TEMPLATE_EXTENTS = {
     AklimeMod_ActionButtonTemplate = 46,
     AklimeMod_SeparatorTemplate    = 50,
     AklimeMod_SubColorTemplate     = 32,
+    AklimeMod_DropdownTemplate     = 32,
 }
 
 AklimeMod_RightScrollView:SetElementExtentCalculator(function(index, node)

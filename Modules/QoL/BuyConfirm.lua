@@ -20,14 +20,26 @@ local REFUND_CONFIRM = {
     CONFIRM_REFUND_TOKEN_ITEM = true,
 }
 
--- Warning that an action ends an item's refund window. Four different
+-- Warning that an action ends an item's refund window. Several different
 -- dialogs share the same END_REFUND text, one per action.
 local NO_REFUND_CONFIRM = {
     EQUIP_BIND_REFUNDABLE          = true,  -- equipping
-    USE_NO_REFUND_CONFIRM          = true,  -- using
+    -- Using is left out on purpose. Its OnAccept calls the protected
+    -- C_Item.ConfirmNoRefundOnUse, which Blizzard blocks for addon code.
     REFUNDABLE_SOCKET              = true,  -- socketing
     CONFIRM_MAIL_ITEM_UNREFUNDABLE = true,  -- sending by mail
 }
+
+local ADDON_NAME = "AklimeModTools"
+
+-- Blizzard blocks the confirmation when it rates the call path as unsafe.
+-- The event fires during the call, so this flag tells us whether it went through.
+local wasBlocked = false
+local blockWatcher = CreateFrame("Frame")
+blockWatcher:RegisterEvent("ADDON_ACTION_FORBIDDEN")
+blockWatcher:SetScript("OnEvent", function(_, _, addon)
+    if addon == ADDON_NAME then wasBlocked = true end
+end)
 
 local function TryAccept(popup, idx, which)
     if not popup:IsShown() or popup.which ~= which then return end
@@ -35,8 +47,11 @@ local function TryAccept(popup, idx, which)
     -- Call the dialog's OnAccept directly (internally identical to a Button1 click).
     local dialog = StaticPopupDialogs and StaticPopupDialogs[which]
     if dialog and dialog.OnAccept then
+        wasBlocked = false
         dialog.OnAccept(popup, popup.data, popup.data2)
-        StaticPopup_Hide(which)
+        -- Keep the dialog open when the call was blocked. Otherwise it
+        -- closes and the action is lost without the player noticing.
+        if not wasBlocked then StaticPopup_Hide(which) end
         return
     end
 

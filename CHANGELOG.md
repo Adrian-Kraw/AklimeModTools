@@ -1,14 +1,26 @@
 ## 1.3.2
 
-Item levels on gear from older expansions were far too high. / Bei Ausrüstung aus älteren Erweiterungen war die Gegenstandsstufe viel zu hoch.
+Action bars can close the gaps left by empty slots, and item levels on older gear are right again. / Aktionsleisten können die Lücken leerer Plätze schließen, und die Gegenstandsstufe bei älterer Ausrüstung stimmt wieder.
 
 **EN**
+
+Action Bars
+
+* New: Closes the gaps that empty slots leave on action bars 1 to 8. Each bar has its own dropdown with Off, Left, Center and Right, and every row of a bar is compressed separately. The bar keeps its position and size, only the buttons move together. Actions stay in their slots, so key bindings do not change.
+* This works in combat too. When you drag an ability onto a bar, the gaps reappear so you can drop it. When the main bar pages for skyriding, shapeshift forms or stealth, it compresses again right away. Action buttons are protected frames, so every move runs through a secure snippet inside the game's own restricted environment.
+* Requires "Always Show Buttons" to be off for that bar in Edit Mode. Blizzard's default layout has it on.
 
 Gear Check
 
 * Fixed: Item levels on gear from older expansions were far too high. Both item level APIs report the level an item was created with, and the game scales that value afterwards. The badge reads the tooltip now, which is the number the game itself puts on screen. That also replaces the separate handling heirlooms and legacy artifact weapons needed.
 
 **DE**
+
+Aktionsleisten
+
+* Neu: Schließt die Lücken, die leere Plätze in den Aktionsleisten 1 bis 8 hinterlassen. Jede Leiste hat ein eigenes Auswahlmenü mit Aus, Links, Mitte und Rechts, und jede Reihe einer Leiste wird einzeln gestaucht. Die Leiste behält Position und Größe, nur die Knöpfe rücken zusammen. Die Aktionen bleiben auf ihren Plätzen, Tastenbelegungen ändern sich also nicht.
+* Das klappt auch im Kampf. Ziehst du eine Fähigkeit auf eine Leiste, erscheinen die Lücken zum Ablegen wieder. Blättert die Hauptleiste beim Dynamischen Fliegen, in Gestaltwandlungen oder in Verstohlenheit um, rückt sie sofort wieder zusammen. Aktionsknöpfe sind geschützte Frames, deshalb läuft jede Verschiebung über ein Secure Snippet in der geschützten Umgebung des Spiels.
+* Voraussetzung ist, dass "Schaltflächen immer anzeigen" für die Leiste im Bearbeitungsmodus aus ist. In Blizzards Standard-Layout ist die Option an.
 
 Ausrüstungs-Prüfung
 

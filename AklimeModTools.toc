@@ -26,6 +26,7 @@ Modules\Interface\MinimapElementHider.lua
 Modules\Interface\GearCheck.lua
 Modules\Interface\CombatTooltip.lua
 Modules\Interface\BNetToastMover.lua
+Modules\Interface\ActionBarCompact.lua
 Modules\Interface\HUDFader.lua
 Modules\Interface\Colorizer\ColorizerCore.lua
 Modules\Interface\Colorizer\ColorizerSkins_UnitFrames.lua

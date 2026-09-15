@@ -243,6 +243,12 @@ function AklimeMod_InitDB()
     def(db.bnetToastMover, "enabled", false)
     def(db.bnetToastMover, "locked",  true)
 
+    db.actionBarCompact = db.actionBarCompact or {}
+    def(db.actionBarCompact, "enabled", false)
+    for i = 1, 8 do
+        def(db.actionBarCompact, "bar" .. i, "off")
+    end
+
     db.interfaceFade = db.interfaceFade or {}
     for i = 1, 3 do
         local k = "mode" .. i
