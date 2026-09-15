@@ -1,4 +1,4 @@
-## 1.3.2
+## 1.4.0
 
 Action bars can close the gaps left by empty slots, and item levels on older gear are right again. / Aktionsleisten können die Lücken leerer Plätze schließen, und die Gegenstandsstufe bei älterer Ausrüstung stimmt wieder.
 
