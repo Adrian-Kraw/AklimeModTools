@@ -110,11 +110,10 @@ local function IsAddonButton(frame)
     if lname:find("handynotes", 1, true) then return false end
     if lname:find("tomtom",     1, true) then return false end
     if lname:find("ttminimapbutton", 1, true) then return false end
-    if lname:find("arrow",      1, true) then return false end
-    if lname:find("waypoint",   1, true) then return false end
-    if lname:find("marker",     1, true) then return false end
-    if lname:find("pin",        1, true) then return false end
-    if lname:find("mappin",     1, true) then return false end
+    -- Numbered map pins such as "HandyNotesPin12". A plain substring match on
+    -- "pin" or "arrow" also caught real buttons like ProfessionShoppingList
+    -- and FollowTheArrow.
+    if lname:find("pin%d+$") then return false end
 
     -- The addon's own button
     if name == "AklimeModMinimapBtn" and not IncludeOwn() then return false end
@@ -219,6 +218,29 @@ local function RestoreAll()
     end
     suppressHook = false
     storedButtons = {}
+end
+
+-- ============================================================
+-- Late buttons
+-- ============================================================
+-- The scans run a few seconds after loading. LibDBIcon reports buttons that
+-- addons create later through a callback. It positions a new button with a
+-- short delay, collecting right away would store an empty anchor.
+local LATE_BUTTON_DELAY = 1
+local lateCallbackOwner = {}
+local lateHooked        = false
+
+local function HookLateButtons()
+    if lateHooked then return end
+    local dbIcon = LibStub and LibStub("LibDBIcon-1.0", true)
+    if not dbIcon or not dbIcon.RegisterCallback then return end
+    lateHooked = true
+    dbIcon.RegisterCallback(lateCallbackOwner, "LibDBIcon_IconCreated", function()
+        C_Timer.After(LATE_BUTTON_DELAY, function()
+            -- While expanded a scan would hide the open buttons
+            if IsEnabled() and collectorBtn and not isOpen then StoreAndHideAll() end
+        end)
+    end)
 end
 
 -- ============================================================
@@ -376,6 +398,7 @@ frame:SetScript("OnEvent", function(_, event, arg1)
             C_Timer.After(3.0, function()
                 CreateCollector()
                 StoreAndHideAll()
+                HookLateButtons()
             end)
         end
         -- Safety: in case the button already exists but is disabled
@@ -390,6 +413,7 @@ frame:SetScript("OnEvent", function(_, event, arg1)
                 if isOpen then CollectorClose() end
                 if not collectorBtn then CreateCollector() end
                 StoreAndHideAll()
+                HookLateButtons()
             end)
         else
             if collectorBtn then collectorBtn:Hide() end
@@ -438,6 +462,7 @@ AklimeMod_MinimapCollector = {
             CreateCollector()
             if collectorBtn then collectorBtn:Show() end
             C_Timer.After(0.5, StoreAndHideAll)
+            HookLateButtons()
         else
             if isOpen then CollectorClose() end
             RestoreAll()
