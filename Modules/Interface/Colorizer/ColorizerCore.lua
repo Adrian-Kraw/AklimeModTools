@@ -33,6 +33,32 @@ C.classColors = {
     WARRIOR     = {r=0.78,g=0.61,b=0.43},
 }
 
+-- Midnight hands out some unit data as secret values, e.g. the class of a
+-- target in restricted situations. A secret cannot be used as a table key or
+-- in a boolean test. It counts as unknown here and the caller keeps its
+-- current color.
+local REACTION_FRIENDLY = { r = 0, g = 1, b = 0 }
+local REACTION_HOSTILE  = { r = 1, g = 0, b = 0 }
+
+local function IsSecret(value)
+    return issecretvalue and issecretvalue(value)
+end
+
+function C.GetUnitClassColor(unit)
+    local _, class = UnitClass(unit)
+    if not class or IsSecret(class) then return nil end
+    return C.classColors[class]
+end
+
+-- Class color if known, otherwise green or red by reaction
+function C.GetUnitClassOrReactionColor(unit)
+    local cc = C.GetUnitClassColor(unit)
+    if cc then return cc end
+    local friendly = UnitIsFriend(unit, "player")
+    if IsSecret(friendly) then return nil end
+    return friendly and REACTION_FRIENDLY or REACTION_HOSTILE
+end
+
 -- ============================================================
 -- Skin-Registry
 -- ============================================================

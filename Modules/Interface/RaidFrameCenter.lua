@@ -27,11 +27,39 @@ local hasModified = false
 local lastWidth = 0
 local lastMtOffset = 0
 
+-- Puts the container back where Edit Mode placed it. These are the same points
+-- EditModeSystemMixin:ApplySystemAnchor sets. That function is not called
+-- because it also runs Edit Mode's action bar layout, which addon code would
+-- taint. The container is no managed frame, so the points are the whole job.
+-- Moving it is protected in combat, PLAYER_REGEN_ENABLED finishes a pending
+-- request.
+local restorePending = false
+
 local function RestorePosition()
-    if not hasModified then return end
-    if InCombatLockdown() then return end
-    hasModified = false
-    lastWidth   = 0
+    local c      = CompactRaidFrameContainer
+    local info   = c and c.systemInfo
+    local anchor = info and info.anchorInfo
+    if not anchor then return end
+    -- Edit Mode positions the frame itself while it is open
+    if IsInEditMode() then return end
+    if InCombatLockdown() then
+        restorePending = true
+        return
+    end
+    restorePending = false
+
+    local scale = c:GetScale()
+    c:ClearAllPoints()
+    c:SetPoint(anchor.point, anchor.relativeTo, anchor.relativePoint, anchor.offsetX / scale, anchor.offsetY / scale)
+    local anchor2 = info.anchorInfo2
+    if anchor2 then
+        c:SetPoint(anchor2.point, anchor2.relativeTo, anchor2.relativePoint, anchor2.offsetX / scale, anchor2.offsetY / scale)
+    end
+
+    -- Measure again from the Edit Mode position when switched on later
+    savedY       = nil
+    hasModified  = false
+    lastWidth    = 0
     lastMtOffset = 0
 end
 
@@ -104,6 +132,25 @@ local function UpdateDriverValues(scale, mtOffset)
             "[@raid36,exists] 8; [@raid31,exists] 7; [@raid26,exists] 6; [@raid21,exists] 5; " ..
             "[@raid16,exists] 4; [@raid11,exists] 3; [@raid6,exists] 2; [@raid1,exists] 1; 0")
     end
+end
+
+-- The snippet does not know the toggle. Once armed, the driver kept centering
+-- on every group change after the feature was switched off. Unregistering is
+-- protected in combat, PLAYER_REGEN_ENABLED finishes a pending request.
+local disarmPending = false
+
+local function DisarmDriver()
+    if not driver or not driverArmed then
+        disarmPending = false
+        return
+    end
+    if InCombatLockdown() then
+        disarmPending = true
+        return
+    end
+    UnregisterStateDriver(driver, "akmraid")
+    driverArmed   = false
+    disarmPending = false
 end
 
 local function RepositionContainer()
@@ -230,6 +277,13 @@ f:SetScript("OnEvent", function(_, event)
     end
 
     if event == "PLAYER_REGEN_ENABLED" then
+        -- Finish a switch off that happened during combat
+        if not GetDB().enabled then
+            if disarmPending  then DisarmDriver()    end
+            if restorePending then RestorePosition() end
+        end
+        disarmPending  = false
+        restorePending = false
         C_Timer.After(0.2, RepositionContainer)
         return
     end
@@ -268,7 +322,7 @@ SlashCmdList["AKMRAID"] = function()
     print(string.format(
         "  Kampf=%s  geschuetzt=%s  Secure-Treiber=%s",
         tostring(InCombatLockdown()), tostring(c:IsProtected()),
-        driver and "vorhanden" or "fehlt"))
+        driver and (driverArmed and "aktiv" or "abgemeldet") or "fehlt"))
     if driver then
         print(string.format(
             "  Treiberwerte: skalierung=%s mt=%s versatz=%s y=%s",
@@ -287,7 +341,12 @@ AklimeMod_RaidFrameCenter = {
     IsEnabled  = function() return GetDB().enabled end,
     SetEnabled = function(v)
         GetDB().enabled = v
-        if v then RepositionContainer() else RestorePosition() end
+        if v then
+            RepositionContainer()
+        else
+            DisarmDriver()
+            RestorePosition()
+        end
     end,
     SetOffsetX = function(x) GetDB().offsetX = x; lastWidth = 0; RepositionContainer() end,
     GetOffsetX = function() return GetDB().offsetX or 0 end,

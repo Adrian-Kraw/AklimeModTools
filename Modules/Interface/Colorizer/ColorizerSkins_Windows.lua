@@ -974,8 +974,7 @@ C:Register("winInspect", {
             if C:GetToggle("winInspect","follow_unit_class") then
                 local function updateBg()
                     local unit=INSPECTED_UNIT or "target"
-                    local class=select(2,UnitClass(unit))
-                    local cc=C.classColors[class]
+                    local cc=C.GetUnitClassColor(unit)
                     if cc then T(InspectFrameBg,cc.r,cc.g,cc.b) end
                 end
                 hooksecurefunc("InspectFrame_Show",updateBg); updateBg()
@@ -1514,8 +1513,7 @@ C:Register("winTrade", {
         T(TradeRecipientLeftBorder,mr,mg,mb,ma); T(TradeRecipientBotLeftCorner,mr,mg,mb,ma)
         T(TradeFrameBg,br,bg2,bb,ba); T(TradeRecipientBG,br,bg2,bb,ba)
         if C:GetToggle("winTrade","follow_unit_class") then
-            local class=select(2,UnitClass("NPC"))
-            local cc=C.classColors[class]
+            local cc=C.GetUnitClassColor("NPC")
             if cc then T(TradeRecipientBG,cc.r,cc.g,cc.b) end
         end
         for _,f in pairs({TradeFrameInset,TradePlayerItemsInset,TradePlayerEnchantInset,TradePlayerInputMoneyInset,TradeRecipientItemsInset,TradeRecipientEnchantInset,TradeRecipientMoneyInset}) do SkinNS(f,ir,ig,ib,ia) end

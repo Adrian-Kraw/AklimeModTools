@@ -281,6 +281,8 @@ L["news_action_bars_where"] = "Find it under Interface > Move UI Elements > Acti
 L["news_chat_history"]      = "No more flood of Lua errors in instances and combat.\nMessages the game keeps secret are no longer saved, they still show in chat."
 L["news_news"]              = "This tab shows the most important changes of the installed version.\nAfter an update a chat message points to it once."
 L["news_gear_check"]        = "Item levels on gear from older expansions were far too high.\nThe number now matches the tooltip."
+L["news_raid_center"]       = "Switching the feature off really switches it off now.\nThe frames no longer jump back to the center and return to their Edit Mode position."
+L["news_mm_collector"]      = "Buttons like ProfessionShoppingList and FollowTheArrow are collected now.\nButtons that addons create after login are collected as well."
 
 -- Currency expansion categories
 L["curr_cat_season"] = "Season"
@@ -660,6 +662,8 @@ if GetLocale() == "deDE" then
     L["news_chat_history"]      = "Keine Flut von Lua-Fehlern mehr in Instanzen und im Kampf.\nNachrichten, die das Spiel geheim hält, werden nicht mehr gespeichert. Im Chat erscheinen sie weiter."
     L["news_news"]              = "Dieser Reiter zeigt die wichtigsten Änderungen der installierten Version.\nNach einem Update weist eine Chatnachricht einmal darauf hin."
     L["news_gear_check"]        = "Bei Ausrüstung aus älteren Erweiterungen war die Gegenstandsstufe viel zu hoch.\nDie Zahl passt jetzt zum Tooltip."
+    L["news_raid_center"]       = "Das Ausschalten schaltet die Funktion jetzt wirklich aus.\nDie Rahmen springen nicht mehr in die Mitte und kehren an ihre Position aus dem Bearbeitungsmodus zurück."
+    L["news_mm_collector"]      = "Knöpfe wie ProfessionShoppingList und FollowTheArrow werden jetzt eingesammelt.\nKnöpfe, die Addons erst nach dem Login erzeugen, ebenfalls."
 
     L["curr_cat_season"] = "Saison"
     L["curr_cat_raids"]  = "Dungeon & Schlachtzug"

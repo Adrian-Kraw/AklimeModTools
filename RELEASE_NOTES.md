@@ -1,3 +1,25 @@
+## 1.4.2
+
+**EN**
+
+Center Raid Frames
+
+* Fixed: Switching the feature off really switches it off now. The frames no longer jump back to the center and return to their Edit Mode position.
+
+Minimap Button Collector
+
+* Fixed: Buttons like ProfessionShoppingList and FollowTheArrow are collected now, as are buttons that addons create after login.
+
+**DE**
+
+Gruppenrahmen zentrieren
+
+* Behoben: Das Ausschalten schaltet die Funktion jetzt wirklich aus. Die Rahmen springen nicht mehr in die Mitte und kehren an ihre Position aus dem Bearbeitungsmodus zurück.
+
+Minimap Button Sammler
+
+* Behoben: Knöpfe wie ProfessionShoppingList und FollowTheArrow werden jetzt eingesammelt, ebenso Knöpfe, die Addons erst nach dem Login erzeugen.
+
 ## 1.4.1
 
 **EN**

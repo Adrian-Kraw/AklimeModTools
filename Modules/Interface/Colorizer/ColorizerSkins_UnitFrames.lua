@@ -118,9 +118,8 @@ C:Register("targetFrame", {
 
         if C:GetToggle("targetFrame","follow_unit_class") then
             local function upd()
-                local cc = C.classColors[select(2, UnitClass("target"))]
-                    or (UnitIsFriend("target","player") and {r=0,g=1,b=0} or {r=1,g=0,b=0})
-                T(TargetFrame.TargetFrameContainer.FrameTexture, cc.r, cc.g, cc.b)
+                local cc = C.GetUnitClassOrReactionColor("target")
+                if cc then T(TargetFrame.TargetFrameContainer.FrameTexture, cc.r, cc.g, cc.b) end
             end
             hooksecurefunc("TargetFrame_Update", upd); upd()
         else
@@ -172,9 +171,8 @@ C:Register("targetOfTarget", {
         local mr,mg,mb,ma = col("targetOfTarget","main")
         if C:GetToggle("targetOfTarget","follow_unit_class") then
             local function upd()
-                local cc = C.classColors[select(2, UnitClass("targettarget"))]
-                    or (UnitIsFriend("targettarget","player") and {r=0,g=1,b=0} or {r=1,g=0,b=0})
-                T(TargetFrameToT.FrameTexture, cc.r,cc.g,cc.b)
+                local cc = C.GetUnitClassOrReactionColor("targettarget")
+                if cc then T(TargetFrameToT.FrameTexture, cc.r,cc.g,cc.b) end
             end
             hooksecurefunc("TargetFrame_Update", upd); upd()
         else
@@ -207,9 +205,8 @@ C:Register("focusFrame", {
 
         if C:GetToggle("focusFrame","follow_unit_class") then
             local function upd()
-                local cc = C.classColors[select(2, UnitClass("focus"))]
-                    or (UnitIsFriend("focus","player") and {r=0,g=1,b=0} or {r=1,g=0,b=0})
-                T(FocusFrame.TargetFrameContainer.FrameTexture, cc.r,cc.g,cc.b)
+                local cc = C.GetUnitClassOrReactionColor("focus")
+                if cc then T(FocusFrame.TargetFrameContainer.FrameTexture, cc.r,cc.g,cc.b) end
             end
             hooksecurefunc("FocusFrame_Update", upd); upd()
         else
@@ -261,9 +258,8 @@ C:Register("focusFrameToT", {
         local mr,mg,mb,ma = col("focusFrameToT","main")
         if C:GetToggle("focusFrameToT","follow_unit_class") then
             local function upd()
-                local cc = C.classColors[select(2, UnitClass("focustarget"))]
-                    or (UnitIsFriend("focustarget","player") and {r=0,g=1,b=0} or {r=1,g=0,b=0})
-                T(FocusFrameToT.FrameTexture, cc.r,cc.g,cc.b)
+                local cc = C.GetUnitClassOrReactionColor("focustarget")
+                if cc then T(FocusFrameToT.FrameTexture, cc.r,cc.g,cc.b) end
             end
             local function onFocusChanged() upd() end
             hooksecurefunc("FocusFrame_Update", onFocusChanged); upd()

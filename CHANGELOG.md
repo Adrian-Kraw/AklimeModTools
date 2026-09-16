@@ -1,3 +1,31 @@
+## 1.4.2
+
+Switching off raid frame centering now really switches it off, and the minimap button collector picks up buttons it used to miss. / Das Ausschalten der Gruppenrahmen-Zentrierung schaltet sie jetzt wirklich aus, und der Minimap Button Sammler sammelt Knöpfe ein, die er vorher übersehen hat.
+
+**EN**
+
+Center Raid Frames
+
+* Fixed: After switching the feature off, the raid frames still jumped back to the center whenever a group was added or removed. The combat snippet that moves the frames kept running, because it was never unregistered. It is unregistered now as soon as you switch the feature off.
+* Changed: Switching the feature off puts the raid frames back where Edit Mode placed them. Before, they stayed where they were. The game does not allow moving them in combat, so in that case it happens right after the fight.
+
+Minimap Button Collector
+
+* Fixed: Some addon buttons were never collected, for example ProfessionShoppingList and FollowTheArrow. A filter meant to keep map pins out rejected every button whose name merely contained "pin" or "arrow". It now only matches numbered pins like the ones HandyNotes creates.
+* Fixed: Buttons that an addon creates some time after login stayed on the minimap until the next loading screen. Buttons made with LibDBIcon are now collected as soon as they appear.
+
+**DE**
+
+Gruppenrahmen zentrieren
+
+* Behoben: Nach dem Ausschalten sprangen die Gruppenrahmen trotzdem wieder in die Mitte, sobald eine Gruppe dazukam oder wegfiel. Das Snippet für den Kampf, das die Rahmen verschiebt, lief weiter, weil es nie abgemeldet wurde. Es wird jetzt beim Ausschalten abgemeldet.
+* Geändert: Beim Ausschalten springen die Gruppenrahmen an ihre Position aus dem Bearbeitungsmodus zurück. Vorher blieben sie dort stehen, wo sie waren. Im Kampf verbietet das Spiel das Verschieben, dann passiert es direkt nach dem Kampf.
+
+Minimap Button Sammler
+
+* Behoben: Manche Addon-Knöpfe wurden nie eingesammelt, zum Beispiel ProfessionShoppingList und FollowTheArrow. Ein Filter, der Kartenmarkierungen fernhalten soll, warf jeden Knopf raus, dessen Name nur "pin" oder "arrow" enthielt. Er greift jetzt nur noch bei nummerierten Markierungen, wie HandyNotes sie erzeugt.
+* Behoben: Knöpfe, die ein Addon erst einige Zeit nach dem Login erzeugt, blieben bis zum nächsten Ladebildschirm auf der Minimap. Knöpfe über LibDBIcon werden jetzt eingesammelt, sobald sie erscheinen.
+
 ## 1.4.1
 
 A new News tab shows what changed in the installed version, and the chat history no longer floods you with Lua errors. / Ein neuer Reiter Neuigkeiten zeigt, was sich in der installierten Version geändert hat, und der Chatverlauf löst keine Flut von Lua-Fehlern mehr aus.
