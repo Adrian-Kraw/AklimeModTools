@@ -7,6 +7,13 @@ Personal WoW addon for Midnight (12.0.7).
 
 ---
 
+## Highlights
+
+- **Action Bars without gaps**: Empty slots on action bars 1 to 8 no longer leave holes. Each bar closes its gaps to the left, to the center or to the right, row by row, while the bar itself stays exactly where Edit Mode placed it. Works in combat too, including dragging abilities onto the bars, skyriding and shapeshift forms.
+- **News tab**: After an update the addon shows what changed in a tab of its own and points to it once in chat.
+
+---
+
 ## Categories
 
 ### Dashboard
@@ -30,6 +37,10 @@ Visual adjustments to the game client.
 - **Hide Tooltip in Combat**: Hides the tooltip during combat
 - **Color Customization**: Colorize unit frames, HUD, micro menu, action bars and numerous windows. All skins can be enabled at once and colored with a shared global color
 
+**Move UI Elements**
+- **Action Bars**: Closes the gaps of empty slots on action bars 1 to 8. Aligned left, center or right per bar, the bar keeps its Edit Mode position. Requires "Always Show Buttons" to be off
+- **Appearing BNet Contacts**: Freely moves the popup that appears when a Battle.net friend comes online. Drag it in the preview, then lock it in place
+
 **Interface Fading**
 - **Chill Mode in Resting Areas**: Automatically fades HUD elements in resting areas
 - **Open World**: Automatically fades HUD elements in the open world
@@ -44,6 +55,7 @@ Convenience features for everyday gameplay.
 - **Chat Interaction**: C-button to copy chat history, clickable URLs, item level in chat links
 - **Chat Fade**: Older chat messages are automatically faded out
 - **Save Chat History**: Saves chat history across sessions
+- **Set Chat Size for All Characters**: Applies your chosen chat font size (12 to 27 pt) once to every character that does not have one set yet
 - **Extended Ignore List**: Blocks chat messages from ignored players beyond the Blizzard limit
 - **Leave Service Channel**: Automatically leaves service channels on login
 - **Block Duel Requests**: Automatically declines duel requests
@@ -58,11 +70,15 @@ Convenience features for everyday gameplay.
 - **Auto Repair**: Automatically repairs equipment at vendors (guild bank or gold)
 - **Interface Reload**: `/rl` and `/nl` as shortcuts for ReloadUI
 - **Easy Confirm and Delete**: Skips text input when deleting and confirming items, unlearning professions and other confirmations
+- **Auto Accept Purchase Confirmation**: Confirms purchase dialogs for non-refundable items and token purchases
+- **Auto Accept Refund Confirmation**: Confirms the dialog when selling a refundable item back to a vendor
+- **Auto Accept Non-Refundable Warning**: Confirms the warning that an item can no longer be refunded when equipping, socketing or mailing it. Off by default, because that warning is the last chance to stop
 - **Auto Sell Junk**: Automatically sells grey items when opening a vendor
 - **Prey Progress in Phases**: Shows hunt progress as phases instead of a crystal icon
 - **24-Hour Clock**: Switches the in-game clock to 24-hour format
 - **Map Coordinates**: Shows your own coordinates on the world map
 - **Hide Learn/Unlearn Messages**: Hides system messages when learning abilities
+- **Hide Micro Menu Notifications**: Hides the blue notification badges on the micro menu buttons and the unspent talent points alert
 - **Item and Currency Icons in Chat**: Shows icons for item and currency links in chat
 - **Item Level in Chat Links**: Shows the item level of players next to the chat name
 - **Mailbox Address Book**: Saves recipient names for the mailbox with auto-completion
@@ -103,6 +119,25 @@ Character and progress overview across all your characters.
 
 ---
 
+### News
+Shows the most important changes of the installed version as cards, marked as new, fixed or changed. After an update a chat message points to it once.
+
+---
+
+## Minimap Button
+
+Clicking the Aklime Mod Tools button at the minimap opens a quick menu around it:
+- **Block PvP Chat**: Left-click disables the chat in PvP, right-click only hides the chat windows
+- **Weekly Vault**: Opens the Great Vault
+- **ToDo List**: A small note list. Enter adds an entry, a click marks it done
+- **Character Tracker**: Opens the overview of all characters
+- **Played Time**: Opens the played time of all characters
+- **Settings**: Opens the settings window
+
+Drag the button to move it along the minimap border.
+
+---
+
 ## Commands
 
 | Command | Function |
@@ -124,6 +159,13 @@ Character and progress overview across all your characters.
 # Aklime Mod Tools
 
 Persönliches WoW Addon für Midnight (12.0.7).
+
+---
+
+## Highlights
+
+- **Aktionsleisten ohne Lücken**: Leere Plätze in den Aktionsleisten 1 bis 8 hinterlassen keine Löcher mehr. Jede Leiste schließt ihre Lücken nach links, zur Mitte oder nach rechts, Reihe für Reihe, und bleibt dabei genau dort, wo der Bearbeitungsmodus sie platziert hat. Klappt auch im Kampf, beim Ziehen von Fähigkeiten, beim Dynamischen Fliegen und in Gestaltwandlungen.
+- **Neuigkeiten-Reiter**: Nach einem Update zeigt das Addon in einem eigenen Reiter, was sich geändert hat, und weist einmal im Chat darauf hin.
 
 ---
 
@@ -150,6 +192,10 @@ Visuelle Anpassungen am Spielclient.
 - **Tooltip im Kampf ausblenden**: Blendet den Tooltip während des Kampfes aus
 - **Farbliche Anpassungen**: Einfärben von Unit Frames, HUD, Micro Menu, Action Bars und zahlreichen Fenstern. Alle Skins lassen sich auf einmal aktivieren und mit einer gemeinsamen Globalfarbe einfärben
 
+**UI Elemente verschieben**
+- **Aktionsleisten**: Schließt die Lücken leerer Plätze in den Aktionsleisten 1 bis 8. Pro Leiste links, mittig oder rechts ausgerichtet, die Leiste behält ihre Position aus dem Bearbeitungsmodus. Voraussetzung: "Schaltflächen immer anzeigen" ist aus
+- **Erscheinende Bnet Kontakte**: Verschiebt die Meldung frei, die erscheint, wenn ein Battle.net-Freund online kommt. In der Vorschau ziehen, danach einrasten
+
 **Interface Ausblendung**
 - **Chillmodus in Ruhezonen**: Blendet HUD-Elemente in Ruhezonen automatisch aus
 - **Offene Welt**: Blendet HUD-Elemente in der offenen Welt automatisch aus
@@ -164,6 +210,7 @@ Komfort-Features für den Spielalltag.
 - **Chat Interaktion**: C-Button zum Kopieren des Chatverlaufs, klickbare URLs, Itemlevel in Chat-Links
 - **Chat verblassen**: Ältere Chat-Nachrichten werden automatisch ausgeblendet
 - **Chatverlauf speichern**: Speichert den Chatverlauf sitzungsübergreifend
+- **Chatgröße für alle Chars setzen**: Setzt die gewählte Chat-Schriftgröße (12 bis 27 pt) einmalig bei jedem Charakter, der noch keine eigene hat
 - **Erweiterte Ignore-Liste**: Blockiert Chat-Nachrichten ignorierter Spieler über das Blizzard-Limit hinaus
 - **Dienste-Channel verlassen**: Verlässt Dienste-Channels automatisch beim Login
 - **Duellanfragen blockieren**: Lehnt Duellanfragen automatisch ab
@@ -178,11 +225,15 @@ Komfort-Features für den Spielalltag.
 - **Auto Repair**: Repariert Ausrüstung automatisch beim Händler (Gildenbank oder Gold)
 - **Interface Neuladen**: `/rl` und `/nl` als Kurzbefehl für ReloadUI
 - **Einfaches Bestätigen und Löschen**: Überspringt die Texteingabe beim Löschen und Bestätigen von Items, Verlernen von Berufen und weiteren Bestätigungen
+- **Kaufbestätigung automatisch annehmen**: Bestätigt Kaufdialoge bei nicht umtauschbaren Items und Token-Käufen
+- **Rückerstattung automatisch annehmen**: Bestätigt den Dialog beim Rückverkauf eines umtauschbaren Items an einen Händler
+- **Warnung zum Verfall der Rückerstattung annehmen**: Bestätigt die Warnung, dass ein Gegenstand nicht mehr zurückerstattet werden kann, beim Anlegen, Sockeln und Verschicken per Post. Standardmäßig aus, denn diese Warnung ist die letzte Möglichkeit abzubrechen
 - **Graue Items automatisch verkaufen**: Verkauft graue Items automatisch beim Öffnen eines Händlers
 - **Jagd Fortschritt in Phasen**: Zeigt den Jagdfortschritt in Phasen statt als Kristall-Icon
 - **24-Stunden-Uhr**: Stellt die Ingame-Uhr auf 24-Stunden-Format um
 - **Karten-Koordinaten**: Zeigt die eigenen Koordinaten auf der Weltkarte an
 - **Lernen-/Vergessen-Meldungen ausblenden**: Blendet Systemmeldungen beim Lernen von Fähigkeiten aus
+- **Micro-Menü-Benachrichtigungen ausblenden**: Blendet die blauen Hinweis-Symbole an den Micro-Menü-Schaltflächen und den Hinweis auf nicht verteilte Talentpunkte aus
 - **Item- und Währungssymbole im Chat**: Zeigt Icons bei Item- und Währungslinks im Chat
 - **Itemlevel in Chat-Links**: Zeigt das Itemlevel von Spielern neben dem Chatnamen
 - **Adressbuch für Post**: Speichert Empfänger-Namen für das Postfach mit Autovervollständigung
@@ -220,6 +271,25 @@ Charakter- und Fortschrittsübersicht über alle eigenen Charaktere.
 ### PvP
 - **Namensplaketten einfärben**: Färbt Namensplaketten in Arenen und Schlachtfeldern (Grün = eigenes Team, Rot = Gegner)
 - **Chat im PvP blockieren**: Verhindert das Öffnen der Chat-Eingabe in Arenen und Schlachtfeldern
+
+---
+
+### Neuigkeiten
+Zeigt die wichtigsten Änderungen der installierten Version als Karten, markiert als neu, behoben oder geändert. Nach einem Update weist eine Chatnachricht einmal darauf hin.
+
+---
+
+## Minimap-Button
+
+Ein Klick auf den Aklime Mod Tools Button an der Minimap öffnet ein Schnellmenü rundherum:
+- **PvP Chat blockieren**: Linksklick deaktiviert den Chat im PvP, Rechtsklick blendet nur die Chatfenster aus
+- **Wöchentliche Schatzkammer**: Öffnet die Große Schatzkammer
+- **ToDo-Liste**: Kleine Notizliste. Enter fügt einen Eintrag hinzu, ein Klick hakt ihn ab
+- **Charakter-Tracker**: Öffnet die Übersicht aller Charaktere
+- **Gespielte Zeit**: Öffnet die Spielzeit aller Charaktere
+- **Einstellungen**: Öffnet das Einstellungsfenster
+
+Per Drag lässt sich der Button am Minimap-Rand verschieben.
 
 ---
 
