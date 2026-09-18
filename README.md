@@ -5,12 +5,7 @@
 
 Personal WoW addon for Midnight (12.0.7).
 
----
 
-## Highlights
-
-- **Action Bars without gaps**: Empty slots on action bars 1 to 8 no longer leave holes. Each bar closes its gaps to the left, to the center or to the right, row by row, while the bar itself stays exactly where Edit Mode placed it. Works in combat too, including dragging abilities onto the bars, skyriding and shapeshift forms.
-- **News tab**: After an update the addon shows what changed in a tab of its own and points to it once in chat.
 
 ---
 
@@ -160,12 +155,7 @@ Drag the button to move it along the minimap border.
 
 Persönliches WoW Addon für Midnight (12.0.7).
 
----
 
-## Highlights
-
-- **Aktionsleisten ohne Lücken**: Leere Plätze in den Aktionsleisten 1 bis 8 hinterlassen keine Löcher mehr. Jede Leiste schließt ihre Lücken nach links, zur Mitte oder nach rechts, Reihe für Reihe, und bleibt dabei genau dort, wo der Bearbeitungsmodus sie platziert hat. Klappt auch im Kampf, beim Ziehen von Fähigkeiten, beim Dynamischen Fliegen und in Gestaltwandlungen.
-- **Neuigkeiten-Reiter**: Nach einem Update zeigt das Addon in einem eigenen Reiter, was sich geändert hat, und weist einmal im Chat darauf hin.
 
 ---
 
