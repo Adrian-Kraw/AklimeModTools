@@ -75,23 +75,6 @@ local LAYOUT_BAR_SNIPPET = [[
     local bar    = "b" .. n
     local perBar = self:GetAttribute("buttonsPerBar")
 
-    -- Same page lookup as Blizzard's CalculateAction. Bars 2 to 8 carry a
-    -- fixed page, only the main bar follows forms, stealth and vehicles.
-    local page = self:GetAttribute(bar .. "page")
-    if not page then
-        page = GetActionBarPage()
-        if HasVehicleActionBar() then
-            page = GetVehicleBarIndex()
-        elseif HasOverrideActionBar() then
-            page = GetOverrideBarIndex()
-        elseif HasTempShapeshiftActionBar() then
-            page = GetTempShapeshiftBarIndex()
-        elseif HasBonusActionBar() and GetActionBarPage() == 1 then
-            page = GetBonusBarIndex()
-        end
-    end
-    self:SetAttribute(bar .. "curpage", page)
-
     -- "Always Show Buttons" or a dragged action shows the grid. The gaps
     -- are wanted then, so the bar keeps its original layout.
     local align = self:GetAttribute(bar .. "align")
@@ -119,11 +102,15 @@ local LAYOUT_BAR_SNIPPET = [[
         local dx    = self:GetAttribute(line .. "dx") or 0
         local dy    = self:GetAttribute(line .. "dy") or 0
 
+        -- Blizzard shows a button exactly when it carries an action, so asking
+        -- the button beats working out the current bar page. That page was
+        -- still the old one right after landing from skyriding, which left the
+        -- flight buttons compressed while the normal ones came back.
         local filled = 0
         for j = 1, slots do
             local i   = self:GetAttribute(line .. "s" .. j)
             local btn = self:GetFrameRef(bar .. "btn" .. i)
-            if btn and not btn:GetAttribute("statehidden") and HasAction(i + (page - 1) * perBar) then
+            if btn and btn:IsShown() then
                 filled = filled + 1
             end
         end
@@ -134,7 +121,7 @@ local LAYOUT_BAR_SNIPPET = [[
         for j = 1, slots do
             local i   = self:GetAttribute(line .. "s" .. j)
             local btn = self:GetFrameRef(bar .. "btn" .. i)
-            if btn and not btn:GetAttribute("statehidden") and HasAction(i + (page - 1) * perBar) then
+            if btn and btn:IsShown() then
                 local shift = target - (j - 1)
                 btn:ClearAllPoints()
                 btn:SetPoint("CENTER", "$parent", "CENTER", shift * dx, shift * dy)
@@ -249,7 +236,6 @@ local function MeasureBar(d, barIndex, def)
     local key   = "b" .. barIndex
     local lines = bar and CollectLines(def, bar.isHorizontal ~= false) or {}
 
-    d:SetAttribute(key .. "page",  bar and bar:GetAttribute("actionpage"))
     d:SetAttribute(key .. "align", GetAlign(barIndex))
     d:SetAttribute(key .. "lines", #lines)
     for r, line in ipairs(lines) do
@@ -338,24 +324,20 @@ SlashCmdList["AKMBARS"] = function()
     if not driver then return end
 
     for barIndex, def in ipairs(BARS) do
-        local key  = "b" .. barIndex
-        local page = driver:GetAttribute(key .. "curpage")
-        -- Compares the page from the snippet with the slot Blizzard uses. Any
-        -- difference means the page lookup is wrong for the current state.
-        local mismatches = 0
+        local key = "b" .. barIndex
         -- Grid reasons as Blizzard bit flags: 1 Always Show Buttons, 2 dragging, 4 spell collection
-        local grid = 0
+        local grid, shown = 0, 0
         for i = 1, BUTTONS_PER_BAR do
             local btn = _G[def.prefix .. i]
-            if btn and btn.action and page and btn.action ~= i + (page - 1) * BUTTONS_PER_BAR then
-                mismatches = mismatches + 1
+            if btn then
+                grid = bit.bor(grid, btn:GetAttribute("showgrid") or 0)
+                if btn:IsShown() then shown = shown + 1 end
             end
-            if btn then grid = bit.bor(grid, btn:GetAttribute("showgrid") or 0) end
         end
         print(string.format(
-            "  Leiste %d: ausrichtung=%s reihen=%s seite=%s abweichungen=%d gestaucht=%s raster=%d",
+            "  Leiste %d: ausrichtung=%s reihen=%s sichtbar=%d gestaucht=%s raster=%d",
             barIndex, tostring(driver:GetAttribute(key .. "align")), tostring(driver:GetAttribute(key .. "lines")),
-            tostring(page), mismatches, tostring(driver:GetAttribute(key .. "applied")), grid))
+            shown, tostring(driver:GetAttribute(key .. "applied")), grid))
     end
 end
 
