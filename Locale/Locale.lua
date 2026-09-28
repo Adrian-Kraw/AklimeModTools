@@ -280,6 +280,7 @@ L["news_tag_new"]     = "NEW"
 L["news_tag_fixed"]   = "FIXED"
 L["news_tag_changed"] = "CHANGED"
 L["news_auto_repair"] = "The chat messages after repairing were always German.\nThey now follow the language of the game client."
+L["news_raid_center"] = "The raid frames stay centered after a reload and after a spec change."
 
 -- Currency expansion categories
 L["curr_cat_season"] = "Season"
@@ -659,6 +660,7 @@ if GetLocale() == "deDE" then
     L["news_tag_fixed"]   = "BEHOBEN"
     L["news_tag_changed"] = "GEÄNDERT"
     L["news_auto_repair"] = "Die Chatnachrichten nach dem Reparieren waren immer deutsch.\nSie folgen jetzt der Sprache des Spielclients."
+    L["news_raid_center"] = "Die Gruppenrahmen bleiben nach einem Reload und nach einem Spezialisierungswechsel zentriert."
 
     L["curr_cat_season"] = "Saison"
     L["curr_cat_raids"]  = "Dungeon & Schlachtzug"

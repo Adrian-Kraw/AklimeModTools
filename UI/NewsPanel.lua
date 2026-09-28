@@ -37,6 +37,7 @@ local TAG_COLORS = {
 -- title, text and where are locale keys, where is optional. Every line of
 -- text becomes one bullet. tag is a key of TAG_COLORS.
 local NEWS_ENTRIES = {
+    { title = "mod_raid_center", tag = "fixed", text = "news_raid_center" },
     { title = "mod_auto_repair", tag = "fixed", text = "news_auto_repair" },
 }
 

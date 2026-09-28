@@ -24,6 +24,7 @@ end
 
 local savedY    = nil
 local hasModified = false
+local settingOwnPoint = false
 local lastWidth = 0
 local lastMtOffset = 0
 
@@ -206,8 +207,10 @@ local function RepositionContainer()
     local groupsX     = (UIParent:GetWidth() - groupsWidth) / 2 + (GetDB().offsetX or 0)
     local targetX     = groupsX - mtOffset
 
+    settingOwnPoint = true
     c:ClearAllPoints()
     c:SetPoint("TOPLEFT", UIParent, "TOPLEFT", targetX, savedY)
+    settingOwnPoint = false
     hasModified = true
 
     -- Keep the snippet supplied for the next fight
@@ -248,6 +251,20 @@ local function HookContainer()
     -- touched here, the timer inside RequestReposition keeps it out of that
     -- call stack, and during combat it exits on its own.
     c:HookScript("OnSizeChanged", function()
+        RequestReposition()
+    end)
+
+    -- Blizzard puts the container back to its Edit Mode position on its own,
+    -- for example when the layout loads after a reload or the spec changes.
+    -- The size stays the same then, so the cache above would skip the next
+    -- attempt and the frames stay off center. Any SetPoint that is not ours
+    -- means the Edit Mode position is current again and has to be measured anew.
+    hooksecurefunc(c, "SetPoint", function()
+        if settingOwnPoint then return end
+        savedY       = nil
+        hasModified  = false
+        lastWidth    = 0
+        lastMtOffset = 0
         RequestReposition()
     end)
 end
