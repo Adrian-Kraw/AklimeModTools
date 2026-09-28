@@ -1,81 +1,13 @@
-## 1.4.2
+## 1.4.3
 
 **EN**
 
-Action Bars
+Auto Repair
 
-* Fixed: Landing from skyriding in combat no longer leaves the buttons sitting on top of each other.
-
-Center Raid Frames
-
-* Fixed: Switching the feature off really switches it off now. The frames no longer jump back to the center and return to their Edit Mode position.
-
-Minimap Button Collector
-
-* Fixed: Buttons like ProfessionShoppingList and FollowTheArrow are collected now, as are buttons that addons create after login.
-
-Skip Cutscenes and Cinematics
-
-* Fixed: The cutscene after creating a character is skipped again and no longer throws an error.
+* Fixed: The chat messages after repairing were always German, even on an English client. They now follow the language of the game client.
 
 **DE**
 
-Aktionsleisten
+Auto Repair
 
-* Behoben: Beim Landen im Kampf schieben sich die Knöpfe nicht mehr ineinander.
-
-Gruppenrahmen zentrieren
-
-* Behoben: Das Ausschalten schaltet die Funktion jetzt wirklich aus. Die Rahmen springen nicht mehr in die Mitte und kehren an ihre Position aus dem Bearbeitungsmodus zurück.
-
-Minimap Button Sammler
-
-* Behoben: Knöpfe wie ProfessionShoppingList und FollowTheArrow werden jetzt eingesammelt, ebenso Knöpfe, die Addons erst nach dem Login erzeugen.
-
-Cutscenes und Cinematics überspringen
-
-* Behoben: Die Cutscene nach dem Erstellen eines Charakters wird wieder übersprungen und wirft keinen Fehler mehr.
-
-## 1.4.1
-
-**EN**
-
-News
-
-* New: A "News" tab in the settings window shows the most important changes of the installed version. After an update a chat message points to it once.
-
-Save Chat History
-
-* Fixed: A flood of Lua errors in instances and combat. Messages the game keeps secret are no longer saved. They still show in chat.
-
-**DE**
-
-Neuigkeiten
-
-* Neu: Ein Reiter "Neuigkeiten" im Einstellungsfenster zeigt die wichtigsten Änderungen der installierten Version. Nach einem Update weist eine Chatnachricht einmal darauf hin.
-
-Chatverlauf speichern
-
-* Behoben: Eine Flut von Lua-Fehlern in Instanzen und im Kampf. Nachrichten, die das Spiel geheim hält, werden nicht mehr gespeichert. Im Chat erscheinen sie weiter.
-
-## 1.4.0
-
-**EN**
-
-Action Bars
-
-* New: Closes the gaps left by empty slots on action bars 1 to 8, aligned left, center or right per bar. Works in combat too, including dragging abilities and skyriding or shapeshift forms. "Always Show Buttons" must be off for that bar in Edit Mode.
-
-Gear Check
-
-* Fixed: Item levels on gear from older expansions were far too high. The number now matches the tooltip.
-
-**DE**
-
-Aktionsleisten
-
-* Neu: Schließt die Lücken leerer Plätze in den Aktionsleisten 1 bis 8, pro Leiste links, mittig oder rechts ausgerichtet. Klappt auch im Kampf, auch beim Ziehen von Fähigkeiten, beim Dynamischen Fliegen und in Gestaltwandlungen. "Schaltflächen immer anzeigen" muss für die Leiste im Bearbeitungsmodus aus sein.
-
-Ausrüstungs-Prüfung
-
-* Behoben: Bei Ausrüstung aus älteren Erweiterungen war die Gegenstandsstufe viel zu hoch. Die Zahl passt jetzt zum Tooltip.
+* Behoben: Die Chatnachrichten nach dem Reparieren waren immer deutsch, auch auf einem englischen Client. Sie folgen jetzt der Sprache des Spielclients.
