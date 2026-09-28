@@ -224,20 +224,25 @@
     </Frames>
   </Frame>
 
-  <!-- Info text -->
+  <!-- Info text. Warm light color, a small indent and extra line spacing to
+       match the gold theme. addInfo in UI/Categories.lua uses the same line
+       spacing for the row height. -->
   <Button name="AklimeMod_InfoTextTemplate" virtual="true">
     <Size y="24"/>
     <Layers>
       <Layer level="OVERLAY">
         <FontString parentKey="info" inherits="GameFontHighlightSmall" justifyH="LEFT">
-          <Color r="0.55" g="0.55" b="0.60" a="1"/>
+          <Color r="0.82" g="0.79" b="0.72" a="1"/>
           <Anchors>
-            <Anchor point="LEFT"  x="15" y="0"/>
+            <Anchor point="LEFT"  x="22" y="0"/>
             <Anchor point="RIGHT" x="-15" y="0"/>
           </Anchors>
         </FontString>
       </Layer>
     </Layers>
+    <Scripts>
+      <OnLoad>self.info:SetSpacing(3)</OnLoad>
+    </Scripts>
   </Button>
 
   <!-- Action row: centered, rounded button. Appearance and colors are set by AklimeMod_StyleActionButton in Lua. -->

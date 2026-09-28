@@ -2,6 +2,10 @@
 
 **EN**
 
+Action Bars
+
+* Fixed: Landing from skyriding in combat no longer leaves the buttons sitting on top of each other.
+
 Center Raid Frames
 
 * Fixed: Switching the feature off really switches it off now. The frames no longer jump back to the center and return to their Edit Mode position.
@@ -10,7 +14,15 @@ Minimap Button Collector
 
 * Fixed: Buttons like ProfessionShoppingList and FollowTheArrow are collected now, as are buttons that addons create after login.
 
+Skip Cutscenes and Cinematics
+
+* Fixed: The cutscene after creating a character is skipped again and no longer throws an error.
+
 **DE**
+
+Aktionsleisten
+
+* Behoben: Beim Landen im Kampf schieben sich die Knöpfe nicht mehr ineinander.
 
 Gruppenrahmen zentrieren
 
@@ -19,6 +31,10 @@ Gruppenrahmen zentrieren
 Minimap Button Sammler
 
 * Behoben: Knöpfe wie ProfessionShoppingList und FollowTheArrow werden jetzt eingesammelt, ebenso Knöpfe, die Addons erst nach dem Login erzeugen.
+
+Cutscenes und Cinematics überspringen
+
+* Behoben: Die Cutscene nach dem Erstellen eines Charakters wird wieder übersprungen und wirft keinen Fehler mehr.
 
 ## 1.4.1
 

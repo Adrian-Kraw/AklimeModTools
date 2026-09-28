@@ -1,8 +1,12 @@
 ## 1.4.2
 
-Switching off raid frame centering now really switches it off, and the minimap button collector picks up buttons it used to miss. / Das Ausschalten der Gruppenrahmen-Zentrierung schaltet sie jetzt wirklich aus, und der Minimap Button Sammler sammelt Knöpfe ein, die er vorher übersehen hat.
+Fixes for the action bars after landing, for switching off raid frame centering, for the minimap button collector and for skipping cutscenes. / Fixes für die Aktionsleisten nach dem Landen, für das Ausschalten der Gruppenrahmen-Zentrierung, für den Minimap Button Sammler und für das Überspringen von Cutscenes.
 
 **EN**
+
+Action Bars
+
+* Fixed: Landing from skyriding during combat left the bar looking like two bars on top of each other. The layout worked out the current bar page on its own, and right after landing that was still the old one. The flight buttons stayed compressed while the normal ones came back next to them. The layout now asks the game whether a button is shown, the same measure Blizzard uses, and that cannot go stale.
 
 Center Raid Frames
 
@@ -14,7 +18,15 @@ Minimap Button Collector
 * Fixed: Some addon buttons were never collected, for example ProfessionShoppingList and FollowTheArrow. A filter meant to keep map pins out rejected every button whose name merely contained "pin" or "arrow". It now only matches numbered pins like the ones HandyNotes creates.
 * Fixed: Buttons that an addon creates some time after login stayed on the minimap until the next loading screen. Buttons made with LibDBIcon are now collected as soon as they appear.
 
+Skip Cutscenes and Cinematics
+
+* Fixed: The cutscene right after creating a character threw a Lua error and was not skipped. The game dropped the global function that cancels a cinematic, it is called StopCinematic now. Vehicle cinematics keep running on purpose, cancelling one of those would eject you from the vehicle.
+
 **DE**
+
+Aktionsleisten
+
+* Behoben: Beim Landen vom Dynamischen Fliegen im Kampf sah die Leiste aus wie zwei ineinandergeschobene Leisten. Das Layout hat die aktuelle Seite der Leiste selbst berechnet, und direkt nach dem Landen war das noch die alte. Die Flugknöpfe blieben deshalb gestaucht stehen, während die normalen daneben zurückkamen. Das Layout fragt jetzt das Spiel, ob ein Knopf angezeigt wird. Das ist derselbe Maßstab, den Blizzard nutzt, und er kann nicht veralten.
 
 Gruppenrahmen zentrieren
 
@@ -25,6 +37,10 @@ Minimap Button Sammler
 
 * Behoben: Manche Addon-Knöpfe wurden nie eingesammelt, zum Beispiel ProfessionShoppingList und FollowTheArrow. Ein Filter, der Kartenmarkierungen fernhalten soll, warf jeden Knopf raus, dessen Name nur "pin" oder "arrow" enthielt. Er greift jetzt nur noch bei nummerierten Markierungen, wie HandyNotes sie erzeugt.
 * Behoben: Knöpfe, die ein Addon erst einige Zeit nach dem Login erzeugt, blieben bis zum nächsten Ladebildschirm auf der Minimap. Knöpfe über LibDBIcon werden jetzt eingesammelt, sobald sie erscheinen.
+
+Cutscenes und Cinematics überspringen
+
+* Behoben: Die Cutscene direkt nach dem Erstellen eines Charakters warf einen Lua-Fehler und wurde nicht übersprungen. Das Spiel hat die globale Funktion zum Abbrechen einer Cutscene entfernt, sie heißt jetzt StopCinematic. Fahrzeug-Cutscenes laufen mit Absicht weiter, ein Abbruch würde dich aus dem Fahrzeug werfen.
 
 ## 1.4.1
 

@@ -41,6 +41,7 @@ local NEWS_ENTRIES = {
     { title = "cat_news",               tag = "new",   text = "news_news" },
     { title = "mod_raid_center",        tag = "fixed", text = "news_raid_center" },
     { title = "mod_mm_collector",       tag = "fixed", text = "news_mm_collector" },
+    { title = "mod_skip_cinematic",     tag = "fixed", text = "news_skip_cinematic" },
     { title = "mod_gear_check",         tag = "fixed", text = "news_gear_check" },
     { title = "mod_chat_history",       tag = "fixed", text = "news_chat_history" },
 }

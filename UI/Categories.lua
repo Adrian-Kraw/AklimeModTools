@@ -50,14 +50,17 @@ local function addDropdown(node, name, options, getVal, setVal)
     })
 end
 
-local INFO_LINE_H = 14  -- GameFontHighlightSmall line height (px)
+local INFO_LINE_H   = 14  -- GameFontHighlightSmall line height (px)
+local INFO_LINE_GAP = 3   -- Extra line spacing, set in AklimeMod_InfoTextTemplate
+local INFO_PAD_Y    = 10  -- Room above and below the text
+local INFO_MIN_H    = 24
 
 local function addInfo(node, text)
-    local height = 24
+    local height = INFO_MIN_H
     if type(text) == "string" and text ~= "" then
         local lines = 1
         for _ in text:gmatch("\n") do lines = lines + 1 end
-        height = math.max(24, lines * INFO_LINE_H + 8)
+        height = math.max(INFO_MIN_H, lines * INFO_LINE_H + (lines - 1) * INFO_LINE_GAP + INFO_PAD_Y * 2)
     end
     node:Insert({
         Template = "AklimeMod_InfoTextTemplate",
