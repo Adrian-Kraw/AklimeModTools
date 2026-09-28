@@ -889,6 +889,8 @@ end
 -- Character header button with a hover tooltip.
 local function MkCharHeader(parent, y, colX, sel, trackerDB)
     local hRow = MkHdr(parent, y)
+    MkTxt(hRow, NORMAL_FONT_COLOR_CODE .. (L["ct_name"] or "Name") .. FONT_COLOR_CODE_CLOSE,
+        8, LAB_W - 4, "GameFontNormalSmall", "LEFT")
     for i, name in ipairs(sel) do
         local toon = trackerDB.Toons[name]
         local label = ShortName(name)

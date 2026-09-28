@@ -289,6 +289,7 @@ L["curr_cat_pvp"]    = "Player vs. Player"
 L["curr_cat_misc"]   = "Miscellaneous"
 
 -- CharacterTracker
+L["ct_name"]             = "Name"
 L["ct_char_hint"]        = "Selecting a character sets the checkmark. Checked characters are shown in the overview."
 L["ct_title"]            = "Character Tracker"
 L["ct_gold_overview"]    = "Gold Overview"
@@ -727,6 +728,7 @@ if GetLocale() == "deDE" then
     L["info_pvp_chat"]         = "Verhindert das Öffnen der Chat-Eingabe (Enter) in Arenen und Schlachtfeldern."
 
     -- CharacterTracker
+    L["ct_name"]             = "Name"
     L["ct_char_hint"]        = "Das Auswählen eines Charakters setzt die Haken, gesetzte Charaktere werden dann in der Übersicht angezeigt."
     L["ct_title"]            = "Charakter-Tracker"
     L["ct_gold_overview"]    = "Gold-Übersicht"
