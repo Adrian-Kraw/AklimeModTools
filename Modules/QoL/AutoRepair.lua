@@ -1,5 +1,7 @@
 -- Modules/QoL/AutoRepair.lua
 
+local L = AklimeModL
+
 local repairFrame = CreateFrame("Frame")
 repairFrame:RegisterEvent("MERCHANT_SHOW")
 repairFrame:SetScript("OnEvent", function()
@@ -13,7 +15,7 @@ repairFrame:SetScript("OnEvent", function()
         local gw = GetGuildBankWithdrawMoney()
         if IsInGuild() and gw and (gw == -1 or gw >= cost) then
             RepairAllItems(1)
-            print("|cFF00CCFFAklime Mod Tools:|r Auf Gildenkosten repariert für: " .. GetCoinTextureString(cost))
+            print("|cFF00CCFFAklime Mod Tools:|r " .. L["msg_repair_guild"] .. GetCoinTextureString(cost))
             return
         end
     end
@@ -21,9 +23,9 @@ repairFrame:SetScript("OnEvent", function()
     if AklimeModDB.autoRepair.useGold then
         if GetMoney() >= cost then
             RepairAllItems()
-            print("|cFF00CCFFAklime Mod Tools:|r Repariert für: " .. GetCoinTextureString(cost))
+            print("|cFF00CCFFAklime Mod Tools:|r " .. L["msg_repair_gold"] .. GetCoinTextureString(cost))
         else
-            print("|cFFFF4444Aklime Mod Tools:|r Nicht genug Gold zum Reparieren.")
+            print("|cFFFF4444Aklime Mod Tools:|r " .. L["msg_repair_no_gold"])
         end
     end
 end)
