@@ -1781,6 +1781,119 @@ local function addQoLNodes(dp)
     end
 
     -- ============================================================
+    -- Micro menu
+    -- ============================================================
+    if currentSearchFilter == "" then
+        dp:Insert({ Template = "AklimeMod_SeparatorTemplate", label = L["sec_micromenu"], centered = true })
+    end
+
+    local microNotifNode = addModule(dp, L["mod_hide_micro_notify"],
+        function() return AklimeMod_HideMicroNotifications.IsEnabled() end,
+        function(v) AklimeMod_HideMicroNotifications.SetEnabled(v) end
+    )
+    addInfo(microNotifNode, L["info_hide_micro_notify"])
+
+    if AklimeMod_ChatLearnFilter then
+        local learnNode = addModule(dp, L["mod_learn_filter"],
+            function() return AklimeMod_ChatLearnFilter:IsEnabled() end,
+            function(v) AklimeMod_ChatLearnFilter:SetEnabled(v) end
+        )
+        addToggle(learnNode, L["toggle_hide_talent_bubble"],
+            function() return AklimeMod_ChatLearnFilter:IsBubbleEnabled() end,
+            function(v) AklimeMod_ChatLearnFilter:SetBubbleEnabled(v) end
+        )
+        addInfo(learnNode, L["info_learn_filter"])
+    end
+
+    -- ============================================================
+    -- Health
+    -- ============================================================
+    if currentSearchFilter == "" then
+        dp:Insert({ Template = "AklimeMod_SeparatorTemplate", label = L["sec_health"], centered = true })
+    end
+
+    local drinkNode = addModule(dp, L["mod_drink_reminder"],
+        function() return AklimeMod_DrinkReminder.IsEnabled() end,
+        function(v) AklimeMod_DrinkReminder.SetEnabled(v) end
+    )
+    addInfo(drinkNode, L["info_drink_reminder"])
+    addToggle(drinkNode, L["toggle_no_instance"],
+        function() return AklimeMod_DrinkReminder.GetDisableInInstance() end,
+        function(v) AklimeMod_DrinkReminder.SetDisableInInstance(v) end
+    )
+    addInfo(drinkNode, L["info_interval"])
+    for _, opt in ipairs({
+        { label = L["toggle_drink_30m"], minutes = 30  },
+        { label = L["toggle_drink_1h"],  minutes = 60  },
+        { label = L["toggle_drink_2h"],  minutes = 120 },
+    }) do
+        local m = opt.minutes
+        addToggle(drinkNode, opt.label,
+            function() return AklimeMod_DrinkReminder.GetInterval() == m end,
+            function(v) if v then AklimeMod_DrinkReminder.SetInterval(m); AklimeMod_RefreshRightToggles() end end
+        )
+    end
+    addAction(drinkNode, L["action_test_now"], function()
+        AklimeMod_DrinkReminder.ShowNow()
+    end)
+
+    -- ============================================================
+    -- Playtime
+    -- ============================================================
+    if currentSearchFilter == "" then
+        dp:Insert({ Template = "AklimeMod_SeparatorTemplate", label = L["sec_playtime"], centered = true })
+    end
+
+    if AklimeMod_PlayedTime then
+        local playedNode = addModule(dp, L["mod_played_time"],
+            function() return AklimeModDB.playedTime.enabled end,
+            function(v) AklimeModDB.playedTime.enabled = v end
+        )
+        addInfo(playedNode, L["info_played_time"])
+        addAction(playedNode, L["action_delete_char"], function(anchor)
+            local chars = AklimeMod_PlayedTime:GetSavedChars()
+            local menu = MenuUtil.CreateContextMenu(anchor or UIParent, function(owner, rootDescription)
+                if #chars == 0 then
+                    rootDescription:CreateTitle(L["played_no_data"])
+                    return
+                end
+                -- Fill by column, maximum 20 characters per column
+                local columns = math.ceil(#chars / 20)
+                if columns > 1 then
+                    rootDescription:SetGridMode(MenuConstants.VerticalGridDirection, columns)
+                end
+                for _, rec in ipairs(chars) do
+                    local key     = rec.key
+                    local display = rec.display
+                    rootDescription:CreateButton(rec.colorized or display, function()
+                        AklimeMod_Confirm(display, function()
+                            AklimeMod_PlayedTime:DeleteChar(key)
+                        end)
+                    end)
+                end
+            end)
+            -- Center the menu on the screen. Second attempt one frame later
+            -- in case the menu repositions itself during layout.
+            local function centerMenu()
+                local m = menu
+                if (not m or not m.SetPoint) and Menu and Menu.GetManager then
+                    local mgr = Menu.GetManager()
+                    m = mgr and mgr.GetOpenMenu and mgr:GetOpenMenu()
+                end
+                if m and m.ClearAllPoints and m.SetPoint then
+                    m:ClearAllPoints()
+                    m:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+                end
+            end
+            centerMenu()
+            C_Timer.After(0, centerMenu)
+        end)
+        addAction(playedNode, L["action_delete_all"], function()
+            AklimeMod_PlayedTime:DeleteAll()
+        end, nil, true)
+    end
+
+    -- ============================================================
     -- Miscellaneous
     -- ============================================================
     if currentSearchFilter == "" then
@@ -1905,119 +2018,6 @@ local function addQoLNodes(dp)
             WeeklyRewardsFrame:Show()
         end
     end)
-
-    -- ============================================================
-    -- Micro menu
-    -- ============================================================
-    if currentSearchFilter == "" then
-        dp:Insert({ Template = "AklimeMod_SeparatorTemplate", label = L["sec_micromenu"], centered = true })
-    end
-
-    local microNotifNode = addModule(dp, L["mod_hide_micro_notify"],
-        function() return AklimeMod_HideMicroNotifications.IsEnabled() end,
-        function(v) AklimeMod_HideMicroNotifications.SetEnabled(v) end
-    )
-    addInfo(microNotifNode, L["info_hide_micro_notify"])
-
-    if AklimeMod_ChatLearnFilter then
-        local learnNode = addModule(dp, L["mod_learn_filter"],
-            function() return AklimeMod_ChatLearnFilter:IsEnabled() end,
-            function(v) AklimeMod_ChatLearnFilter:SetEnabled(v) end
-        )
-        addToggle(learnNode, L["toggle_hide_talent_bubble"],
-            function() return AklimeMod_ChatLearnFilter:IsBubbleEnabled() end,
-            function(v) AklimeMod_ChatLearnFilter:SetBubbleEnabled(v) end
-        )
-        addInfo(learnNode, L["info_learn_filter"])
-    end
-
-    -- ============================================================
-    -- Health
-    -- ============================================================
-    if currentSearchFilter == "" then
-        dp:Insert({ Template = "AklimeMod_SeparatorTemplate", label = L["sec_health"], centered = true })
-    end
-
-    local drinkNode = addModule(dp, L["mod_drink_reminder"],
-        function() return AklimeMod_DrinkReminder.IsEnabled() end,
-        function(v) AklimeMod_DrinkReminder.SetEnabled(v) end
-    )
-    addInfo(drinkNode, L["info_drink_reminder"])
-    addToggle(drinkNode, L["toggle_no_instance"],
-        function() return AklimeMod_DrinkReminder.GetDisableInInstance() end,
-        function(v) AklimeMod_DrinkReminder.SetDisableInInstance(v) end
-    )
-    addInfo(drinkNode, L["info_interval"])
-    for _, opt in ipairs({
-        { label = L["toggle_drink_30m"], minutes = 30  },
-        { label = L["toggle_drink_1h"],  minutes = 60  },
-        { label = L["toggle_drink_2h"],  minutes = 120 },
-    }) do
-        local m = opt.minutes
-        addToggle(drinkNode, opt.label,
-            function() return AklimeMod_DrinkReminder.GetInterval() == m end,
-            function(v) if v then AklimeMod_DrinkReminder.SetInterval(m); AklimeMod_RefreshRightToggles() end end
-        )
-    end
-    addAction(drinkNode, L["action_test_now"], function()
-        AklimeMod_DrinkReminder.ShowNow()
-    end)
-
-    -- ============================================================
-    -- Playtime
-    -- ============================================================
-    if currentSearchFilter == "" then
-        dp:Insert({ Template = "AklimeMod_SeparatorTemplate", label = L["sec_playtime"], centered = true })
-    end
-
-    if AklimeMod_PlayedTime then
-        local playedNode = addModule(dp, L["mod_played_time"],
-            function() return AklimeModDB.playedTime.enabled end,
-            function(v) AklimeModDB.playedTime.enabled = v end
-        )
-        addInfo(playedNode, L["info_played_time"])
-        addAction(playedNode, L["action_delete_char"], function(anchor)
-            local chars = AklimeMod_PlayedTime:GetSavedChars()
-            local menu = MenuUtil.CreateContextMenu(anchor or UIParent, function(owner, rootDescription)
-                if #chars == 0 then
-                    rootDescription:CreateTitle(L["played_no_data"])
-                    return
-                end
-                -- Fill by column, maximum 20 characters per column
-                local columns = math.ceil(#chars / 20)
-                if columns > 1 then
-                    rootDescription:SetGridMode(MenuConstants.VerticalGridDirection, columns)
-                end
-                for _, rec in ipairs(chars) do
-                    local key     = rec.key
-                    local display = rec.display
-                    rootDescription:CreateButton(rec.colorized or display, function()
-                        AklimeMod_Confirm(display, function()
-                            AklimeMod_PlayedTime:DeleteChar(key)
-                        end)
-                    end)
-                end
-            end)
-            -- Center the menu on the screen. Second attempt one frame later
-            -- in case the menu repositions itself during layout.
-            local function centerMenu()
-                local m = menu
-                if (not m or not m.SetPoint) and Menu and Menu.GetManager then
-                    local mgr = Menu.GetManager()
-                    m = mgr and mgr.GetOpenMenu and mgr:GetOpenMenu()
-                end
-                if m and m.ClearAllPoints and m.SetPoint then
-                    m:ClearAllPoints()
-                    m:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-                end
-            end
-            centerMenu()
-            C_Timer.After(0, centerMenu)
-        end)
-        addAction(playedNode, L["action_delete_all"], function()
-            AklimeMod_PlayedTime:DeleteAll()
-        end, nil, true)
-    end
 
 end  -- addQoLNodes
 
