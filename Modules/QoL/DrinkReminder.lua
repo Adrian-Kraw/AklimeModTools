@@ -99,8 +99,9 @@ local function CreateAlertFrame()
     desc:SetTextColor(0.9, 0.9, 0.9, 1)
     desc:SetJustifyH("LEFT")
 
-    -- "Got it!" button directly below the frame
-    local btn = CreateFrame("Button", nil, UIParent, "UIPanelButtonTemplate")
+    -- "Got it!" button directly below the frame.
+    -- Child of the alert frame so it shares its strata and always sits above other windows.
+    local btn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
     btn:SetSize(110, 24)
     btn:SetPoint("TOP", f, "BOTTOM", 0, -4)
     btn:SetText(L["drink_btn"] or "Got it!")

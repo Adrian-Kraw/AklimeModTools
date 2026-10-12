@@ -39,6 +39,7 @@ local TAG_COLORS = {
 local NEWS_ENTRIES = {
     { title = "mod_raid_center", tag = "fixed", text = "news_raid_center" },
     { title = "mod_auto_repair", tag = "fixed", text = "news_auto_repair" },
+    { title = "mod_drink_reminder", tag = "fixed", text = "news_drink_reminder" },
 }
 
 -- Same rounded look as the category buttons on the left
