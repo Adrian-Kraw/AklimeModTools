@@ -40,6 +40,9 @@ local NEWS_ENTRIES = {
     { title = "mod_raid_center", tag = "fixed", text = "news_raid_center" },
     { title = "mod_auto_repair", tag = "fixed", text = "news_auto_repair" },
     { title = "mod_drink_reminder", tag = "fixed", text = "news_drink_reminder" },
+    { title = "ct_title", tag = "changed", text = "news_tracker" },
+    { title = "mod_ready_check", tag = "fixed", text = "news_ready_check" },
+    { title = "news_title_settings", tag = "changed", text = "news_settings" },
 }
 
 -- Same rounded look as the category buttons on the left

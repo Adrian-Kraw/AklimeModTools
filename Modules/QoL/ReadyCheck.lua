@@ -20,6 +20,12 @@ local function StopTimer()
     if btn then btn:SetText(READY) end
 end
 
+-- True once the player has clicked Ready or Not Ready on their own
+local function HasAnswered()
+    local status = GetReadyCheckStatus and GetReadyCheckStatus("player")
+    return status == "ready" or status == "notready"
+end
+
 local function StartTimer(delay)
     countdown = delay
     timerFrame:SetScript("OnUpdate", function(_, elapsed)
@@ -31,6 +37,8 @@ local function StartTimer(delay)
         end
         if countdown <= 0 then
             StopTimer()
+            -- A decision made by hand is never overridden
+            if HasAnswered() then return end
             ConfirmReadyCheck(1)
             if ReadyCheckFrame then ReadyCheckFrame:Hide() end
         end
@@ -40,8 +48,12 @@ end
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("READY_CHECK")
 eventFrame:RegisterEvent("READY_CHECK_FINISHED")
-eventFrame:SetScript("OnEvent", function(_, event)
-    if event == "READY_CHECK" then
+eventFrame:RegisterEvent("READY_CHECK_CONFIRM")
+eventFrame:SetScript("OnEvent", function(_, event, unit)
+    if event == "READY_CHECK_CONFIRM" then
+        -- The player answered by hand, so the countdown must not run on
+        if unit and UnitIsUnit(unit, "player") then StopTimer() end
+    elseif event == "READY_CHECK" then
         if GetDB().enabled then
             StartTimer(GetDB().delay or 3)
         end

@@ -76,6 +76,8 @@ Modules\PvP\NameplateColorizer.lua
 
 Modules\Collecting\CharacterTracker.lua
 
+Locale\ColorizerLabels.lua
+
 UI\MainWindow.lua
 UI\ColorizerUI.lua
 UI\NewsPanel.lua
