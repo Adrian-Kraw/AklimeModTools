@@ -330,6 +330,10 @@ L["vault_dungeons"] = "Dungeons"
 L["vault_world"]    = "World Activities"
 L["vault_reward"]   = "Reward"
 L["vault_open"]     = "Open"
+L["vault_slot"]     = "Slot %d"
+L["vault_slot_locked"] = "not unlocked"
+L["vault_tier"]     = "Tier %d"
+L["ct_keystone"]     = "Mythic Keystone"
 
 -- Played Time window
 L["played_title"]        = "Played Time"
@@ -769,6 +773,10 @@ if GetLocale() == "deDE" then
     L["vault_world"]    = "Weltaktivitäten"
     L["vault_reward"]   = "Belohnung"
     L["vault_open"]     = "Offen"
+    L["vault_slot"]     = "Platz %d"
+    L["vault_slot_locked"] = "nicht freigeschaltet"
+    L["vault_tier"]     = "Stufe %d"
+    L["ct_keystone"]     = "Mythic-Schlüsselstein"
 
     -- Played Time window
     L["played_title"]        = "Gespielte Zeit"

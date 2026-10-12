@@ -152,6 +152,66 @@ local function GetLastWeeklyReset()
     return time() + secs - 604800
 end
 
+-- True when data was collected before the last weekly reset. Without a known
+-- reset time nothing counts as stale.
+local function IsBeforeReset(stamp, lastReset)
+    if not lastReset then return false end
+    return not stamp or stamp < lastReset
+end
+
+-- ============================================================
+-- Great Vault slots
+-- ============================================================
+local VAULT_SLOT_COUNT = 3
+local VAULT_RAID_LETTER = { [17] = "L", [14] = "N", [15] = "H", [16] = "M" }
+local VAULT_LEVEL_COLOR = "|cFFFFD100"
+local VAULT_DASH        = "|cFF808080-|r"
+
+local function SlotLevelText(key, level)
+    if not level or level <= 0 then return "+" end
+    if key == "raid" then return VAULT_RAID_LETTER[level] or tostring(level) end
+    return tostring(level)
+end
+
+local function SlotLevelColor(key, level)
+    local dc = key == "raid" and level and DIFF_COLOR[level]
+    if not dc then return VAULT_LEVEL_COLOR end
+    return string.format("|cFF%02x%02x%02x", dc.r * 255, dc.g * 255, dc.b * 255)
+end
+
+-- Cell of a vault row: one token per slot, "-" for a slot that is not earned
+local function VaultCellText(key, details)
+    local parts = {}
+    for i = 1, VAULT_SLOT_COUNT do
+        local slot = details and details[i]
+        if slot and slot.done then
+            parts[i] = SlotLevelColor(key, slot.level) .. SlotLevelText(key, slot.level) .. "|r"
+        else
+            parts[i] = VAULT_DASH
+        end
+    end
+    return table.concat(parts, " ")
+end
+
+-- Long form of a slot for the tooltip, for example "+10", "Heroic", "Tier 5"
+local function SlotLevelLong(key, level)
+    if not level or level <= 0 then return nil end
+    if key == "raid" then
+        local ok, name = pcall(GetDifficultyInfo, level)
+        return ok and name or VAULT_RAID_LETTER[level] or tostring(level)
+    end
+    if key == "dungeon" then return "+" .. level end
+    return string.format(L["vault_tier"] or "Tier %d", level)
+end
+
+-- Dungeon name and icon of a keystone, resolved from the map ID on demand
+local function GetKeystoneDungeon(mapID)
+    if not mapID or not C_ChallengeMode or not C_ChallengeMode.GetMapUIInfo then return nil end
+    local ok, name, _, _, texture = pcall(C_ChallengeMode.GetMapUIInfo, mapID)
+    if ok and name then return name, texture end
+    return nil
+end
+
 -- ============================================================
 -- Helpers
 -- ============================================================
@@ -886,6 +946,52 @@ local function MkTxt(parent, text, x, w, font, justify)
     return fs
 end
 
+-- Section bar (Great Vault, Raids, Currencies): darker band with a gold line below
+local function MkSection(parent, y, text)
+    local f = MkHdr(parent, y)
+    -- BORDER layer so it covers the grey band MkHdr draws on BACKGROUND
+    local tint = f:CreateTexture(nil, "BORDER")
+    tint:SetAllPoints(f)
+    tint:SetColorTexture(0.2, 0.16, 0.04, 0.9)
+    local line = f:CreateTexture(nil, "ARTWORK")
+    line:SetHeight(1)
+    line:SetPoint("BOTTOMLEFT", f, "BOTTOMLEFT", 0, 0)
+    line:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 0, 0)
+    line:SetColorTexture(0.85, 0.65, 0.1, 0.8)
+    local fs = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    fs:SetPoint("LEFT", f, "LEFT", 8, 0)
+    fs:SetText(NORMAL_FONT_COLOR_CODE .. text .. FONT_COLOR_CODE_CLOSE)
+    return f
+end
+
+-- Centered cell with an optional hover tooltip. fillTooltip receives GameTooltip.
+local function MkHoverCell(row, colX, ci, txt, fillTooltip)
+    local btn = CreateFrame("Button", nil, row)
+    btn:SetSize(COL_W, ROW_H)
+    btn:SetPoint("LEFT", row, "LEFT", colX + (ci - 1) * COL_W, 0)
+    local fs = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    fs:SetAllPoints(btn)
+    fs:SetJustifyH("CENTER")
+    fs:SetText(txt)
+    if fillTooltip then
+        btn:SetScript("OnEnter", function(self)
+            GameTooltip:SetOwner(self, "ANCHOR_TOP")
+            GameTooltip:ClearLines()
+            fillTooltip(GameTooltip)
+            GameTooltip:Show()
+        end)
+        btn:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    end
+    return btn
+end
+
+-- Colored character name line for tooltips
+local function ToonNameLine(trackerDB, charName)
+    local toon = trackerDB.Toons[charName]
+    local r, g, b = ToonClassCol(toon)
+    return string.format("|cFF%02x%02x%02x%s|r", r * 255, g * 255, b * 255, ShortName(charName))
+end
+
 -- Character header button with a hover tooltip.
 local function MkCharHeader(parent, y, colX, sel, trackerDB)
     local hRow = MkHdr(parent, y)
@@ -980,11 +1086,48 @@ function AklimeMod_CT_Refresh()
     contentFrame:SetWidth(math.max(660, totalW - 40))
 
     local colX = LAB_W + PAD
-    local y    = 4
+    local HEADER_TOP = 4
+    local y    = HEADER_TOP
 
     -- Character header with hover tooltip
     MkCharHeader(contentFrame, y, colX, sel, trackerDB)
     y = y + ROW_H
+
+    local lastReset = GetLastWeeklyReset()
+
+    -- ── Mythic keystone in the bags ───────────────────────────
+    -- The game replaces the key at the weekly reset, so a key collected
+    -- before it no longer exists and is not shown.
+    local hasKeystoneData = false
+    for _, ch in ipairs(sel) do
+        local toon = trackerDB.Toons[ch]
+        if toon and toon.keystone then hasKeystoneData = true; break end
+    end
+
+    if hasKeystoneData then
+        local keyRow = MkRow(contentFrame, y, true)
+        MkTxt(keyRow, NORMAL_FONT_COLOR_CODE .. (L["ct_keystone"] or "Keystone") .. FONT_COLOR_CODE_CLOSE,
+            8, LAB_W - 4, "GameFontNormalSmall", "LEFT")
+        for ci, ch in ipairs(sel) do
+            local toon = trackerDB.Toons[ch]
+            local key  = toon and toon.keystone
+            if key and not IsBeforeReset(key.collected, lastReset) then
+                local dungeon, icon = GetKeystoneDungeon(key.mapID)
+                local iconStr = icon and ("|T" .. icon .. ":14:14:0:0|t ") or ""
+                local charName = ch
+                MkHoverCell(keyRow, colX, ci,
+                    iconStr .. VAULT_LEVEL_COLOR .. "+" .. key.level .. "|r",
+                    function(tip)
+                        tip:AddLine(NORMAL_FONT_COLOR_CODE .. (dungeon or "?") .. FONT_COLOR_CODE_CLOSE)
+                        tip:AddLine("+" .. key.level, 1, 1, 1)
+                        tip:AddLine(ToonNameLine(trackerDB, charName))
+                    end)
+            else
+                MkHoverCell(keyRow, colX, ci, VAULT_DASH)
+            end
+        end
+        y = y + ROW_H
+    end
 
     -- ── Great Vault ───────────────────────────────────────────
     local hasVaultData = false
@@ -995,10 +1138,7 @@ function AklimeMod_CT_Refresh()
 
     if hasVaultData then
         y = y + 4
-        local vHdr = MkHdr(contentFrame, y)
-        local vFs = vHdr:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-        vFs:SetPoint("LEFT", vHdr, "LEFT", 8, 0)
-        vFs:SetText(NORMAL_FONT_COLOR_CODE .. (L["vault_header"] or "Great Vault") .. FONT_COLOR_CODE_CLOSE)
+        MkSection(contentFrame, y, L["vault_header"] or "Great Vault")
         y = y + ROW_H
 
         local VAULT_ROWS = {
@@ -1013,18 +1153,47 @@ function AklimeMod_CT_Refresh()
             for ci, ch in ipairs(sel) do
                 local toon = trackerDB.Toons[ch]
                 local vault = toon and toon.weeklyVault
-                local slots = vault and vault[vr.key]
-                local txt
-                if slots == nil then
-                    txt = GRAY_FONT_COLOR_CODE .. "-" .. FONT_COLOR_CODE_CLOSE
-                elseif slots >= 3 then
-                    txt = GREEN_FONT_COLOR_CODE .. "3/3" .. FONT_COLOR_CODE_CLOSE
-                elseif slots > 0 then
-                    txt = NORMAL_FONT_COLOR_CODE .. slots .. "/3" .. FONT_COLOR_CODE_CLOSE
+                local count = vault and vault[vr.key]
+                local stale = vault and IsBeforeReset(vault.collected or toon.LastSeen, lastReset)
+                local details = vault and vault.slots and vault.slots[vr.key]
+                if not vault or count == nil then
+                    MkHoverCell(row, colX, ci, VAULT_DASH)
+                elseif stale then
+                    -- New week, nothing done yet
+                    MkHoverCell(row, colX, ci, VaultCellText(vr.key, nil))
+                elseif details then
+                    local key, charName = vr.key, ch
+                    MkHoverCell(row, colX, ci, VaultCellText(key, details), function(tip)
+                        tip:AddLine(NORMAL_FONT_COLOR_CODE .. vr.label .. FONT_COLOR_CODE_CLOSE
+                            .. "  " .. ToonNameLine(trackerDB, charName))
+                        for i = 1, VAULT_SLOT_COUNT do
+                            local slot = details[i]
+                            local left = string.format(L["vault_slot"] or "Slot %d", i)
+                            if slot and slot.done then
+                                local text = SlotLevelLong(key, slot.level) or ""
+                                if slot.ilvl then
+                                    text = text .. "  |cFFFFFFFF" .. (L["ct_item_level"] or "Item Level")
+                                        .. " " .. slot.ilvl .. "|r"
+                                end
+                                tip:AddDoubleLine(left, text, 0.8, 0.8, 0.8, 1, 0.82, 0)
+                            else
+                                tip:AddDoubleLine(left, L["vault_slot_locked"] or "not unlocked",
+                                    0.8, 0.8, 0.8, 0.5, 0.5, 0.5)
+                            end
+                        end
+                    end)
                 else
-                    txt = GRAY_FONT_COLOR_CODE .. "0/3" .. FONT_COLOR_CODE_CLOSE
+                    -- Data from before the slot details were stored, only the count is known
+                    local txt
+                    if count >= 3 then
+                        txt = GREEN_FONT_COLOR_CODE .. "3/3" .. FONT_COLOR_CODE_CLOSE
+                    elseif count > 0 then
+                        txt = NORMAL_FONT_COLOR_CODE .. count .. "/3" .. FONT_COLOR_CODE_CLOSE
+                    else
+                        txt = GRAY_FONT_COLOR_CODE .. "0/3" .. FONT_COLOR_CODE_CLOSE
+                    end
+                    MkHoverCell(row, colX, ci, txt)
                 end
-                MkTxt(row, txt, colX + (ci-1)*COL_W, COL_W, "GameFontNormalSmall", "CENTER")
             end
             y = y + ROW_H
         end
@@ -1035,14 +1204,13 @@ function AklimeMod_CT_Refresh()
         -- In that case, fall back to the last known per-category completion:
         -- completing at least one activity guarantees a vault reward for the
         -- new week, so this can be deduced without the character logging in.
-        local lastReset = GetLastWeeklyReset()
         local rewardRow = MkRow(contentFrame, y, false)
         MkTxt(rewardRow, NORMAL_FONT_COLOR_CODE .. (L["vault_reward"] or "Reward") .. FONT_COLOR_CODE_CLOSE,
             8, LAB_W - 4, "GameFontNormalSmall", "LEFT")
         for ci, ch in ipairs(sel) do
             local toon = trackerDB.Toons[ch]
             local vault = toon and toon.weeklyVault
-            local staleSinceReset = vault and lastReset and (not toon.LastSeen or toon.LastSeen < lastReset)
+            local staleSinceReset = vault and IsBeforeReset(vault.collected or toon.LastSeen, lastReset)
             local hasOpenReward
             if staleSinceReset then
                 hasOpenReward = (vault.raid and vault.raid > 0)
@@ -1070,10 +1238,7 @@ function AklimeMod_CT_Refresh()
 
     if #expIDs > 0 then
         y = y + 4
-        local raidHdr = MkHdr(contentFrame, y)
-        local secFs = raidHdr:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-        secFs:SetPoint("LEFT", raidHdr, "LEFT", 8, 0)
-        secFs:SetText(NORMAL_FONT_COLOR_CODE .. (L["ct_sec_raids"] or "Raids") .. FONT_COLOR_CODE_CLOSE)
+        MkSection(contentFrame, y, L["ct_sec_raids"] or "Raids")
         y = y + ROW_H
 
         for _, exp in ipairs(expIDs) do
@@ -1115,8 +1280,10 @@ function AklimeMod_CT_Refresh()
                         if raid.diffs[diff] and raid.diffs[diff][ch] then anySaved = true; break end
                     end
 
+                    local raidIcon = AklimeMod_GetInstanceIcon and AklimeMod_GetInstanceIcon(raid.name)
+                    local iconStr  = raidIcon and ("|T" .. raidIcon .. ":14:14:0:0|t ") or ""
                     MkTxt(row,
-                        (anySaved and NORMAL_FONT_COLOR_CODE or GRAY_FONT_COLOR_CODE)
+                        iconStr .. (anySaved and NORMAL_FONT_COLOR_CODE or GRAY_FONT_COLOR_CODE)
                         .. displayName .. FONT_COLOR_CODE_CLOSE,
                         8, LAB_W - 4, "GameFontNormalSmall", "LEFT")
 
@@ -1212,10 +1379,7 @@ function AklimeMod_CT_Refresh()
     local currencies = BuildCurrencies(sel)
     if #currencies > 0 then
         y = y + 4
-        local wHdr = MkHdr(contentFrame, y)
-        local wFs  = wHdr:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-        wFs:SetPoint("LEFT", wHdr, "LEFT", 8, 0)
-        wFs:SetText(NORMAL_FONT_COLOR_CODE .. (L["ct_sec_currencies"] or "Currencies") .. FONT_COLOR_CODE_CLOSE)
+        MkSection(contentFrame, y, L["ct_sec_currencies"] or "Currencies")
         y = y + ROW_H
 
         local lastExp = -999  -- sentinel that never matches
@@ -1302,7 +1466,22 @@ function AklimeMod_CT_Refresh()
         end
     end
 
+    local lastRowEnd = y
     y = y + 12
+
+    -- Vertical divider between the label column and the character columns
+    -- Own frame above the rows, otherwise their backgrounds cover the line
+    -- and it only shows in the gaps between them.
+    local divider = CreateFrame("Frame", nil, contentFrame)
+    divider:SetFrameLevel(contentFrame:GetFrameLevel() + 50)
+    divider:SetWidth(1)
+    -- Runs from the top of the character header row to the end of the last row
+    divider:SetPoint("TOPLEFT", contentFrame, "TOPLEFT", LAB_W + PAD - 1, -HEADER_TOP)
+    divider:SetHeight(lastRowEnd - HEADER_TOP)
+    local dividerLine = divider:CreateTexture(nil, "OVERLAY")
+    dividerLine:SetAllPoints(divider)
+    dividerLine:SetColorTexture(0.85, 0.65, 0.1, 0.45)
+
     contentFrame:SetHeight(y)
     contentFrame:Show()
 end

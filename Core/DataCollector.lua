@@ -64,10 +64,16 @@ end
 -- An instance can sit in more than one tier. Terrasse der Magister is listed
 -- under The Burning Crusade and again under Midnight. Tiers run oldest first
 -- and the first one wins, so the instance keeps its original expansion.
+local instanceIDByName = {}
+local instanceIconCache  = {}
+
 local function CacheInstance(instID, name, exp)
     local key = name and NormName(name) or ""
     if key ~= "" and AklimeMod_InstExpCache[key] == nil then
         AklimeMod_InstExpCache[key] = exp
+    end
+    if key ~= "" and instanceIDByName[key] == nil then
+        instanceIDByName[key] = instID
     end
     if AklimeMod_InstExpCache[instID] == nil then
         AklimeMod_InstExpCache[instID] = exp
@@ -112,6 +118,24 @@ local function ResolveExpansion(name)
     local exp = AklimeMod_InstExpCache[NormName(name)]
     if type(exp) == "number" then return exp end
     return nil
+end
+
+-- Journal icon of an instance by its lockout name, nil while the journal cache
+-- cannot answer. Used by the tracker to put a picture next to raid names.
+function AklimeMod_GetInstanceIcon(name)
+    if not name or not EJ_GetInstanceInfo then return nil end
+    local key = NormName(name)
+    local cached = instanceIconCache[key]
+    if cached ~= nil then return cached or nil end
+
+    local instID = instanceIDByName[key]
+    if not instID then return nil end
+
+    local ok, _, _, _, smallIcon, _, icon = pcall(EJ_GetInstanceInfo, instID)
+    local result = ok and (icon or smallIcon) or nil
+    if result == 0 then result = nil end
+    instanceIconCache[key] = result or false
+    return result
 end
 
 -- ============================================================
@@ -305,6 +329,17 @@ local function GetVaultTypes()
     return types
 end
 
+-- Item level of the reward behind one vault slot, nil while the game cannot say
+local function GetSlotItemLevel(activityID)
+    if not activityID or not C_WeeklyRewards.GetExampleRewardItemHyperlinks then return nil end
+    local ok, link = pcall(C_WeeklyRewards.GetExampleRewardItemHyperlinks, activityID)
+    if not ok or not link then return nil end
+    if not C_Item or not C_Item.GetDetailedItemLevelInfo then return nil end
+    local ok2, ilvl = pcall(C_Item.GetDetailedItemLevelInfo, link)
+    if ok2 and type(ilvl) == "number" and ilvl > 0 then return ilvl end
+    return nil
+end
+
 local function CollectWeeklyVault(toon)
     if not C_WeeklyRewards then return end
     local vaultTypes = GetVaultTypes()
@@ -312,17 +347,25 @@ local function CollectWeeklyVault(toon)
 
     toon.weeklyVault = toon.weeklyVault or {}
     local vault = toon.weeklyVault
+    vault.slots = vault.slots or {}
 
     for _, vt in ipairs(vaultTypes) do
         local ok, activities = pcall(C_WeeklyRewards.GetActivities, vt.typeID)
         if ok and activities then
-            local slots = 0
-            for _, act in ipairs(activities) do
-                if act.progress and act.threshold and act.progress >= act.threshold then
-                    slots = slots + 1
-                end
+            table.sort(activities, function(a, b) return (a.index or 0) < (b.index or 0) end)
+            local slots, details = 0, {}
+            for i, act in ipairs(activities) do
+                local done = act.progress and act.threshold and act.progress >= act.threshold
+                if done then slots = slots + 1 end
+                -- level is the key level, the raid difficulty or the delve tier
+                details[i] = {
+                    done  = done and true or false,
+                    level = done and act.level or nil,
+                    ilvl  = done and GetSlotItemLevel(act.id) or nil,
+                }
             end
-            vault[vt.key] = slots
+            vault[vt.key]       = slots
+            vault.slots[vt.key] = details
         else
             vault[vt.key] = vault[vt.key] or 0
         end
@@ -330,6 +373,29 @@ local function CollectWeeklyVault(toon)
 
     local ok2, hasRewards = pcall(C_WeeklyRewards.HasAvailableRewards)
     vault.hasRewards = ok2 and hasRewards == true or false
+    -- Stamp for the tracker, data from before the weekly reset is stale
+    vault.collected  = time()
+end
+
+-- ============================================================
+-- Mythic keystone in the bags. The stamp lets the tracker drop the entry
+-- at the weekly reset, when the game replaces the key.
+-- ============================================================
+local function CollectKeystone(toon)
+    if not C_MythicPlus or not C_MythicPlus.GetOwnedKeystoneLevel then return end
+    local level = C_MythicPlus.GetOwnedKeystoneLevel()
+    local mapID = C_MythicPlus.GetOwnedKeystoneChallengeMapID
+        and C_MythicPlus.GetOwnedKeystoneChallengeMapID()
+    if level and level > 0 and mapID then
+        local key = toon.keystone
+        if key and key.mapID == mapID and key.level == level then
+            key.collected = time()
+        else
+            toon.keystone = { mapID = mapID, level = level, collected = time() }
+        end
+    else
+        toon.keystone = nil
+    end
 end
 
 -- ============================================================
@@ -381,6 +447,9 @@ local function CollectToonData()
 
     -- Collect weekly vault
     CollectWeeklyVault(t)
+
+    -- Collect the keystone from the bags
+    CollectKeystone(t)
 
     -- Collect instances
     CollectInstances(db, toonKey)
@@ -560,6 +629,7 @@ end
 -- Event-Frame
 -- ============================================================
 local eventFrame = CreateFrame("Frame")
+local keystoneDirty = false
 
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 eventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
@@ -573,6 +643,9 @@ pcall(eventFrame.RegisterEvent, eventFrame, "ACCOUNT_CHARACTER_CURRENCY_DATA_REC
 -- Warband bank: only readable while the bank is open
 pcall(eventFrame.RegisterEvent, eventFrame, "BANKFRAME_OPENED")
 pcall(eventFrame.RegisterEvent, eventFrame, "BANK_TABS_CHANGED")
+-- Keystone: a new key arrives after a completed run, bag changes cover the rest
+eventFrame:RegisterEvent("CHALLENGE_MODE_COMPLETED")
+eventFrame:RegisterEvent("BAG_UPDATE_DELAYED")
 
 eventFrame:SetScript("OnEvent", function(self, event)
     if event == "PLAYER_ENTERING_WORLD" or event == "ZONE_CHANGED_NEW_AREA" then
@@ -612,6 +685,19 @@ eventFrame:SetScript("OnEvent", function(self, event)
             CollectInstances(db, toonKey)
         end
         CleanExpiredInstances()
+
+    elseif event == "CHALLENGE_MODE_COMPLETED" or event == "BAG_UPDATE_DELAYED" then
+        -- Bag events come in bursts, one read per second is enough
+        if keystoneDirty then return end
+        keystoneDirty = true
+        C_Timer.After(1, function()
+            keystoneDirty = false
+            local db = GetTrackerDB()
+            local toonKey = GetToonKey()
+            if db and toonKey and db.Toons[toonKey] then
+                CollectKeystone(db.Toons[toonKey])
+            end
+        end)
 
     elseif event == "WEEKLY_REWARDS_UPDATE" then
         C_Timer.After(0.3, function()
