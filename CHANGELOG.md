@@ -7,6 +7,7 @@ Fixes for Auto Repair, raid frame centering and the Drink Reminder, a reworked C
 Auto Repair
 
 * Fixed: The chat messages after repairing were always German, even on an English client. They now follow the language of the game client.
+* Fixed: Repairing at a vendor threw a Lua error when the message with the repair costs was printed. The repair itself worked. The message now shows the costs again.
 
 Center Raid Frames
 
@@ -39,6 +40,7 @@ Ready Check
 Auto Repair
 
 * Behoben: Die Chatnachrichten nach dem Reparieren waren immer deutsch, auch auf einem englischen Client. Sie folgen jetzt der Sprache des Spielclients.
+* Behoben: Beim Reparieren beim Händler trat ein Lua-Fehler auf, als die Meldung mit den Reparaturkosten ausgegeben wurde. Die Reparatur selbst hat funktioniert. Die Meldung zeigt die Kosten jetzt wieder an.
 
 Gruppenrahmen zentrieren
 
