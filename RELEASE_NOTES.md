@@ -33,6 +33,11 @@ Ready Check
 
 * Fixed: A Not Ready you clicked yourself was overridden by the automatic Ready when the countdown ended. The addon now leaves your decision alone.
 
+Language
+
+* Fixed: Some texts were German on an English client. This covered the summon message, the talent reminder popup, the extended ignore list with its menu entries, the ignore menu for NPCs, the Wowhead URL entry, the address book of the mailbox, the map coordinates, the Heroism tracker, the mana warning hint, one button in the color customization and the names of some skins. All of them follow the language of the game client now.
+* Changed: The output of the debug commands such as /akmbars and /akmraid is English in every client.
+
 **DE**
 
 Auto Repair
@@ -65,3 +70,8 @@ Einstellungsfenster
 Bereitschaftsabfrage
 
 * Behoben: Ein selbst geklicktes Nicht bereit wurde vom automatischen Bereit überschrieben, wenn der Countdown ablief. Das Addon lässt deine Entscheidung jetzt in Ruhe.
+
+Sprache
+
+* Behoben: Einige Texte waren auf einem englischen Client deutsch. Das betraf die Beschwörungsmeldung, das Popup der Talent-Erinnerung, die erweiterte Ignore-Liste mit ihren Menüeinträgen, das Ignore-Menü für NPCs, den Wowhead-URL-Eintrag, das Adressbuch der Post, die Kartenkoordinaten, die Heldentum-Anzeige, den Hinweis der Manawarnung, einen Knopf der farblichen Anpassungen und die Namen einiger Skins. Alle folgen jetzt der Sprache des Spielclients.
+* Geändert: Die Ausgabe der Debug-Befehle wie /akmbars und /akmraid ist auf jedem Client englisch.

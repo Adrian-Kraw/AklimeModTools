@@ -15,6 +15,8 @@
 -- ============================================================
 -- Constants
 -- ============================================================
+local L = AklimeModL or {}
+
 local THRESHOLD_LOW = 30
 local THRESHOLD_OOM = 10
 -- A threshold is only re-armed when mana is this many points above it
@@ -246,7 +248,7 @@ SlashCmdList["AKM_MANA"] = function(input)
     if cmd == "test" then
         local ch = GetChatChannel()
         if not ch then
-            print("|cFFFF4444Aklime Mod Tools:|r Solo - kein Kanal verfuegbar.")
+            print("|cFFFF4444Aklime Mod Tools:|r " .. L["msg_mana_solo"])
             return
         end
         SendChat(MSG_LOW, ch)
@@ -255,10 +257,10 @@ SlashCmdList["AKM_MANA"] = function(input)
         local ch = GetChatChannel() or "nil (Solo)"
         local pct = GetManaPercent()
         print(string.format(
-            "|cFFFFD100Aklime Mod Tools Mana:|r Kanal: %s | Modul: %s | Mana: %s",
+            "|cFFFFD100Aklime Mod Tools Mana:|r Channel: %s | Module: %s | Mana: %s",
             ch,
-            IsEnabled() and "|cFF00FF00aktiv|r" or "|cFFFF4444inaktiv|r",
-            pct and string.format("%.1f%%", pct) or "nicht lesbar"
+            IsEnabled() and "|cFF00FF00active|r" or "|cFFFF4444inactive|r",
+            pct and string.format("%.1f%%", pct) or "unreadable"
         ))
         print(string.format(
             "  firedLow: %s | firedOOM: %s | fallbackLow: %s | fallbackOOM: %s",

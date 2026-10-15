@@ -2,6 +2,8 @@
 -- Shows a popup when entering an instance: "Do the talents fit?"
 -- Only on a real entry, not on login or reload.
 
+local L = AklimeModL or {}
+
 local function GetDB()
     if AklimeModDB and AklimeModDB.talentReminder then return AklimeModDB.talentReminder end
     return {}
@@ -25,9 +27,9 @@ end
 -- Popup
 -- ============================================================
 StaticPopupDialogs["AKLIMEMOD_TALENT_REMINDER"] = {
-    text         = "Talent-Erinnerung\n\n|cFFFFD100%s|r\n\nPassen die Talente für diese Instanz?",
-    button1      = "Ja, alles gut",
-    button2      = "Talente öffnen",
+    text         = L["talent_popup_text"],
+    button1      = L["talent_popup_ok"],
+    button2      = L["talent_popup_open"],
     OnAccept     = function() end,
     OnCancel     = function() OpenTalents() end,
     timeout      = 0,
@@ -57,7 +59,7 @@ eventFrame:SetScript("OnEvent", function(_, _, isLogin, isReload)
 
     if not isLogin and not isReload and inInstance and not wasInInstance then
         if GetDB().enabled then
-            local name = GetInstanceInfo() or "Instanz"
+            local name = GetInstanceInfo() or L["talent_popup_instance"]
             StaticPopup_Show("AKLIMEMOD_TALENT_REMINDER", name)
         end
     end

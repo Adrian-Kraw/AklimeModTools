@@ -327,30 +327,30 @@ SLASH_AKMRAID1 = "/akmraid"
 SlashCmdList["AKMRAID"] = function()
     local c = CompactRaidFrameContainer
     if not c then
-        print("|cFFFF4444Aklime Mod Tools:|r kein CompactRaidFrameContainer.")
+        print("|cFFFF4444Aklime Mod Tools:|r CompactRaidFrameContainer is missing.")
         return
     end
     local scale = c:GetEffectiveScale() / UIParent:GetEffectiveScale()
     local width = (c:GetWidth() or 0) * scale
     local left  = (c:GetLeft() or 0) * scale
     print(string.format(
-        "|cFFFFD100Aklime Mod Tools Raid:|r aktiv=%s sichtbar=%s schlachtzug=%s",
+        "|cFFFFD100Aklime Mod Tools Raid:|r enabled=%s shown=%s raid=%s",
         tostring(GetDB().enabled), tostring(c:IsShown()), tostring(IsInRaid())))
     print(string.format(
-        "  Kampf=%s  geschuetzt=%s  Secure-Treiber=%s",
+        "  Combat=%s  protected=%s  secure driver=%s",
         tostring(InCombatLockdown()), tostring(c:IsProtected()),
-        driver and (driverArmed and "aktiv" or "abgemeldet") or "fehlt"))
+        driver and (driverArmed and "armed" or "unregistered") or "missing"))
     if driver then
         print(string.format(
-            "  Treiberwerte: skalierung=%s mt=%s versatz=%s y=%s",
+            "  Driver values: scale=%s mt=%s offset=%s y=%s",
             tostring(driver:GetAttribute("scale")),   tostring(driver:GetAttribute("mtOffset")),
             tostring(driver:GetAttribute("offsetX")), tostring(driver:GetAttribute("posY"))))
     end
     print(string.format(
-        "  Breite=%.1f  links=%.1f  Bildschirm=%.1f  MT=%.1f  Skalierung=%.3f",
+        "  Width=%.1f  left=%.1f  screen=%.1f  MT=%.1f  scale=%.3f",
         width, left, UIParent:GetWidth(), lastMtOffset, scale))
     print(string.format(
-        "  Mitte Rahmen=%.1f  Mitte Bildschirm=%.1f  Versatz=%d  gesetzt=%s",
+        "  Frame center=%.1f  screen center=%.1f  offset=%d  applied=%s",
         left + width / 2, UIParent:GetWidth() / 2, GetDB().offsetX or 0, tostring(hasModified)))
 end
 

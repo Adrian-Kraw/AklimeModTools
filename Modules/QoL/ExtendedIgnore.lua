@@ -3,6 +3,8 @@
 -- Hides chat messages from ignored players.
 -- Management: /akm ignore  or  right-click on a player
 
+local L = AklimeModL or {}
+
 local M = {}
 AklimeMod_ExtendedIgnore = M
 
@@ -154,15 +156,15 @@ local function AddContextEntry(owner, root, ctx)
     root:CreateDivider()
     root:CreateTitle("Aklime Mod Tools")
     if M:IsIgnored(key) or M:IsIgnored(name) then
-        root:CreateButton("Erw. Ignore entfernen", function()
+        root:CreateButton(L["ignore_menu_remove"], function()
             M:Remove(key)
             M:Remove(name)
-            print("|cFFFFD100Aklime Mod Tools:|r " .. label .. " aus erweiterter Ignore-Liste entfernt.")
+            print("|cFFFFD100Aklime Mod Tools:|r " .. string.format(L["msg_ignore_removed"], label))
         end)
     else
-        root:CreateButton("Zu erw. Ignore hinzufügen", function()
+        root:CreateButton(L["ignore_menu_add"], function()
             M:Add(key)
-            print("|cFFFFD100Aklime Mod Tools:|r " .. label .. " zur erweiterten Ignore-Liste hinzugefügt.")
+            print("|cFFFFD100Aklime Mod Tools:|r " .. string.format(L["msg_ignore_added"], label))
         end)
     end
 end
@@ -279,7 +281,7 @@ local function BuildWin()
     local title = winFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
     title:SetPoint("TOP", 0, -13)
     title:SetTextColor(GOLD[1], GOLD[2], GOLD[3])
-    title:SetText("Erweiterte Ignore-Liste")
+    title:SetText(L["ignore_title"])
 
     local titleSep = winFrame:CreateTexture(nil, "ARTWORK")
     titleSep:SetHeight(1)
@@ -303,7 +305,7 @@ local function BuildWin()
 
     winEmptyLbl = winContent:CreateFontString(nil, "OVERLAY", "GameFontDisable")
     winEmptyLbl:SetPoint("TOP", 0, -24)
-    winEmptyLbl:SetText("Keine Spieler ignoriert")
+    winEmptyLbl:SetText(L["ignore_empty"])
     winEmptyLbl:Hide()
 
     -- Divider
@@ -345,7 +347,7 @@ local function BuildWin()
             if M:Add(name) then
                 RefreshWin()
             else
-                print("|cFFFFD100Aklime Mod Tools:|r " .. name .. " ist bereits ignoriert.")
+                print("|cFFFFD100Aklime Mod Tools:|r " .. string.format(L["msg_ignore_exists"], name))
             end
         end
         self:SetText("")
@@ -358,7 +360,7 @@ local function BuildWin()
 
     local hint = winFrame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
     hint:SetPoint("BOTTOM", 0, 8)
-    hint:SetText("Enter = Hinzufügen    |    x = Entfernen")
+    hint:SetText(L["ignore_hint"])
 end
 
 function M:ToggleWindow()

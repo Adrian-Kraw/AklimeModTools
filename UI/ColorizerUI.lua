@@ -84,7 +84,7 @@ end
 
 local function globalColorInitializer(button, node)
     local C = AklimeMod_Colorizer
-    if button.name then button.name:SetText("Globalfarbe auf alle anwenden") end
+    if button.name then button.name:SetText(L["color_apply_global"]) end
     if button.followClassColor then button.followClassColor:Hide() end
 
     local function getColor()

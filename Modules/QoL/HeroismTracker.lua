@@ -8,6 +8,8 @@
 -- ============================================================
 
 -- Active haste buffs (40 seconds)
+local L = AklimeModL or {}
+
 local BUFF_IDS = {
     [2825]    = true, -- Bloodlust
     [32182]   = true, -- Heroism
@@ -196,7 +198,7 @@ local function BuildFrame()
     local text = frame:CreateFontString(nil, "OVERLAY")
     text:SetFont("Fonts\\FRIZQT__.TTF", SliderToPx(GetDB().fontSizeSlider or 20), "OUTLINE")
     text:SetAllPoints(frame)
-    text:SetText("HT AKTIV")
+    text:SetText(L["ht_active"])
     text:SetTextColor(1, 1, 1, 1)
     text:SetJustifyH("CENTER")
     text:SetJustifyV("MIDDLE")
@@ -222,7 +224,7 @@ local function BuildFrame()
         if not GetDB().locked then
             GameTooltip:SetOwner(self, "ANCHOR_TOP")
             GameTooltip:AddLine("HT-Tracker", 1, 0.82, 0)
-            GameTooltip:AddLine("Drag zum Verschieben", 0.7, 0.7, 0.7)
+            GameTooltip:AddLine(L["ht_drag"], 0.7, 0.7, 0.7)
             GameTooltip:Show()
         end
     end)
@@ -348,34 +350,34 @@ SlashCmdList["AKM_HT"] = function(input)
     -- "/akht buffs": list all active buffs with spell ID,
     -- to identify unknown lust variants
     if cmd == "buffs" then
-        print("|cFFFFD100Aklime Mod Tools HT:|r Aktive Buffs:")
+        print("|cFFFFD100Aklime Mod Tools HT:|r Active buffs:")
         local found = false
         for i = 1, 60 do
             local aura = C_UnitAuras.GetAuraDataByIndex("player", i, "HELPFUL")
             if not aura then break end
             found = true
             if issecretvalue(aura) then
-                print("  [gesperrt]")
+                print("  [secret]")
             else
                 local name = aura.name
                 local sid  = aura.spellId
-                if issecretvalue(name) then name = "[gesperrt]" end
-                if issecretvalue(sid)  then sid  = "[gesperrt]" end
+                if issecretvalue(name) then name = "[secret]" end
+                if issecretvalue(sid)  then sid  = "[secret]" end
                 print(string.format("  %s = %s", tostring(name), tostring(sid)))
             end
         end
-        if not found then print("  (keine)") end
+        if not found then print("  (none)") end
         return
     end
 
     local db = GetDB()
     print(string.format(
-        "|cFFFFD100Aklime Mod Tools HT:|r Modul: %s | Frame: %s | Kampf: %s | Gesperrt (DB): %s | Maus aktiv (Frame): %s",
-        db.enabled and "|cFF00FF00aktiv|r" or "|cFFFF4444inaktiv|r",
-        (frame and frame:IsShown()) and "|cFF00FF00sichtbar|r" or "versteckt",
-        UnitAffectingCombat("player") and "ja" or "nein",
-        M:IsLocked() and "ja" or "nein",
-        (frame and frame:IsMouseEnabled()) and "|cFFFF4444JA|r" or "nein"
+        "|cFFFFD100Aklime Mod Tools HT:|r Module: %s | Frame: %s | Combat: %s | Locked (DB): %s | Mouse enabled (frame): %s",
+        db.enabled and "|cFF00FF00active|r" or "|cFFFF4444inactive|r",
+        (frame and frame:IsShown()) and "|cFF00FF00shown|r" or "hidden",
+        UnitAffectingCombat("player") and "yes" or "no",
+        M:IsLocked() and "yes" or "no",
+        (frame and frame:IsMouseEnabled()) and "|cFFFF4444YES|r" or "no"
     ))
 
     local foundBuff, buffSecret = nil, false
@@ -399,36 +401,36 @@ SlashCmdList["AKM_HT"] = function(input)
         end
     end
 
-    local buffText = "|cFFFF4444keiner|r"
+    local buffText = "|cFFFF4444none|r"
     if foundBuff then
         buffText = "|cFF00FF00" .. foundBuff .. "|r"
     elseif buffSecret then
-        buffText = "|cFFFF8800GESPERRT|r"
+        buffText = "|cFFFF8800SECRET|r"
     end
-    local satedText = "nein"
+    local satedText = "no"
     if foundSated then
         satedText = "|cFFFF4444" .. foundSated .. "|r"
     elseif satedSecret then
-        satedText = "|cFFFF8800GESPERRT|r"
+        satedText = "|cFFFF8800SECRET|r"
     end
 
     -- Buff end derived from the exhaustion
-    local derivedText = "nein"
+    local derivedText = "no"
     local satedEnd = GetBuffEndFromSated()
     if satedEnd then
         local remain = satedEnd - GetTime()
         if remain > 0 then
-            derivedText = string.format("|cFF00FF00noch %.0fs|r", remain)
+            derivedText = string.format("|cFF00FF00%.0fs left|r", remain)
         else
-            derivedText = "abgelaufen"
+            derivedText = "expired"
         end
     end
 
     print(string.format(
-        "  HT-Buff: %s | Erschoepfung: %s | Buff laut Ableitung: %s | Ticker: %s",
+        "  HT buff: %s | Exhaustion: %s | Derived buff: %s | Ticker: %s",
         buffText,
         satedText,
         derivedText,
-        combatTicker and "laeuft" or "aus"
+        combatTicker and "running" or "off"
     ))
 end

@@ -318,9 +318,9 @@ f:SetScript("OnEvent", RequestLayout)
 SLASH_AKMBARS1 = "/akmbars"
 SlashCmdList["AKMBARS"] = function()
     print(string.format(
-        "|cFFFFD100Aklime Mod Tools Leisten:|r aktiv=%s kampf=%s bearbeitungsmodus=%s treiber=%s",
+        "|cFFFFD100Aklime Mod Tools Bars:|r enabled=%s combat=%s editmode=%s driver=%s",
         tostring(GetDB().enabled), tostring(InCombatLockdown()), tostring(IsInEditMode()),
-        driver and (driverArmed and "aktiv" or "vorhanden") or "fehlt"))
+        driver and (driverArmed and "armed" or "present") or "missing"))
     if not driver then return end
 
     for barIndex, def in ipairs(BARS) do
@@ -335,7 +335,7 @@ SlashCmdList["AKMBARS"] = function()
             end
         end
         print(string.format(
-            "  Leiste %d: ausrichtung=%s reihen=%s sichtbar=%d gestaucht=%s raster=%d",
+            "  Bar %d: align=%s lines=%s shown=%d applied=%s grid=%d",
             barIndex, tostring(driver:GetAttribute(key .. "align")), tostring(driver:GetAttribute(key .. "lines")),
             shown, tostring(driver:GetAttribute(key .. "applied")), grid))
     end

@@ -40,7 +40,7 @@ C:Register("buffFrame", {
 C:Register("cooldownViewer", {
     label  = "Cooldown Viewer",
     group  = "HUD",
-    colors = { bar_border_color = { label="Balken-Rahmen", r=D.main.r, g=D.main.g, b=D.main.b, a=1, order=1 } },
+    colors = { bar_border_color = { label="Bar Border", r=D.main.r, g=D.main.g, b=D.main.b, a=1, order=1 } },
     apply = function(self)
         local mr,mg,mb,ma = col("cooldownViewer","bar_border_color")
         if not BuffBarCooldownViewer then return end
@@ -344,13 +344,13 @@ C:Register("spellFlyout", {
 -- Pop-up dialog skin.
 -- ============================================================
 C:Register("popupDialogs", {
-    label  = "Pop-up Dialoge",
+    label  = "Pop-up Dialogs",
     group  = "HUD",
     colors = {
         main          = { label="Main",             r=D.main.r,     g=D.main.g,     b=D.main.b,     a=1,   order=1 },
-        gold_border   = { label="Gold-Rahmen",      r=1.0,          g=0.843,        b=0.0,          a=1,   order=3.1 },
-        silver_border = { label="Silber-Rahmen",    r=0.753,        g=0.753,        b=0.753,        a=1,   order=3.2 },
-        copper_border = { label="Kupfer-Rahmen",    r=0.722,        g=0.451,        b=0.200,        a=1,   order=3.3 },
+        gold_border   = { label="Gold Border",      r=1.0,          g=0.843,        b=0.0,          a=1,   order=3.1 },
+        silver_border = { label="Silver Border",    r=0.753,        g=0.753,        b=0.753,        a=1,   order=3.2 },
+        copper_border = { label="Copper Border",    r=0.722,        g=0.451,        b=0.200,        a=1,   order=3.3 },
         controls      = { label="Controls",         r=D.controls.r, g=D.controls.g, b=D.controls.b, a=1,   order=4 },
     },
     apply = function(self)

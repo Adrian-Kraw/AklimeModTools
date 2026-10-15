@@ -4,6 +4,8 @@
 -- Wowhead URL button in the quest right-click menu.
 -- NPC ignore list via right-click on the target.
 
+local L = AklimeModL or {}
+
 local function GetDB()
     if AklimeModDB and AklimeModDB.questAutomation then return AklimeModDB.questAutomation end
     return { enabled = false }
@@ -174,7 +176,7 @@ local menuHooked = false
 local function ShowCopyDialog(url)
     if not StaticPopupDialogs["AKLIMEMOD_COPY_URL"] then
         StaticPopupDialogs["AKLIMEMOD_COPY_URL"] = {
-            text     = "URL kopieren:",
+            text     = L["quest_copy_label"],
             button1  = OKAY,
             hasEditBox   = true,
             timeout      = 0,
@@ -233,7 +235,7 @@ local function HookMenus()
         end
         if not qid then return end
         root:CreateDivider()
-        root:CreateButton("Wowhead-URL kopieren", function()
+        root:CreateButton(L["quest_copy_wowhead"], function()
             ShowCopyDialog(("https://www.wowhead.com/quest=%d"):format(qid))
         end)
     end
@@ -255,11 +257,11 @@ local function HookMenus()
         root:CreateDivider()
         root:CreateTitle("Aklime Mod Tools")
         if db.ignoredNPCs[npcID] then
-            root:CreateButton("NPC aus Ignoreliste entfernen", function()
+            root:CreateButton(L["quest_npc_ignore_remove"], function()
                 db.ignoredNPCs[npcID] = nil
             end)
         else
-            root:CreateButton("NPC zu Ignoreliste hinzufügen", function()
+            root:CreateButton(L["quest_npc_ignore_add"], function()
                 db.ignoredNPCs[npcID] = name
             end)
         end

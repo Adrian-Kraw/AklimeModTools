@@ -1,6 +1,8 @@
 -- Modules/QoL/Summons.lua
 -- Automatically accepts summon requests.
 
+local L = AklimeModL or {}
+
 local M = {}
 AklimeMod_Summons = M
 
@@ -50,7 +52,7 @@ local function Accept(summoner, area)
     end
     StaticPopup_Hide("CONFIRM_SUMMON")
 
-    print("|cFFFFD100Aklime Mod Tools:|r Beschwörung von " .. summoner .. " nach " .. area .. " automatisch angenommen.")
+    print("|cFFFFD100Aklime Mod Tools:|r " .. string.format(L["msg_summon_accepted"], summoner, area))
 end
 
 -- ============================================================

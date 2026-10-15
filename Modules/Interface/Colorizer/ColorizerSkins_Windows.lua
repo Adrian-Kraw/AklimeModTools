@@ -78,7 +78,7 @@ end
 -- Achievement Frame
 -- ========================================================
 C:Register("winAchieve", {
-    label = "Erfolge", group = "Windows",
+    label = "Achievements", group = "Windows",
     colors = {
         main     = { label="Main",     r=DM.r,g=DM.g,b=DM.b,a=1,order=1 },
         controls = { label="Controls", r=DC.r,g=DC.g,b=DC.b,a=1,order=2 },

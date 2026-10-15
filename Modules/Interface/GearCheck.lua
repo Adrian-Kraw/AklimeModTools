@@ -635,5 +635,5 @@ end)
 SLASH_AKM_GEARCHECK1 = "/akgc"
 SlashCmdList["AKM_GEARCHECK"] = function()
     AklimeMod_GearCheckDebug = not AklimeMod_GearCheckDebug
-    print("|cFFFFD100Aklime Mod Tools GearCheck:|r Bag-Debug " .. (AklimeMod_GearCheckDebug and "|cFF00FF00an|r" or "|cFFFF4444aus|r"))
+    print("|cFFFFD100Aklime Mod Tools GearCheck:|r Bag debug " .. (AklimeMod_GearCheckDebug and "|cFF00FF00on|r" or "|cFFFF4444off|r"))
 end

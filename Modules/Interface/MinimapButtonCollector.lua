@@ -433,14 +433,14 @@ SlashCmdList["AKM_MMC"] = function(input)
         local angle = math.deg(math.atan2(tonumber(y), tonumber(x)))
         SetAngle(angle)
         UpdateCollectorPos()
-        print(string.format("|cFFFFD100Aklime Mod Tools MMC:|r Winkel gesetzt: %.1f°", angle))
+        print(string.format("|cFFFFD100Aklime Mod Tools MMC:|r Angle set: %.1f°", angle))
     else
         local db = GetDB()
         print(string.format(
-            "|cFFFFD100Aklime Mod Tools MMC:|r Winkel: %.1f° | Buttons: %d | Offen: %s",
+            "|cFFFFD100Aklime Mod Tools MMC:|r Angle: %.1f° | Buttons: %d | Open: %s",
             GetAngle(), #storedButtons, tostring(isOpen)
         ))
-        print("  Tipp: /akmmmc X Y — z.B. /akmmmc -80 60")
+        print("  Tip: /akmmmc X Y, e.g. /akmmmc -80 60")
     end
 end
 

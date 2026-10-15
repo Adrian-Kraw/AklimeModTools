@@ -116,11 +116,11 @@ SlashCmdList["AKMBUYDEBUG"] = function()
                     tostring(btn2:IsEnabled()), tostring(btn2:IsShown())))
             end
             local dialog = StaticPopupDialogs and StaticPopupDialogs[popup.which]
-            print(string.format("  OnAccept=%s", dialog and tostring(dialog.OnAccept) or "kein Dialog"))
+            print(string.format("  OnAccept=%s", dialog and tostring(dialog.OnAccept) or "no dialog"))
         end
     end
     if not found then
-        print("|cFFFFD100AklimeMod:|r Kein StaticPopup offen.")
+        print("|cFFFFD100AklimeMod:|r No StaticPopup open.")
     end
 end
 

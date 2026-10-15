@@ -5,6 +5,8 @@
 -- The character you sent mail to last is pinned to the top of the list.
 -- The last recipient option remembers the last recipient per session.
 
+local L = AklimeModL or {}
+
 local ROW_H        = 22
 local FRAME_W      = 235
 local ROW_AREA_TOP = -78   -- pixel offset (negative) from the frame top to the first row
@@ -207,12 +209,12 @@ local function EnsureFrame()
     -- Title
     local title = f:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
     title:SetPoint("TOP", 0, -8)
-    title:SetText("Adressbuch")
+    title:SetText(L["mailbox_title"])
 
     -- Search
     local sLabel = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     sLabel:SetPoint("TOPLEFT", 8, -30)
-    sLabel:SetText("Suche:")
+    sLabel:SetText(L["mailbox_search"])
 
     local sBox = CreateFrame("EditBox", nil, f, "SearchBoxTemplate")
     sBox:SetPoint("TOPLEFT", 50, -28)

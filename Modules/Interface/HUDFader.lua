@@ -518,16 +518,16 @@ SlashCmdList["AKMHUD"] = function(input)
         print("|cFFFFD100HUDFader Zone:|r " .. (GetRealZoneText() or "?") ..
               " / Sub: " .. (GetSubZoneText() or "?"))
         local inInst, instType = IsInInstance()
-        print("  IsInInstance: " .. tostring(inInst) .. "  Typ: " .. tostring(instType))
+        print("  IsInInstance: " .. tostring(inInst) .. "  Type: " .. tostring(instType))
         return
     end
     local function scanFrame(label, frame)
-        if not frame then print("  " .. label .. ": nicht gefunden"); return end
+        if not frame then print("  " .. label .. ": not found"); return end
         print(string.format("|cFFFFD100%s|r  alpha=%.2f", label, frame:GetAlpha()))
         local count = 0
         for _, child in ipairs({ frame:GetChildren() }) do
             count = count + 1
-            local name  = child:GetName() or "(kein Name)"
+            local name  = child:GetName() or "(no name)"
             local shown = child:IsShown() and "SHOWN" or "hidden"
             local alpha = string.format("%.2f", child:GetAlpha())
             local okW, w = pcall(function() return child:GetWidth() end)
@@ -535,7 +535,7 @@ SlashCmdList["AKMHUD"] = function(input)
             local size  = (okW and okH) and string.format("%dx%d", w, h) or "?"
             print(string.format("  [%d] %-45s %s  alpha=%s  size=%s", count, name, shown, alpha, size))
         end
-        print(string.format("  Gesamt: %d Kinder", count))
+        print(string.format("  Total: %d children", count))
     end
     scanFrame("MinimapCluster", MinimapCluster)
     scanFrame("Minimap",        Minimap)
