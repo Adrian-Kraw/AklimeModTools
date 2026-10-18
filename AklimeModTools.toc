@@ -1,9 +1,9 @@
-## Interface: 120107, 120105, 120100
+## Interface: 120107, 120105
 ## Title: Aklime Mod Tools
 ## X-Curse-Project-ID: 1548949
 ## Notes: /akm — Aklime Mod Tools
 ## Author: Aklime
-## Version: 1.4.3
+## Version: 1.4.4
 ## SavedVariables: AklimeModDB
 ## AddonCompartmentFunc: AklimeMod_OpenSettings
 ## IconTexture: Interface\AddOns\AklimeModTools\Assets\icon
@@ -56,6 +56,7 @@ Modules\QoL\ChatFade.lua
 Modules\QoL\FriendsListDecor.lua
 Modules\QoL\ChatFontSize.lua
 Modules\QoL\HeroismTracker.lua
+Modules\QoL\AfkTimer.lua
 Modules\QoL\DeathSound.lua
 Modules\QoL\TalentReminder.lua
 Modules\QoL\BlockRequests.lua

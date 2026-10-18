@@ -1,77 +1,31 @@
-## 1.4.3
+## 1.4.4
 
 **EN**
 
-Auto Repair
+AFK Timer
 
-* Fixed: The chat messages after repairing were always German, even on an English client. They now follow the language of the game client.
-* Fixed: Repairing at a vendor threw a Lua error when the message with the repair costs was printed. The repair itself worked. The message now shows the costs again.
+* New: A clock in the middle of the screen counts up how long you have been AFK. It appears as soon as you go AFK and disappears when you are back. You find it under Quality of Life, Miscellaneous. Position and size can be changed like on the Heroism display.
 
-Center Raid Frames
+Address Book
 
-* Fixed: After a reload or a spec change the raid frames were no longer centered, even with the feature switched on. The game puts them back to their Edit Mode position in both cases. The frames kept their size, so the addon assumed they were still centered and did nothing. It now notices when the game moves the frames and centers them again.
+* New: A star right of the realm marks a character as favorite. Favorites are listed above all other characters, in the sort order you chose. The character you mailed last stays on top.
+* Fixed: The Remove entry in the right-click menu was German on an English client.
 
-Drink Reminder
+Heroism Display
 
-* Fixed: The "Got it!" button could end up hidden behind other windows, for example a tooltip, so you had to close them to click it. The button now sits on the same layer as the reminder and always stays on top.
-
-Character Tracker
-
-* Changed: The Great Vault shows the level of every slot, for example the key level, the raid difficulty or the delve tier. Hovering a cell lists the three slots with the item level of their reward.
-* Changed: A new row shows the Mythic keystone each character carries. It disappears at the weekly reset, together with the vault progress.
-* Changed: New look with section bars, a divider between the labels and the characters and icons next to the raid names.
-
-Settings Window
-
-* Changed: The Interface category is split into Character and Portrait, Combat and Minimap.
-* Changed: All color customizations moved from Interface into the new category Color Customization.
-* Changed: Quality of Life is split into Chat, Social, Group Activities, Merchant, Blizzard Bug Fixes, Combat, Quest, Miscellaneous and Micro Menu. Chat Interaction is now called Copy Chat.
-* Changed: The Weekly Vault entry no longer has a checkbox, it only opens the vault.
-* Changed: Color Customization uses the German names on a German client, for example Kalender instead of Calendar.
-
-Ready Check
-
-* Fixed: A Not Ready you clicked yourself was overridden by the automatic Ready when the countdown ended. The addon now leaves your decision alone.
-
-Language
-
-* Fixed: Some texts were German on an English client. This covered the summon message, the talent reminder popup, the extended ignore list with its menu entries, the ignore menu for NPCs, the Wowhead URL entry, the address book of the mailbox, the map coordinates, the Heroism tracker, the mana warning hint, one button in the color customization and the names of some skins. All of them follow the language of the game client now.
-* Changed: The output of the debug commands such as /akmbars and /akmraid is English in every client.
+* Fixed: On an English client the text said HT ACTIVE, it says BL ACTIVE now, like the name of the feature.
 
 **DE**
 
-Auto Repair
+AFK-Timer
 
-* Behoben: Die Chatnachrichten nach dem Reparieren waren immer deutsch, auch auf einem englischen Client. Sie folgen jetzt der Sprache des Spielclients.
-* Behoben: Beim Reparieren beim Händler trat ein Lua-Fehler auf, als die Meldung mit den Reparaturkosten ausgegeben wurde. Die Reparatur selbst hat funktioniert. Die Meldung zeigt die Kosten jetzt wieder an.
+* Neu: Eine Uhr in der Bildschirmmitte zählt hoch, wie lange du AFK bist. Sie erscheint, sobald du AFK gehst, und verschwindet, wenn du zurück bist. Du findest sie unter Quality of Life, Sonstiges. Position und Größe lassen sich wie bei der HT-Anzeige ändern.
 
-Gruppenrahmen zentrieren
+Adressbuch
 
-* Behoben: Nach einem Reload oder einem Spezialisierungswechsel waren die Gruppenrahmen nicht mehr zentriert, obwohl die Funktion an war. Das Spiel setzt sie in beiden Fällen an ihre Position aus dem Bearbeitungsmodus zurück. Die Größe der Rahmen blieb gleich, deshalb hielt das Addon sie weiter für zentriert und tat nichts. Es merkt jetzt, wenn das Spiel die Rahmen verschiebt, und zentriert sie erneut.
+* Neu: Ein Stern rechts neben dem Realm markiert einen Charakter als Favorit. Favoriten stehen über allen anderen Charakteren, in der gewählten Sortierung. Der zuletzt angeschriebene Charakter bleibt ganz oben.
+* Behoben: Der Eintrag Entfernen im Rechtsklick-Menü war auf einem englischen Client deutsch.
 
-Trinkerinnerung
+HT-Anzeige
 
-* Behoben: Der Knopf "Alles klar!" konnte hinter anderen Fenstern verschwinden, zum Beispiel hinter einem Tooltip, sodass du sie schließen musstest, um ihn anzuklicken. Der Knopf liegt jetzt auf derselben Ebene wie die Erinnerung und bleibt immer oben.
-
-Charakter-Tracker
-
-* Geändert: Die Große Schatzkammer zeigt die Stufe jedes Platzes, zum Beispiel die Schlüsselstufe, die Schlachtzug-Schwierigkeit oder die Stufe der Tiefen. Beim Überfahren einer Zelle stehen die drei Plätze mit der Gegenstandsstufe ihrer Belohnung im Tooltip.
-* Geändert: Eine neue Zeile zeigt den Mythic-Schlüsselstein, den jeder Charakter trägt. Er verschwindet beim wöchentlichen Reset, genau wie der Fortschritt der Schatzkammer.
-* Geändert: Neue Optik mit Abschnittsbalken, einer Trennlinie zwischen Beschriftung und Charakteren und Symbolen neben den Schlachtzugnamen.
-
-Einstellungsfenster
-
-* Geändert: Die Kategorie Interface ist in Charakter und Portrait, Kampf und Minimap unterteilt.
-* Geändert: Alle farblichen Anpassungen sind aus Interface in die neue Kategorie Farbliche Anpassungen gewandert.
-* Geändert: Quality of Life ist in Chat, Social, Gruppenaktivitäten, Händler, Blizzard Bugfixes, Kampf, Quest, Sonstiges und Micromenüleiste unterteilt. Chat Interaktion heißt jetzt Chat kopieren.
-* Geändert: Der Eintrag Wöchentliche Schatzkammer hat keinen Haken mehr, er öffnet nur noch die Schatzkammer.
-* Geändert: Die farblichen Anpassungen zeigen auf einem deutschen Client die deutschen Namen, zum Beispiel Kalender statt Calendar.
-
-Bereitschaftsabfrage
-
-* Behoben: Ein selbst geklicktes Nicht bereit wurde vom automatischen Bereit überschrieben, wenn der Countdown ablief. Das Addon lässt deine Entscheidung jetzt in Ruhe.
-
-Sprache
-
-* Behoben: Einige Texte waren auf einem englischen Client deutsch. Das betraf die Beschwörungsmeldung, das Popup der Talent-Erinnerung, die erweiterte Ignore-Liste mit ihren Menüeinträgen, das Ignore-Menü für NPCs, den Wowhead-URL-Eintrag, das Adressbuch der Post, die Kartenkoordinaten, die Heldentum-Anzeige, den Hinweis der Manawarnung, einen Knopf der farblichen Anpassungen und die Namen einiger Skins. Alle folgen jetzt der Sprache des Spielclients.
-* Geändert: Die Ausgabe der Debug-Befehle wie /akmbars und /akmraid ist auf jedem Client englisch.
+* Behoben: Auf einem englischen Client stand HT ACTIVE, jetzt steht dort BL ACTIVE, passend zum Namen der Funktion.

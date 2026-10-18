@@ -2008,6 +2008,30 @@ local function addQoLNodes(dp)
         end, nil, true)
     end
 
+    local afkNode = addModule(dp, L["mod_afk_timer"],
+        function() return AklimeMod_AfkTimer:IsEnabled() end,
+        function(v) AklimeMod_AfkTimer:SetEnabled(v) end
+    )
+    addToggle(afkNode, L["toggle_lock_position"],
+        function() return AklimeMod_AfkTimer:IsLocked() end,
+        function(v) AklimeMod_AfkTimer:SetLocked(v) end
+    )
+    addSlider(afkNode, L["slider_font_size"], 0, 100, 1,
+        function() return AklimeMod_AfkTimer:GetFontSizeSlider() end,
+        function(v) AklimeMod_AfkTimer:SetFontSizeSlider(v) end,
+        function(v) return tostring(v) end
+    )
+    addAction(afkNode, L["action_preview"], function()
+        if AklimeMod_AfkTimer.previewing then
+            AklimeMod_AfkTimer.previewing = false
+            AklimeMod_AfkTimer:HidePreview()
+        else
+            AklimeMod_AfkTimer.previewing = true
+            AklimeMod_AfkTimer:ShowPreview()
+        end
+    end)
+    addInfo(afkNode, L["info_afk_timer"])
+
     local vaultNode = addPlainModule(dp, L["mod_weekly_vault"])
     addInfo(vaultNode, L["info_weekly_vault"])
     addAction(vaultNode, L["action_open_vault"], function()

@@ -196,6 +196,11 @@ function AklimeMod_InitDB()
     def(db.heroismTracker, "locked",   true)
     def(db.heroismTracker, "fontSizeSlider", 20)
 
+    db.afkTimer = db.afkTimer or {}
+    def(db.afkTimer, "enabled",  false)
+    def(db.afkTimer, "locked",   true)
+    def(db.afkTimer, "fontSizeSlider", 50)
+
     db.deathSound = db.deathSound or {}
     def(db.deathSound, "enabled", false)
 
