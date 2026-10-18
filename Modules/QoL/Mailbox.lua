@@ -3,12 +3,13 @@
 -- Contains your own characters only, one entry is added on each character login.
 -- Clicking a contact sets the recipient automatically.
 -- The character you sent mail to last is pinned to the top of the list.
+-- Favorites (star right of the realm) are listed above all other characters.
 -- The last recipient option remembers the last recipient per session.
 
 local L = AklimeModL or {}
 
 local ROW_H        = 22
-local FRAME_W      = 235
+local FRAME_W      = 250
 local ROW_AREA_TOP = -78   -- pixel offset (negative) from the frame top to the first row
 local ROW_AREA_BOT = 8     -- offset from the frame bottom to the last row
 local MAX_ROWS     = 25    -- upper limit, actual count is computed from the height
@@ -99,6 +100,7 @@ local function BuildFiltered()
                     name        = name,
                     realm       = realm,
                     nameColored = ("|cff%02x%02x%02x%s|r"):format(r*255, g*255, b*255, name),
+                    favorite    = rec.favorite == true,
                     isLast      = lastName ~= nil
                                   and name:lower() == lastName
                                   and NormalizeRealm(realm) == lastRealm,
@@ -110,6 +112,8 @@ local function BuildFiltered()
     table.sort(M.filtered, function(a, b)
         -- Last recipient stays on top, no matter which column is sorted
         if a.isLast ~= b.isLast then return a.isLast end
+        -- Favorites come next, then the chosen sort order applies inside both groups
+        if a.favorite ~= b.favorite then return a.favorite end
 
         local av, bv
         if M.sortKey == "realm" then
@@ -147,6 +151,9 @@ local function UpdateRows()
                 row.key    = rec.key
                 row.rname  = rec.name
                 row.rrealm = rec.realm
+                row.favorite = rec.favorite
+                row.star.icon:SetDesaturated(not rec.favorite)
+                row.star.icon:SetAlpha(rec.favorite and 1 or 0.3)
                 row:Show()
             else
                 row:Hide()
@@ -260,8 +267,8 @@ local function EnsureFrame()
         btn:SetHighlightTexture("Interface/QuestFrame/UI-QuestTitleHighlight", "ADD")
         return btn
     end
-    M.nameHeader  = MakeHeader("Name",  "name",  6,   140)
-    M.realmHeader = MakeHeader("Realm", "realm", 148, 80)
+    M.nameHeader  = MakeHeader("Name",  "name",  6,   118)
+    M.realmHeader = MakeHeader("Realm", "realm", 128, 76)
 
     -- Separator line
     local line = f:CreateTexture(nil, "ARTWORK")
@@ -379,16 +386,39 @@ local function EnsureFrame()
 
         row.nameText = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
         row.nameText:SetPoint("LEFT", 0, 0)
-        row.nameText:SetWidth(130)
+        row.nameText:SetWidth(118)
         row.nameText:SetJustifyH("LEFT")
         row.nameText:SetWordWrap(false)
 
         row.realmText = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-        row.realmText:SetPoint("LEFT", 134, 0)
-        row.realmText:SetWidth(78)
+        row.realmText:SetPoint("LEFT", 122, 0)
+        row.realmText:SetWidth(76)
         row.realmText:SetJustifyH("LEFT")
         row.realmText:SetWordWrap(false)
         row.realmText:SetTextColor(0.65, 0.65, 0.65, 1)
+
+        -- Favorite star right of the realm
+        local star = CreateFrame("Button", nil, row)
+        star:SetSize(14, 14)
+        star:SetPoint("RIGHT", row, "RIGHT", -2, 0)
+        star.icon = star:CreateTexture(nil, "ARTWORK")
+        star.icon:SetAllPoints()
+        star.icon:SetAtlas("auctionhouse-icon-favorite")
+        star:SetScript("OnClick", function()
+            if not row.key then return end
+            local rec = GetDB().contacts and GetDB().contacts[row.key]
+            if not rec then return end
+            rec.favorite = (not rec.favorite) or nil
+            BuildFiltered()
+            UpdateRows()
+        end)
+        star:SetScript("OnEnter", function(self)
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+            GameTooltip:SetText(row.favorite and L["mailbox_fav_remove"] or L["mailbox_fav_add"])
+            GameTooltip:Show()
+        end)
+        star:SetScript("OnLeave", function() GameTooltip:Hide() end)
+        row.star = star
 
         row:SetScript("OnClick", function(self, mouseButton)
             if mouseButton == "RightButton" then
@@ -396,7 +426,7 @@ local function EnsureFrame()
                 local key = self.key
                 MenuUtil.CreateContextMenu(self, function(_, root)
                     root:CreateTitle(key)
-                    root:CreateButton("Entfernen", function()
+                    root:CreateButton(L["mailbox_remove"], function()
                         local db = GetDB()
                         if db.contacts then
                             db.contacts[key] = nil
