@@ -107,7 +107,12 @@ local function EnsureDriver()
     driver:SetFrameRef("container", c)
     driver:SetFrameRef("uiparent", UIParent)
     driver:SetAttribute("updatePosition", UPDATE_SNIPPET)
-    driver:SetAttribute("_onstate-akmraid", [[ self:RunAttribute("updatePosition") ]])
+    -- State 0 means no raid. The driver can be armed in a party as well, and
+    -- a party must not be moved, so the snippet only runs for a raid.
+    driver:SetAttribute("_onstate-akmraid", [[
+        if newstate == "0" then return end
+        self:RunAttribute("updatePosition")
+    ]])
 
     return driver
 end
@@ -159,16 +164,18 @@ local function RepositionContainer()
     if not GetDB().enabled then return end
 
     local c = CompactRaidFrameContainer
-    if not c or not c:IsShown() then return end
+    if not c then return end
 
     -- CompactRaidFrameContainer:IsProtected() is true, verified in game via
     -- /akmraid. A SetPoint from here is refused during combat, the state
     -- driver and its snippet take over for that.
     if InCombatLockdown() then return end
 
+    -- The anchor of a hidden frame is just as valid, so this works in a party too
     if savedY == nil then
         local _, _, _, _, y = c:GetPoint(1)
-        savedY = y or (c:GetTop() - GetScreenHeight())
+        if not y and c:GetTop() then y = c:GetTop() - GetScreenHeight() end
+        savedY = y
     end
     if savedY == nil then return end
 
@@ -176,8 +183,16 @@ local function RepositionContainer()
         hasModified  = false
         lastWidth    = 0
         lastMtOffset = 0
+        -- Arm the driver before any raid exists. A party that turns into a raid
+        -- during combat is only centered by the snippet, and without this the
+        -- driver would only be armed after a raid was seen out of combat.
+        if not driverArmed then
+            UpdateDriverValues(c:GetEffectiveScale() / UIParent:GetEffectiveScale(), 0)
+        end
         return
     end
+
+    if not c:IsShown() then return end
 
     -- The container resizes itself to its content, so its own width is the
     -- truth. Counting groups and multiplying by one group width ignored the

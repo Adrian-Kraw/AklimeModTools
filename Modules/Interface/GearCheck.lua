@@ -6,6 +6,7 @@
 
 local L = AklimeModL or {}
 
+local GetItemInfo        = (C_Item and C_Item.GetItemInfo)              and C_Item.GetItemInfo              or GetItemInfo
 local GetItemInfoInstant = (C_Item and C_Item.GetItemInfoInstant)       and C_Item.GetItemInfoInstant       or GetItemInfo
 local GetDetailedItemLvl = (C_Item and C_Item.GetDetailedItemLevelInfo) and C_Item.GetDetailedItemLevelInfo or GetDetailedItemLevelInfo
 local GetInvItemQuality  = (C_Item and C_Item.GetInventoryItemQuality)  and C_Item.GetInventoryItemQuality  or GetInventoryItemQuality
