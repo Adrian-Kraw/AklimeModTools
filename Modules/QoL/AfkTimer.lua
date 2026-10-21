@@ -35,6 +35,17 @@ local function FormatElapsed(seconds)
 end
 
 -- ============================================================
+-- AFK state
+-- ============================================================
+-- In restricted situations the client hands out the flag as a secret value,
+-- which cannot be tested. nil means unknown, the caller keeps its current state.
+local function IsPlayerAfk()
+    local afk = UnitIsAFK("player")
+    if issecretvalue and issecretvalue(afk) then return nil end
+    return afk and true or false
+end
+
+-- ============================================================
 -- Frame
 -- ============================================================
 local M = {}
@@ -163,7 +174,7 @@ function M:SetEnabled(v)
     if v then
         BuildFrame()
         -- Already AFK when the feature is switched on
-        if UnitIsAFK("player") and not afkSince then afkSince = GetTime() end
+        if IsPlayerAfk() and not afkSince then afkSince = GetTime() end
     end
     RefreshVisibility()
 end
@@ -195,7 +206,9 @@ end
 -- Events
 -- ============================================================
 local function SyncAfkState()
-    if UnitIsAFK("player") then
+    local afk = IsPlayerAfk()
+    if afk == nil then return end
+    if afk then
         if not afkSince then afkSince = GetTime() end
     else
         afkSince = nil
