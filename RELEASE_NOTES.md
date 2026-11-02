@@ -1,31 +1,19 @@
-## 1.4.4
+## 1.4.5
 
 **EN**
 
-AFK Timer
+Chat History
 
-* New: A clock in the middle of the screen counts up how long you have been AFK. It appears as soon as you go AFK and disappears when you are back. You find it under Quality of Life, Miscellaneous. Position and size can be changed like on the Heroism display.
-
-Address Book
-
-* New: A star right of the realm marks a character as favorite. Favorites are listed above all other characters, in the sort order you chose. The character you mailed last stays on top.
-* Fixed: The Remove entry in the right-click menu was German on an English client.
-
-Heroism Display
-
-* Fixed: On an English client the text said HT ACTIVE, it says BL ACTIVE now, like the name of the feature.
+* Fixed: Restored messages could end up in the wrong chat tab, for example old chat in a tab that only shows instance chat. A message history is now only restored into the tab it was saved from.
+* Fixed: All characters shared one saved history. It is now saved per character.
+* Changed: The history of characters you have not logged in with for 30 days is deleted automatically.
+* Changed: The old shared history is discarded once after the update.
 
 **DE**
 
-AFK-Timer
+Chatverlauf
 
-* Neu: Eine Uhr in der Bildschirmmitte zählt hoch, wie lange du AFK bist. Sie erscheint, sobald du AFK gehst, und verschwindet, wenn du zurück bist. Du findest sie unter Quality of Life, Sonstiges. Position und Größe lassen sich wie bei der HT-Anzeige ändern.
-
-Adressbuch
-
-* Neu: Ein Stern rechts neben dem Realm markiert einen Charakter als Favorit. Favoriten stehen über allen anderen Charakteren, in der gewählten Sortierung. Der zuletzt angeschriebene Charakter bleibt ganz oben.
-* Behoben: Der Eintrag Entfernen im Rechtsklick-Menü war auf einem englischen Client deutsch.
-
-HT-Anzeige
-
-* Behoben: Auf einem englischen Client stand HT ACTIVE, jetzt steht dort BL ACTIVE, passend zum Namen der Funktion.
+* Behoben: Wiederhergestellte Nachrichten konnten im falschen Chat-Tab landen, zum Beispiel alter Chat in einem Tab, der nur den Instanzchat zeigt. Ein Verlauf wird jetzt nur noch in den Tab zurückgespielt, aus dem er gespeichert wurde.
+* Behoben: Alle Charaktere teilten sich einen gespeicherten Verlauf. Er wird jetzt pro Charakter gespeichert.
+* Geändert: Der Verlauf von Charakteren, mit denen du 30 Tage nicht eingeloggt warst, wird automatisch gelöscht.
+* Geändert: Der alte gemeinsame Verlauf wird nach dem Update einmalig verworfen.

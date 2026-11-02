@@ -37,8 +37,7 @@ local TAG_COLORS = {
 -- title, text and where are locale keys, where is optional. Every line of
 -- text becomes one bullet. tag is a key of TAG_COLORS.
 local NEWS_ENTRIES = {
-    { title = "mod_afk_timer", tag = "new", text = "news_afk_timer" },
-    { title = "mod_mailbox", tag = "new", text = "news_mailbox" },
+    { title = "mod_chat_history", tag = "fixed", text = "news_chat_history" },
 }
 
 -- Same rounded look as the category buttons on the left

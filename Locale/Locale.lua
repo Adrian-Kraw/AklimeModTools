@@ -287,8 +287,7 @@ L["news_hint"]        = "Version %s is installed. See what's new in /akm under \
 L["news_tag_new"]     = "NEW"
 L["news_tag_fixed"]   = "FIXED"
 L["news_tag_changed"] = "CHANGED"
-L["news_afk_timer"] = "A clock in the middle of the screen counts up how long you have been AFK.\nFind it under Quality of Life, Miscellaneous."
-L["news_mailbox"] = "Mark characters as favorites with the star in the address book.\nFavorites are listed first."
+L["news_chat_history"] = "The chat history is saved per character now.\nSaved messages are only restored into the chat tab they came from.\nHistory of characters not seen for 30 days is deleted."
 
 -- Currency expansion categories
 L["curr_cat_season"] = "Season"
@@ -711,8 +710,7 @@ if GetLocale() == "deDE" then
     L["news_tag_new"]     = "NEU"
     L["news_tag_fixed"]   = "BEHOBEN"
     L["news_tag_changed"] = "GEÄNDERT"
-    L["news_afk_timer"] = "Eine Uhr in der Bildschirmmitte zählt hoch, wie lange du AFK bist.\nZu finden unter Quality of Life, Sonstiges."
-    L["news_mailbox"] = "Markiere Charaktere im Adressbuch mit dem Stern als Favoriten.\nFavoriten stehen zuerst."
+    L["news_chat_history"] = "Der Chatverlauf wird jetzt pro Charakter gespeichert.\nGespeicherte Nachrichten kommen nur in den Chat-Tab zurück, aus dem sie stammen.\nVerlauf von Charakteren, die 30 Tage nicht eingeloggt waren, wird gelöscht."
 
     L["curr_cat_season"] = "Saison"
     L["curr_cat_raids"]  = "Dungeon & Schlachtzug"
