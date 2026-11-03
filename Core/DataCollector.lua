@@ -483,13 +483,22 @@ end
 -- Tracks instance entries for the per hour limit display. Each entry is
 -- stored with a timestamp and pruned once it is older than one hour.
 -- ============================================================
+local DELVE_DIFFICULTY_ID = 208
+
+-- Instance types that never count towards the per hour limit.
+-- Delves report the type "scenario", so they are told apart by difficulty.
+local UNLIMITED_INSTANCE_TYPES = {
+    none = true, pvp = true, arena = true,
+    neighborhood = true, interior = true, home = true,
+}
+
 local function TrackInstanceEntry()
     local db = GetTrackerDB()
     if not db then return end
 
     local instName, instType, diff = GetInstanceInfo()
     if not instName or not instType
-    or instType == "none" or instType == "pvp" or instType == "arena" then
+    or UNLIMITED_INSTANCE_TYPES[instType] or diff == DELVE_DIFFICULTY_ID then
         return
     end
 

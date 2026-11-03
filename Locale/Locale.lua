@@ -288,6 +288,7 @@ L["news_tag_new"]     = "NEW"
 L["news_tag_fixed"]   = "FIXED"
 L["news_tag_changed"] = "CHANGED"
 L["news_chat_history"] = "The chat history is saved per character now.\nSaved messages are only restored into the chat tab they came from.\nHistory of characters not seen for 30 days is deleted."
+L["news_instance_limit"] = "Delves and housing no longer count towards the 10 instances per hour limit."
 
 -- Currency expansion categories
 L["curr_cat_season"] = "Season"
@@ -711,6 +712,7 @@ if GetLocale() == "deDE" then
     L["news_tag_fixed"]   = "BEHOBEN"
     L["news_tag_changed"] = "GEÄNDERT"
     L["news_chat_history"] = "Der Chatverlauf wird jetzt pro Charakter gespeichert.\nGespeicherte Nachrichten kommen nur in den Chat-Tab zurück, aus dem sie stammen.\nVerlauf von Charakteren, die 30 Tage nicht eingeloggt waren, wird gelöscht."
+    L["news_instance_limit"] = "Tiefen und Housing zählen nicht mehr ins Limit von 10 Instanzen pro Stunde."
 
     L["curr_cat_season"] = "Saison"
     L["curr_cat_raids"]  = "Dungeon & Schlachtzug"
