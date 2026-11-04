@@ -201,6 +201,12 @@ function AklimeMod_InitDB()
     def(db.afkTimer, "locked",   true)
     def(db.afkTimer, "fontSizeSlider", 50)
 
+    db.easyScrap = db.easyScrap or {}
+    def(db.easyScrap, "enabled",           false)
+    def(db.easyScrap, "skipEquipmentSets", true)
+    def(db.easyScrap, "autoRefill",        true)
+    db.easyScrap.ignored = db.easyScrap.ignored or {}
+
     db.deathSound = db.deathSound or {}
     def(db.deathSound, "enabled", false)
 

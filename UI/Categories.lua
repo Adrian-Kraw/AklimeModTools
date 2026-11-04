@@ -2032,6 +2032,20 @@ local function addQoLNodes(dp)
     end)
     addInfo(afkNode, L["info_afk_timer"])
 
+    local scrapNode = addModule(dp, L["mod_easy_scrap"],
+        function() return AklimeMod_EasyScrap:IsEnabled() end,
+        function(v) AklimeMod_EasyScrap:SetEnabled(v) end
+    )
+    addToggle(scrapNode, L["toggle_es_skip_sets"],
+        function() return AklimeMod_EasyScrap:IsSkipEquipmentSets() end,
+        function(v) AklimeMod_EasyScrap:SetSkipEquipmentSets(v) end
+    )
+    addToggle(scrapNode, L["toggle_es_auto_refill"],
+        function() return AklimeMod_EasyScrap:IsAutoRefill() end,
+        function(v) AklimeMod_EasyScrap:SetAutoRefill(v) end
+    )
+    addInfo(scrapNode, L["info_easy_scrap"])
+
     local vaultNode = addPlainModule(dp, L["mod_weekly_vault"])
     addInfo(vaultNode, L["info_weekly_vault"])
     addAction(vaultNode, L["action_open_vault"], function()

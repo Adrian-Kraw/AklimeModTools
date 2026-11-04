@@ -1,6 +1,6 @@
 ## 1.4.5
 
-Chat history is now saved per character and no longer mixes up chat tabs. / Der Chatverlauf wird jetzt pro Charakter gespeichert und vermischt keine Chat-Tabs mehr.
+Chat history is now saved per character and no longer mixes up chat tabs, plus a new helper for the scrapping machine. / Der Chatverlauf wird jetzt pro Charakter gespeichert und vermischt keine Chat-Tabs mehr, dazu ein neuer Helfer für den Verschrotter.
 
 **EN**
 
@@ -15,6 +15,10 @@ Character Tracker
 
 * Changed: Delves and housing no longer count towards the 10 instances per hour limit.
 
+Easier Scrap
+
+* New: A list below the scrapping machine shows every scrappable item in your bags. Click an item to put it in the machine, right-click to ignore it. Fill loads up to nine items at once and the machine is filled again by itself after every scrap run. You find it under Quality of Life, Miscellaneous.
+
 **DE**
 
 Chatverlauf
@@ -27,6 +31,10 @@ Chatverlauf
 Charakter-Tracker
 
 * Geändert: Tiefen und Housing zählen nicht mehr ins Limit von 10 Instanzen pro Stunde.
+
+Einfacheres verschrotten
+
+* Neu: Eine Liste unter dem Verschrotter zeigt alle verschrottbaren Gegenstände aus deinen Taschen. Ein Klick legt einen Gegenstand in den Verschrotter, ein Rechtsklick ignoriert ihn. Befüllen legt bis zu neun Gegenstände auf einmal hinein und nach jedem Verschrotten wird der Verschrotter von selbst neu befüllt. Du findest es unter Quality of Life, Sonstiges.
 
 ## 1.4.4
 

@@ -57,6 +57,7 @@ Modules\QoL\FriendsListDecor.lua
 Modules\QoL\ChatFontSize.lua
 Modules\QoL\HeroismTracker.lua
 Modules\QoL\AfkTimer.lua
+Modules\QoL\EasyScrap.lua
 Modules\QoL\DeathSound.lua
 Modules\QoL\TalentReminder.lua
 Modules\QoL\BlockRequests.lua
