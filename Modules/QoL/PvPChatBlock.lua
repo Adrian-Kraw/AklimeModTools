@@ -1,6 +1,11 @@
 -- Modules/QoL/PvPChatBlock.lua
 -- Blocks Enter (open chat) in PvP instances (arena + battleground, rated + unrated).
+-- In the same places the chat bubbles are turned off.
 -- Toggle via the minimap radial menu button.
+
+-- Battlegrounds use the raid setting, arenas the party setting
+local CHAT_BUBBLE_CVARS = { "chatBubbles", "chatBubblesParty", "chatBubblesRaid" }
+local BUBBLES_OFF       = "0"
 
 -- ============================================================
 -- DB
@@ -20,6 +25,30 @@ end
 local function IsInPvPInstance()
     local inInstance, instanceType = IsInInstance()
     return inInstance and (instanceType == "pvp" or instanceType == "arena")
+end
+
+-- ============================================================
+-- Chat bubbles
+-- The old values are saved in the DB, so a /reload inside the instance
+-- cannot leave the bubbles switched off for good.
+-- ============================================================
+local function HideBubbles()
+    local db = GetDB()
+    if not db or db.savedBubbles then return end
+    db.savedBubbles = {}
+    for _, cvar in ipairs(CHAT_BUBBLE_CVARS) do
+        db.savedBubbles[cvar] = GetCVar(cvar)
+        SetCVar(cvar, BUBBLES_OFF)
+    end
+end
+
+local function RestoreBubbles()
+    local db = GetDB()
+    if not db or not db.savedBubbles then return end
+    for cvar, value in pairs(db.savedBubbles) do
+        SetCVar(cvar, value)
+    end
+    db.savedBubbles = nil
 end
 
 -- ============================================================
@@ -51,11 +80,14 @@ local function Block()
         end
         if not _G["ChatFrame" .. i] then break end
     end
+
+    HideBubbles()
 end
 
 local function Unblock()
     blocked = false
     -- Hook stays but IsEnabled() returns false, so Show() is not blocked
+    RestoreBubbles()
 end
 
 -- ============================================================
@@ -160,5 +192,9 @@ end
 function AklimeMod_PvPChatBlock.Init()
     if IsEnabled() then
         RegisterEvents()
+    end
+    -- Bubbles left switched off by a crash or a disabled module come back here
+    if not (IsEnabled() and IsInPvPInstance()) then
+        RestoreBubbles()
     end
 end

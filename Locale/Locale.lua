@@ -291,6 +291,7 @@ L["news_tag_changed"] = "CHANGED"
 L["news_chat_history"] = "The chat history is saved per character now.\nSaved messages are only restored into the chat tab they came from.\nHistory of characters not seen for 30 days is deleted."
 L["news_instance_limit"] = "Delves and housing no longer count towards the 10 instances per hour limit."
 L["news_easy_scrap"] = "A list below the scrapping machine shows all scrappable items.\nFill loads up to nine items and refills after every scrap run.\nFind it under Quality of Life, Miscellaneous."
+L["news_pvp_chat_bubbles"] = "In arenas and battlegrounds the chat bubbles are turned off as well while the block is on."
 
 -- Currency expansion categories
 L["curr_cat_season"] = "Season"
@@ -467,7 +468,7 @@ L["info_quest_tracker"]    = "Quest count: gold number in tracker header.\nButto
 L["info_drink_reminder"]   = "Reminds you regularly to drink and stretch.\nAppears as an in-game popup top center. In instances the\nalert is held back and shown when you are outside again."
 L["info_played_time"]      = "Records played time of all chars on login automatically.\nOpen: /akm played"
 L["info_nameplate_color"]  = "Colors nameplates in PvP instances (Arena & Battleground):\n|cFF00FF00Green|r  = own group / team\n|cFFFF3333Red|r   = enemy"
-L["info_pvp_chat"]         = "Prevents opening the chat input (Enter) in arenas and battlegrounds."
+L["info_pvp_chat"]         = "Prevents opening the chat input (Enter) in arenas and battlegrounds.\nIn the same places the chat bubbles are turned off."
 
 -- ============================================================
 -- German overrides (deDE)
@@ -727,6 +728,7 @@ if GetLocale() == "deDE" then
     L["news_chat_history"] = "Der Chatverlauf wird jetzt pro Charakter gespeichert.\nGespeicherte Nachrichten kommen nur in den Chat-Tab zurück, aus dem sie stammen.\nVerlauf von Charakteren, die 30 Tage nicht eingeloggt waren, wird gelöscht."
     L["news_instance_limit"] = "Tiefen und Housing zählen nicht mehr ins Limit von 10 Instanzen pro Stunde."
     L["news_easy_scrap"] = "Eine Liste unter dem Verschrotter zeigt alle verschrottbaren Gegenstände.\nBefüllen legt bis zu neun Gegenstände hinein und füllt nach jedem Verschrotten neu.\nZu finden unter Quality of Life, Sonstiges."
+    L["news_pvp_chat_bubbles"] = "In Arenen und Schlachtfeldern sind bei aktivem Block auch die Sprechblasen aus."
 
     L["curr_cat_season"] = "Saison"
     L["curr_cat_raids"]  = "Dungeon & Schlachtzug"
@@ -830,7 +832,7 @@ if GetLocale() == "deDE" then
     L["info_drink_reminder"]   = "Erinnert dich regelmäßig daran zu trinken und dich zu strecken.\nErscheint als Ingame-Popup oben mittig. In Instanzen wird die\nMeldung zurückgehalten und kommt wenn du wieder draußen bist."
     L["info_played_time"]      = "Erfasst die Spielzeit aller Chars beim Login automatisch.\nÖffnen: /akm played"
     L["info_nameplate_color"]  = "Färbt Namensplaketten in PvP-Instanzen (Arena & Schlachtfeld):\n|cFF00FF00Grün|r  = eigene Gruppe / Team\n|cFFFF3333Rot|r   = Gegner"
-    L["info_pvp_chat"]         = "Verhindert das Öffnen der Chat-Eingabe (Enter) in Arenen und Schlachtfeldern."
+    L["info_pvp_chat"]         = "Verhindert das Öffnen der Chat-Eingabe (Enter) in Arenen und Schlachtfeldern.\nAn denselben Orten sind die Sprechblasen aus."
 
     -- CharacterTracker
     L["ct_name"]             = "Name"

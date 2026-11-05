@@ -40,6 +40,7 @@ local NEWS_ENTRIES = {
     { title = "mod_chat_history", tag = "fixed", text = "news_chat_history" },
     { title = "ct_title", tag = "changed", text = "news_instance_limit" },
     { title = "mod_easy_scrap", tag = "new", text = "news_easy_scrap" },
+    { title = "mod_pvp_chat_block", tag = "new", text = "news_pvp_chat_bubbles" },
 }
 
 -- Same rounded look as the category buttons on the left

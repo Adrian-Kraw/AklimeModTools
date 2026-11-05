@@ -30,7 +30,6 @@ Visual adjustments to the game client.
 - **Mouse Ring and Trail**: Colored ring and trail effect on the cursor, customizable in color, size and style
 - **Gear Check**: Shows socket icons, item level and enchant status on each equipment slot
 - **Hide Tooltip in Combat**: Hides the tooltip during combat
-- **Color Customization**: Colorize unit frames, HUD, micro menu, action bars and numerous windows. All skins can be enabled at once and colored with a shared global color
 
 **Move UI Elements**
 - **Action Bars**: Closes the gaps of empty slots on action bars 1 to 8. Aligned left, center or right per bar, the bar keeps its Edit Mode position. Requires "Always Show Buttons" to be off
@@ -43,13 +42,18 @@ Visual adjustments to the game client.
 
 ---
 
+### Color Customization
+Colorize unit frames, HUD, micro menu, action bars and numerous windows. All skins can be enabled at once and colored with a shared global color. Skin names follow the language of the game client.
+
+---
+
 ### Quality of Life
 Convenience features for everyday gameplay.
 
 **Chat and Social**
-- **Chat Interaction**: C-button to copy chat history, clickable URLs, item level in chat links
+- **Copy Chat**: C-button to copy chat history, clickable URLs, item level in chat links
 - **Chat Fade**: Older chat messages are automatically faded out
-- **Save Chat History**: Saves chat history across sessions
+- **Save Chat History**: Saves chat history across sessions, separately for each character. Messages are only restored into the chat tab they were saved from. The history of characters you have not logged in with for 30 days is deleted automatically
 - **Set Chat Size for All Characters**: Applies your chosen chat font size (12 to 27 pt) once to every character that does not have one set yet
 - **Extended Ignore List**: Blocks chat messages from ignored players beyond the Blizzard limit
 - **Leave Service Channel**: Automatically leaves service channels on login
@@ -76,7 +80,9 @@ Convenience features for everyday gameplay.
 - **Hide Micro Menu Notifications**: Hides the blue notification badges on the micro menu buttons and the unspent talent points alert
 - **Item and Currency Icons in Chat**: Shows icons for item and currency links in chat
 - **Item Level in Chat Links**: Shows the item level of players next to the chat name
-- **Mailbox Address Book**: Saves recipient names for the mailbox with auto-completion
+- **Mailbox Address Book**: Saves recipient names for the mailbox with auto-completion. A star marks a character as favorite, favorites are listed first
+- **AFK Timer**: Shows a clock in the middle of the screen that counts up how long you have been AFK. Position and size can be changed
+- **Easier Scrap**: Lists every scrappable item in your bags below the scrapping machine. Click an item to put it in the machine, right-click to ignore it. Fill loads up to nine items at once and the machine is filled again after every scrap run
 - **Vendor Window — 20 Items per Page**: Shows 20 instead of 10 items per vendor page
 
 **Gameplay**
@@ -103,7 +109,7 @@ Convenience features for everyday gameplay.
 ### Collecting
 Character and progress overview across all your characters.
 
-- **Character Tracker**: Shows saved instances (raids), Great Vault, currencies and gold for all characters
+- **Character Tracker**: Shows saved instances (raids), Great Vault with the level of every slot, the Mythic keystone of each character, currencies and gold for all characters
 - **Currencies**: Sorted by expansion with totals per currency across all characters, filter which currencies are shown
 
 ---
@@ -180,7 +186,6 @@ Visuelle Anpassungen am Spielclient.
 - **Mausring und Mausspur**: Farbiger Ring und Trail-Effekt am Mauszeiger, anpassbar in Farbe, Größe und Stil
 - **Ausrüstungs-Prüfung**: Zeigt Sockel-Icons, Itemlevel und Verzauberungsstatus an jedem Equipment-Slot
 - **Tooltip im Kampf ausblenden**: Blendet den Tooltip während des Kampfes aus
-- **Farbliche Anpassungen**: Einfärben von Unit Frames, HUD, Micro Menu, Action Bars und zahlreichen Fenstern. Alle Skins lassen sich auf einmal aktivieren und mit einer gemeinsamen Globalfarbe einfärben
 
 **UI Elemente verschieben**
 - **Aktionsleisten**: Schließt die Lücken leerer Plätze in den Aktionsleisten 1 bis 8. Pro Leiste links, mittig oder rechts ausgerichtet, die Leiste behält ihre Position aus dem Bearbeitungsmodus. Voraussetzung: "Schaltflächen immer anzeigen" ist aus
@@ -193,13 +198,18 @@ Visuelle Anpassungen am Spielclient.
 
 ---
 
+### Farbliche Anpassungen
+Einfärben von Unit Frames, HUD, Micro Menu, Action Bars und zahlreichen Fenstern. Alle Skins lassen sich auf einmal aktivieren und mit einer gemeinsamen Globalfarbe einfärben. Die Namen der Skins folgen der Sprache des Spielclients.
+
+---
+
 ### Quality of Life
 Komfort-Features für den Spielalltag.
 
 **Chat und Social**
-- **Chat Interaktion**: C-Button zum Kopieren des Chatverlaufs, klickbare URLs, Itemlevel in Chat-Links
+- **Chat kopieren**: C-Button zum Kopieren des Chatverlaufs, klickbare URLs, Itemlevel in Chat-Links
 - **Chat verblassen**: Ältere Chat-Nachrichten werden automatisch ausgeblendet
-- **Chatverlauf speichern**: Speichert den Chatverlauf sitzungsübergreifend
+- **Chatverlauf speichern**: Speichert den Chatverlauf sitzungsübergreifend, getrennt für jeden Charakter. Nachrichten kommen nur in den Chat-Tab zurück, aus dem sie gespeichert wurden. Der Verlauf von Charakteren, mit denen du 30 Tage nicht eingeloggt warst, wird automatisch gelöscht
 - **Chatgröße für alle Chars setzen**: Setzt die gewählte Chat-Schriftgröße (12 bis 27 pt) einmalig bei jedem Charakter, der noch keine eigene hat
 - **Erweiterte Ignore-Liste**: Blockiert Chat-Nachrichten ignorierter Spieler über das Blizzard-Limit hinaus
 - **Dienste-Channel verlassen**: Verlässt Dienste-Channels automatisch beim Login
@@ -226,7 +236,9 @@ Komfort-Features für den Spielalltag.
 - **Micro-Menü-Benachrichtigungen ausblenden**: Blendet die blauen Hinweis-Symbole an den Micro-Menü-Schaltflächen und den Hinweis auf nicht verteilte Talentpunkte aus
 - **Item- und Währungssymbole im Chat**: Zeigt Icons bei Item- und Währungslinks im Chat
 - **Itemlevel in Chat-Links**: Zeigt das Itemlevel von Spielern neben dem Chatnamen
-- **Adressbuch für Post**: Speichert Empfänger-Namen für das Postfach mit Autovervollständigung
+- **Adressbuch für Post**: Speichert Empfänger-Namen für das Postfach mit Autovervollständigung. Ein Stern markiert einen Charakter als Favorit, Favoriten stehen zuerst
+- **AFK-Timer**: Zeigt eine Uhr in der Bildschirmmitte, die hochzählt, wie lange du AFK bist. Position und Größe lassen sich ändern
+- **Einfacheres Verschrotten**: Listet unter dem Verschrotter alle verschrottbaren Gegenstände aus deinen Taschen auf. Ein Klick legt einen Gegenstand in den Verschrotter, ein Rechtsklick ignoriert ihn. Befüllen legt bis zu neun Gegenstände auf einmal hinein und der Verschrotter wird nach jedem Durchlauf neu befüllt
 - **Händlerfenster — 20 Gegenstände pro Seite**: Zeigt 20 statt 10 Gegenstände pro Händler-Seite
 
 **Gameplay**
@@ -253,7 +265,7 @@ Komfort-Features für den Spielalltag.
 ### Collecting
 Charakter- und Fortschrittsübersicht über alle eigenen Charaktere.
 
-- **Charakter-Tracker**: Zeigt gespeicherte Instanzen (Raids), Große Schatzkammer, Währungen und Gold für alle Charaktere
+- **Charakter-Tracker**: Zeigt gespeicherte Instanzen (Raids), Große Schatzkammer mit der Stufe jedes Platzes, den Mythisch-Schlüsselstein jedes Charakters, Währungen und Gold für alle Charaktere
 - **Währungen**: Nach Erweiterung sortiert mit Gesamtsummen pro Währung über alle Charaktere, Filter welche Währungen angezeigt werden
 
 ---

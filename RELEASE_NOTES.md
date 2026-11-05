@@ -17,6 +17,10 @@ Easier Scrap
 
 * New: A list below the scrapping machine shows every scrappable item in your bags. Click an item to put it in the machine, right-click to ignore it. Fill loads up to nine items at once and the machine is filled again by itself after every scrap run. You find it under Quality of Life, Miscellaneous.
 
+PvP Chat Block
+
+* New: In arenas and battlegrounds the chat bubbles are turned off as well while the block is on. They come back when you leave the instance.
+
 **DE**
 
 Chatverlauf
@@ -33,3 +37,7 @@ Charakter-Tracker
 Einfacheres verschrotten
 
 * Neu: Eine Liste unter dem Verschrotter zeigt alle verschrottbaren Gegenstände aus deinen Taschen. Ein Klick legt einen Gegenstand in den Verschrotter, ein Rechtsklick ignoriert ihn. Befüllen legt bis zu neun Gegenstände auf einmal hinein und nach jedem Verschrotten wird der Verschrotter von selbst neu befüllt. Du findest es unter Quality of Life, Sonstiges.
+
+PvP-Chat-Block
+
+* Neu: In Arenen und Schlachtfeldern sind bei aktivem Block auch die Sprechblasen aus. Sie kommen wieder, wenn du die Instanz verlässt.
