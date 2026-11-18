@@ -171,6 +171,26 @@ end
 -- ============================================================
 local chatBtn = nil
 
+local BTN_BORDER_DEFAULT = { 0.6, 0.5, 0.2, 1 }
+local BTN_HOVER_DEFAULT  = { 1, 0.82, 0, 1 }
+local BTN_TEXT_DEFAULT   = { 1, 0.82, 0, 1 }
+
+-- Uses the Colorizer skin "chatCopyBtn" when active, otherwise the default color.
+local function GetBtnColor(colorKey, default)
+    local C = AklimeMod_Colorizer
+    if C and C:IsEnabled("chatCopyBtn") then return C:GetColor("chatCopyBtn", colorKey) end
+    return unpack(default)
+end
+
+local function ApplyBtnColors(btn, hovered)
+    if hovered then
+        btn:SetBackdropBorderColor(GetBtnColor("highlight", BTN_HOVER_DEFAULT))
+    else
+        btn:SetBackdropBorderColor(GetBtnColor("border", BTN_BORDER_DEFAULT))
+    end
+    btn.label:SetTextColor(GetBtnColor("text", BTN_TEXT_DEFAULT))
+end
+
 local function CreateChatBtn()
     if chatBtn then return chatBtn end
 
@@ -197,7 +217,6 @@ local function CreateChatBtn()
         edgeSize = 12, insets={left=2,right=2,top=2,bottom=2},
     })
     btn:SetBackdropColor(0.08, 0.08, 0.08, 0.9)
-    btn:SetBackdropBorderColor(0.6, 0.5, 0.2, 1)
 
     local tex = btn:CreateTexture(nil, "ARTWORK")
     tex:SetAllPoints()
@@ -206,7 +225,9 @@ local function CreateChatBtn()
 
     local label = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
     label:SetAllPoints()
-    label:SetText("|cFFFFD100C|r")
+    label:SetText("C")
+    btn.label = label
+    ApplyBtnColors(btn, false)
     tex:Hide()  -- Text instead of texture
 
     -- Drag
@@ -228,15 +249,15 @@ local function CreateChatBtn()
 
     -- Highlight
     btn:SetScript("OnEnter", function(self)
-        self:SetBackdropBorderColor(1, 0.82, 0, 1)
+        ApplyBtnColors(self, true)
         GameTooltip:SetOwner(self, "ANCHOR_TOP")
-        GameTooltip:SetText("|cFFFFD100Copy Chat|r", 1, 1, 1)
-        GameTooltip:AddLine("Click: Open Chat History", 0.7,0.7,0.7)
-        GameTooltip:AddLine("Drag: Move Button", 0.7,0.7,0.7)
+        GameTooltip:SetText("|cFFFFD100" .. AklimeModL["mod_chat_interaction"] .. "|r", 1, 1, 1)
+        GameTooltip:AddLine(AklimeModL["chat_copy_tip_click"], 0.7,0.7,0.7)
+        GameTooltip:AddLine(AklimeModL["chat_copy_tip_drag"], 0.7,0.7,0.7)
         GameTooltip:Show()
     end)
     btn:SetScript("OnLeave", function(self)
-        self:SetBackdropBorderColor(0.6, 0.5, 0.2, 1)
+        ApplyBtnColors(self, false)
         GameTooltip:Hide()
     end)
 
@@ -350,6 +371,9 @@ AklimeMod_ChatInteraction = {
     SetClickLinksEnabled = function(v)
         GetDB().clickLinks = v
         if v then RegisterFilters() else UnregisterFilters() end
+    end,
+    RefreshBtnColors = function()
+        if chatBtn then ApplyBtnColors(chatBtn, false) end
     end,
     IsBtnLocked  = function() return GetDB().btnLocked end,
     SetBtnLocked = function(v) GetDB().btnLocked = v end,

@@ -301,8 +301,13 @@ local function CollectorOpen()
                 mouseWasDown = true
             elseif mouseWasDown then
                 mouseWasDown = false
-                closeDetector:SetScript("OnUpdate", nil)
-                if CollectorClose then CollectorClose() end
+                -- A click on the addon's own button or on its menu keeps the
+                -- bar open, the menu hangs below that button
+                local onOwnMenu = AklimeMod_IsMouseOverMenu and AklimeMod_IsMouseOverMenu()
+                if not onOwnMenu then
+                    closeDetector:SetScript("OnUpdate", nil)
+                    if CollectorClose then CollectorClose() end
+                end
             end
         end)
     end)
@@ -313,6 +318,8 @@ CollectorClose = function()
     isOpen = false
     mouseWasDown = false
     closeDetector:SetScript("OnUpdate", nil)
+    -- The menu hangs below the addon button, which leaves with the bar
+    if AklimeMod_CloseRadialMenu then AklimeMod_CloseRadialMenu() end
     suppressHook = true
     for _, btn in ipairs(expandedButtons) do
         RestoreBtn(btn)
@@ -447,7 +454,19 @@ end
 -- ============================================================
 -- API
 -- ============================================================
+local OWN_BUTTON_NAME = "AklimeModMinimapBtn"
+
+-- True while the addon's own minimap button is kept by the collector
+local function HostsOwnButton()
+    if not IsEnabled() or not IncludeOwn() then return false end
+    for _, btn in ipairs(storedButtons) do
+        if btn:GetName() == OWN_BUTTON_NAME then return true end
+    end
+    return false
+end
+
 AklimeMod_MinimapCollector = {
+    HostsOwnButton = HostsOwnButton,
     IsEnabled     = function() return IsEnabled() end,
     IsLocked      = function() return IsLocked() end,
     SetLocked     = function(v)

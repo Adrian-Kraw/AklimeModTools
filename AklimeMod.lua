@@ -46,9 +46,16 @@ end
 local SPREADS   = { -37, -22, -7, 7, 22, 39 }
 local OUTER_R   = 135
 
+-- Menu below the addon button, used while the button sits in the opened
+-- Minimap Button Collector
+local MENU_BUTTON_SIZE = 30
+local HOST_MENU_GAP    = 4   -- Between the addon button and the first menu button
+local HOST_MENU_STEP   = MENU_BUTTON_SIZE + HOST_MENU_GAP
+
 local function ApplyMenuPositions(angle)
     for i, mb in ipairs(menuButtons) do
         local a = angle + math.rad(SPREADS[i])
+        mb:SetFrameStrata("MEDIUM")
         mb:ClearAllPoints()
         mb:SetPoint("CENTER", Minimap, "CENTER",
             math.cos(a) * OUTER_R,
@@ -56,7 +63,20 @@ local function ApplyMenuPositions(angle)
     end
 end
 
+-- The collector bar is drawn in the HIGH strata, so the menu follows it
+local function ApplyHostedMenuPositions()
+    for i, mb in ipairs(menuButtons) do
+        mb:SetFrameStrata("HIGH")
+        mb:ClearAllPoints()
+        mb:SetPoint("TOP", minimapBtn, "BOTTOM", 0, -(HOST_MENU_GAP + (i - 1) * HOST_MENU_STEP))
+    end
+end
+
 minimapBtn:SetScript("OnDragStart", function(self)
+    -- In the collector bar the button stays put. The saved angle belongs to
+    -- its place on the minimap, a drag here would move the menu arc away from it.
+    local collector = AklimeMod_MinimapCollector
+    if collector and collector.HostsOwnButton() then return end
     self:SetScript("OnUpdate", function()
         local mx, my = Minimap:GetCenter()
         local scale  = Minimap:GetEffectiveScale()
@@ -140,9 +160,14 @@ local MENU_ITEMS = {
     },
 }
 
+local function CloseMenu()
+    for _, mb in ipairs(menuButtons) do mb:Hide() end
+    menuOpen = false
+end
+
 local function CreateMenuButton(item)
     local btn = CreateFrame("Button", nil, Minimap, "BackdropTemplate")
-    btn:SetSize(30, 30)
+    btn:SetSize(MENU_BUTTON_SIZE, MENU_BUTTON_SIZE)
     btn:SetFrameStrata("MEDIUM")
     btn:SetFrameLevel(9)
     btn:RegisterForClicks("AnyUp")
@@ -187,8 +212,7 @@ local function CreateMenuButton(item)
         GameTooltip:Hide()
     end)
     btn:SetScript("OnClick", function(self, button)
-        for _, mb in ipairs(menuButtons) do mb:Hide() end
-        menuOpen = false
+        CloseMenu()
         if button == "RightButton" and item.onRightClick then
             item.onRightClick()
         else
@@ -199,18 +223,48 @@ local function CreateMenuButton(item)
     return btn
 end
 
+-- The arc follows the place where the button really sits. The saved angle can
+-- differ from it, for example after the collector put the button back.
+local function GetButtonAngle()
+    local mapX, mapY = Minimap:GetCenter()
+    local btnX, btnY = minimapBtn:GetCenter()
+    if not (mapX and btnX) then
+        return math.rad(AklimeModDB.minimapAngle or -139.6)
+    end
+    return math.atan2(btnY - mapY, btnX - mapX)
+end
+
 local function PositionMenuButtons()
-    ApplyMenuPositions(math.rad(AklimeModDB.minimapAngle or -139.6))
+    local collector = AklimeMod_MinimapCollector
+    if collector and collector.HostsOwnButton() then
+        ApplyHostedMenuPositions()
+    else
+        ApplyMenuPositions(GetButtonAngle())
+    end
 end
 
 local function ToggleMenu()
-    menuOpen = not menuOpen
     if menuOpen then
-        PositionMenuButtons()
-        for _, mb in ipairs(menuButtons) do mb:Show() end
-    else
-        for _, mb in ipairs(menuButtons) do mb:Hide() end
+        CloseMenu()
+        return
     end
+    menuOpen = true
+    PositionMenuButtons()
+    for _, mb in ipairs(menuButtons) do mb:Show() end
+end
+
+-- Used by the Minimap Button Collector, which closes its bar with a click
+-- anywhere except on the addon button and its menu
+function AklimeMod_CloseRadialMenu()
+    CloseMenu()
+end
+
+function AklimeMod_IsMouseOverMenu()
+    if minimapBtn:IsMouseOver() then return true end
+    for _, mb in ipairs(menuButtons) do
+        if mb:IsShown() and mb:IsMouseOver() then return true end
+    end
+    return false
 end
 
 minimapBtn:SetScript("OnClick", function(_, b)

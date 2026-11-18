@@ -1743,12 +1743,32 @@ C:Register("eliteFrame", {
 })
 
 -- ========================================================
+-- Chat copy button (the "C" button of the chat interaction module)
+-- ========================================================
+local function refreshChatCopyBtn()
+    if AklimeMod_ChatInteraction then AklimeMod_ChatInteraction.RefreshBtnColors() end
+end
+
+C:Register("chatCopyBtn", {
+    label  = "Chat Copy Button",
+    group  = "Addons",
+    colors = {
+        border    = { label="Border",    r=DM.r, g=DM.g, b=DM.b, a=1, order=1 },
+        highlight = { label="Highlight", r=DG.r, g=DG.g, b=DG.b, a=1, order=2 },
+        text      = { label="Text",      r=DC.r, g=DC.g, b=DC.b, a=1, order=3 },
+    },
+    -- The button reads the colors itself, because it is created after the Colorizer starts.
+    apply  = refreshChatCopyBtn,
+    remove = refreshChatCopyBtn,
+})
+
+-- ========================================================
 -- Group order
 -- ========================================================
 -- At position 1: Addons appear directly below "Enable all / Disable all"
 table.insert(AklimeMod_Colorizer.groupOrder, 1, {
     label = "Addons",
-    keys  = { "winAklimeMod", "eliteFrame" },
+    keys  = { "winAklimeMod", "eliteFrame", "chatCopyBtn" },
 })
 
 table.insert(AklimeMod_Colorizer.groupOrder, {
