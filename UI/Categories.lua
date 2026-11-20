@@ -726,6 +726,13 @@ local function addInterfaceNodes(dp)
                 function() return fade[k].enabled end,
                 setEnabled
             )
+            addToggle(modeNode, L["toggle_hover_reveal"],
+                function() return fade[k].hoverReveal end,
+                function(v)
+                    fade[k].hoverReveal = v
+                    if AklimeMod_HUDFader then AklimeMod_HUDFader:Refresh() end
+                end
+            )
             addSlider(modeNode, L["slider_transparency"], 0, 100, 1,
                 function() return fade[k].alpha end,
                 function(v)
@@ -765,8 +772,19 @@ local function addInterfaceNodes(dp)
                 addToggle(modeNode, L["toggle_buffs"],         function() return ex.buffs       end, function(v) ex.buffs       = v; refresh() end)
                 addToggle(modeNode, L["toggle_rep_bar"],       function() return ex.repBar      end, function(v) ex.repBar      = v; refresh() end)
                 addToggle(modeNode, L["toggle_damage_meter"],  function() return ex.damageMeter end, function(v) ex.damageMeter = v; refresh() end)
+                if i == 3 then
+                    addToggle(modeNode, L["toggle_housing_menu"], function() return ex.housingMenu end, function(v) ex.housingMenu = v; refresh() end)
+                end
             end
         end
+    end
+
+    if AklimeMod_HideNamesWithUI then
+        local namesNode = addModule(dp, L["mod_hide_names_ui"],
+            function() return AklimeMod_HideNamesWithUI.IsEnabled() end,
+            function(v) AklimeMod_HideNamesWithUI.SetEnabled(v) end
+        )
+        addInfo(namesNode, L["info_hide_names_ui"])
     end
 end
 
@@ -1248,6 +1266,13 @@ local function BuildInterfaceContent(filter)
                 function() return fade[k].enabled end,
                 setEnabled
             )
+            addToggle(modeNode, L["toggle_hover_reveal"],
+                function() return fade[k].hoverReveal end,
+                function(v)
+                    fade[k].hoverReveal = v
+                    if AklimeMod_HUDFader then AklimeMod_HUDFader:Refresh() end
+                end
+            )
             addSlider(modeNode, L["slider_transparency"], 0, 100, 1,
                 function() return fade[k].alpha end,
                 function(v)
@@ -1287,8 +1312,19 @@ local function BuildInterfaceContent(filter)
                 addToggle(modeNode, L["toggle_buffs"],        function() return ex.buffs       end, function(v) ex.buffs       = v; refresh() end)
                 addToggle(modeNode, L["toggle_rep_bar"],      function() return ex.repBar      end, function(v) ex.repBar      = v; refresh() end)
                 addToggle(modeNode, L["toggle_damage_meter"], function() return ex.damageMeter end, function(v) ex.damageMeter = v; refresh() end)
+                if i == 3 then
+                    addToggle(modeNode, L["toggle_housing_menu"], function() return ex.housingMenu end, function(v) ex.housingMenu = v; refresh() end)
+                end
             end
         end
+    end
+
+    if AklimeMod_HideNamesWithUI then
+        local namesNode3 = addModule(dp3, L["mod_hide_names_ui"],
+            function() return AklimeMod_HideNamesWithUI.IsEnabled() end,
+            function(v) AklimeMod_HideNamesWithUI.SetEnabled(v) end
+        )
+        addInfo(namesNode3, L["info_hide_names_ui"])
     end
 
     RSV():SetDataProvider(dp3)

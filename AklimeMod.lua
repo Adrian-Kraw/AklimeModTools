@@ -4,6 +4,7 @@ local L = AklimeModL or {}
 
 local RADIUS = 99
 local menuOpen = false
+local menuHosted = false  -- Layout of the open menu, set when it opens
 local menuButtons = {}
 
 -- ============================================================
@@ -46,16 +47,24 @@ end
 local SPREADS   = { -37, -22, -7, 7, 22, 39 }
 local OUTER_R   = 135
 
--- Menu below the addon button, used while the button sits in the opened
--- Minimap Button Collector
+-- While the button sits in the bar of a Minimap Button Collector (ours or one
+-- of another addon), the menu is a row in the middle of the screen. Collectors
+-- arrange their buttons in many ways, so a menu hanging on the button would
+-- often be covered by the bar.
 local MENU_BUTTON_SIZE = 30
-local HOST_MENU_GAP    = 4   -- Between the addon button and the first menu button
-local HOST_MENU_STEP   = MENU_BUTTON_SIZE + HOST_MENU_GAP
+local MENU_FRAME_LEVEL = 9
+local HOST_MENU_SIZE   = 40
+local HOST_MENU_GAP    = 8   -- Between two buttons of the row
 
+-- The menu buttons change their parent between the two layouts, so parent,
+-- size, strata and level are all set here
 local function ApplyMenuPositions(angle)
     for i, mb in ipairs(menuButtons) do
         local a = angle + math.rad(SPREADS[i])
+        mb:SetParent(Minimap)
+        mb:SetSize(MENU_BUTTON_SIZE, MENU_BUTTON_SIZE)
         mb:SetFrameStrata("MEDIUM")
+        mb:SetFrameLevel(MENU_FRAME_LEVEL)
         mb:ClearAllPoints()
         mb:SetPoint("CENTER", Minimap, "CENTER",
             math.cos(a) * OUTER_R,
@@ -63,20 +72,40 @@ local function ApplyMenuPositions(angle)
     end
 end
 
--- The collector bar is drawn in the HIGH strata, so the menu follows it
+-- DIALOG lies above the collector bars. The menu belongs to the screen here,
+-- not to the minimap, so it is a child of UIParent and keeps its size.
 local function ApplyHostedMenuPositions()
+    local step   = HOST_MENU_SIZE + HOST_MENU_GAP
+    local firstX = -(#menuButtons - 1) * step / 2
     for i, mb in ipairs(menuButtons) do
-        mb:SetFrameStrata("HIGH")
+        mb:SetParent(UIParent)
+        mb:SetSize(HOST_MENU_SIZE, HOST_MENU_SIZE)
+        mb:SetFrameStrata("DIALOG")
+        mb:SetFrameLevel(MENU_FRAME_LEVEL)
         mb:ClearAllPoints()
-        mb:SetPoint("TOP", minimapBtn, "BOTTOM", 0, -(HOST_MENU_GAP + (i - 1) * HOST_MENU_STEP))
+        mb:SetPoint("CENTER", UIParent, "CENTER", firstX + (i - 1) * step, 0)
     end
+end
+
+-- True while the button sits in a collector bar, either in our own Minimap
+-- Button Collector or in one of another addon. Other collectors take the button
+-- with SetParent or by anchoring it to their bar, so both are checked. This way
+-- no collector has to be known by name.
+local function IsButtonHosted()
+    local collector = AklimeMod_MinimapCollector
+    if collector and collector.HostsOwnButton() then return true end
+    if minimapBtn:GetParent() ~= Minimap then return true end
+    for i = 1, minimapBtn:GetNumPoints() do
+        local _, relativeTo = minimapBtn:GetPoint(i)
+        if relativeTo and relativeTo ~= Minimap then return true end
+    end
+    return false
 end
 
 minimapBtn:SetScript("OnDragStart", function(self)
     -- In the collector bar the button stays put. The saved angle belongs to
     -- its place on the minimap, a drag here would move the menu arc away from it.
-    local collector = AklimeMod_MinimapCollector
-    if collector and collector.HostsOwnButton() then return end
+    if IsButtonHosted() then return end
     self:SetScript("OnUpdate", function()
         local mx, my = Minimap:GetCenter()
         local scale  = Minimap:GetEffectiveScale()
@@ -169,7 +198,7 @@ local function CreateMenuButton(item)
     local btn = CreateFrame("Button", nil, Minimap, "BackdropTemplate")
     btn:SetSize(MENU_BUTTON_SIZE, MENU_BUTTON_SIZE)
     btn:SetFrameStrata("MEDIUM")
-    btn:SetFrameLevel(9)
+    btn:SetFrameLevel(MENU_FRAME_LEVEL)
     btn:RegisterForClicks("AnyUp")
     btn:Hide()
 
@@ -197,7 +226,8 @@ local function CreateMenuButton(item)
 
     btn:SetScript("OnEnter", function(self)
         self:SetBackdropBorderColor(1, 0.82, 0, 1)
-        GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+        -- In the row a tooltip on the left would cover the neighbour button
+        GameTooltip:SetOwner(self, menuHosted and "ANCHOR_TOP" or "ANCHOR_LEFT")
         GameTooltip:SetText(item.tooltip, 1, 0.82, 0, 1)
         if item.tooltipLeft then
             GameTooltip:AddLine(item.tooltipLeft, 0.7, 0.7, 0.7)
@@ -235,12 +265,35 @@ local function GetButtonAngle()
 end
 
 local function PositionMenuButtons()
-    local collector = AklimeMod_MinimapCollector
-    if collector and collector.HostsOwnButton() then
+    menuHosted = IsButtonHosted()
+    if menuHosted then
         ApplyHostedMenuPositions()
     else
         ApplyMenuPositions(GetButtonAngle())
     end
+end
+
+-- The row in the middle of the screen has no link to the button anymore. A
+-- collector can close its bar and hide the button while the row is open, so
+-- the row closes with a click anywhere outside of it. Closing it when the button
+-- hides would not work, bars that close when the mouse leaves would take the
+-- row away before a choice is made.
+local clickAwayWatcher = CreateFrame("Frame")
+
+local function WatchClickAway()
+    local mouseWasDown = false
+    clickAwayWatcher:SetScript("OnUpdate", function()
+        if not menuOpen then
+            clickAwayWatcher:SetScript("OnUpdate", nil)
+            return
+        end
+        if IsMouseButtonDown("LeftButton") or IsMouseButtonDown("RightButton") then
+            mouseWasDown = true
+        elseif mouseWasDown then
+            mouseWasDown = false
+            if not AklimeMod_IsMouseOverMenu() then CloseMenu() end
+        end
+    end)
 end
 
 local function ToggleMenu()
@@ -251,6 +304,7 @@ local function ToggleMenu()
     menuOpen = true
     PositionMenuButtons()
     for _, mb in ipairs(menuButtons) do mb:Show() end
+    if menuHosted then WatchClickAway() end
 end
 
 -- Used by the Minimap Button Collector, which closes its bar with a click

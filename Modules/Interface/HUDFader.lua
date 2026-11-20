@@ -73,6 +73,8 @@ local ELEMENTS = {
         end
         return f
     end },
+    -- The housing menu at the top of the screen. It comes from a load on demand addon, so it may not exist yet.
+    { key = "housingMenu", frames = function() return HousingControlsFrame and {HousingControlsFrame} or {} end },
 }
 
 local CHAT_EVENTS = {
@@ -82,6 +84,11 @@ local CHAT_EVENTS = {
     "CHAT_MSG_RAID","CHAT_MSG_RAID_LEADER",
     "CHAT_MSG_GUILD","CHAT_MSG_OFFICER",
     "CHAT_MSG_CHANNEL","CHAT_MSG_INSTANCE_CHAT","CHAT_MSG_INSTANCE_CHAT_LEADER",
+}
+
+-- Battle.net whispers. They are registered apart, so a client without these events cannot break the loading.
+local BN_CHAT_EVENTS = {
+    "CHAT_MSG_BN_WHISPER","CHAT_MSG_BN_WHISPER_INFORM",
 }
 
 local MOVE_ACTIVATE_DELAY = 2
@@ -113,6 +120,14 @@ local function FadeTo(frame, alpha)
     fadeTargets[frame] = math.max(0, math.min(1, alpha))
 end
 
+-- Finishes all running fades at once, so a frame that was set back to full alpha does not fade down in view
+local function CompleteFades()
+    for frame, target in pairs(fadeTargets) do
+        frame:SetAlpha(target)
+        fadeTargets[frame] = nil
+    end
+end
+
 -- ============================================================
 -- Minimap overlays
 -- Nameless MinimapCluster children (player arrow, quest blobs,
@@ -122,10 +137,13 @@ local minimapIdleActive  = false
 local hookedOverlays     = {}
 local currentHidden      = {}
 local minimapShowHooked  = false  -- One-time: hooksecurefunc on Minimap.Show in housing
+local clusterLayoutHooked = false  -- One-time: hooksecurefunc on MinimapCluster.Layout
+local idleClusterWidth, idleClusterHeight = nil, nil  -- Size of the cluster before its parts were hidden
 
 local function HideMinimapOverlays()
     if minimapIdleActive then return end  -- already hidden, no second wipe
     minimapIdleActive = true
+    idleClusterWidth, idleClusterHeight = nil, nil
     wipe(currentHidden)
     if not MinimapCluster then return end
     local inInst, instType = IsInInstance()
@@ -144,6 +162,17 @@ local function HideMinimapOverlays()
         end
         Minimap:Hide()
         return
+    end
+
+    -- Blizzard lays out the cluster again for many reasons, for example when the interface is shown. The cluster
+    -- sizes itself from its shown parts. With all of them hidden it would shrink to nothing, the minimap would sit
+    -- half off screen and the quest tracker below it would move up. So the cluster keeps its size meanwhile.
+    idleClusterWidth, idleClusterHeight = MinimapCluster:GetSize()
+    if not clusterLayoutHooked and MinimapCluster.Layout then
+        clusterLayoutHooked = true
+        hooksecurefunc(MinimapCluster, "Layout", function(self)
+            if minimapIdleActive and idleClusterWidth then self:SetSize(idleClusterWidth, idleClusterHeight) end
+        end)
     end
 
     for _, child in ipairs({ MinimapCluster:GetChildren() }) do
@@ -175,19 +204,46 @@ local function ShowMinimapOverlays()
         pcall(function() child:Show() end)
     end
     wipe(currentHidden)
+    -- MinimapCluster is a layout frame that sizes itself from its shown children. A layout that ran
+    -- while they were hidden, for example when the interface was hidden and shown again, left it too small.
+    -- Showing a child does not start a new layout, so it is requested here.
+    if MinimapCluster and MinimapCluster.MarkDirty then MinimapCluster:MarkDirty() end
 end
 
 -- ============================================================
 -- Helpers
 -- ============================================================
+-- Every chat window counts, also hidden tabs and temporary windows such as whisper tabs.
+-- A tab that is hidden while the interface fades would otherwise appear at full alpha when selected.
+-- Blizzard numbers temporary windows above MaxChatWindows, so the range must reach past that number.
+local TEMPORARY_CHAT_WINDOW_ALLOWANCE = 40
+local MAX_CHAT_FRAMES = (Constants and Constants.ChatFrameConstants and Constants.ChatFrameConstants.MaxChatWindows or 10) + TEMPORARY_CHAT_WINDOW_ALLOWANCE
+
 local function GetChatFrames()
     local f = {}
-    for i = 1, 10 do
+    for i = 1, MAX_CHAT_FRAMES do
         local cf = _G["ChatFrame" .. i]
-        if cf and cf:IsShown() then f[#f+1] = cf end
+        if cf then f[#f+1] = cf end
     end
     if GeneralDockManager then f[#f+1] = GeneralDockManager end
     return f
+end
+
+-- True while the player types in a chat input box. The chat must not fade away under the text.
+local function IsTyping()
+    for i = 1, MAX_CHAT_FRAMES do
+        local editBox = _G["ChatFrame" .. i .. "EditBox"]
+        if editBox and editBox:HasFocus() then return true end
+    end
+    return false
+end
+
+-- True while the mouse is over a shown chat window or the tab bar. The chat then shows, like for a new message.
+local function IsMouseOverChat()
+    for _, frame in ipairs(GetChatFrames()) do
+        if frame:IsShown() and frame:IsMouseOver() then return true end
+    end
+    return false
 end
 
 local function CancelTimer(t)
@@ -203,6 +259,12 @@ end
 -- ============================================================
 local modeAlphas = {}
 local inCombat   = false
+-- True when an update was skipped because the player hid the whole interface
+local updateSkippedWhileHidden = false
+-- The chat stays visible until this time, set after the player stopped typing or pointed at it
+local chatHoldUntil = 0
+-- Defined further down, because the modes need it before that place
+local StartChatHold
 
 -- Mapping: ELEMENTS key -> DB exclude key
 local EXCLUDE_KEY = {
@@ -221,6 +283,7 @@ local EXCLUDE_KEY = {
     debuffs     = "buffs",
     repBar      = "repBar",
     damageMeter = "damageMeter",
+    housingMenu = "housingMenu",
 }
 
 -- Returns true if the excludeKey is marked as an exception in an active mode
@@ -233,25 +296,82 @@ local function IsExcluded(excludeKey)
     return false
 end
 
-local function ApplyUnified()
+-- Returns true if an active mode has the hover option on
+local function IsHoverRevealOn()
+    for dbKey in pairs(modeAlphas) do
+        local db = AklimeModDB and AklimeModDB.interfaceFade and AklimeModDB.interfaceFade[dbKey]
+        if db and db.hoverReveal then return true end
+    end
+    return false
+end
+
+-- The longest chat delay of the active modes
+local function GetChatHoldDuration()
+    local duration = nil
+    for dbKey in pairs(modeAlphas) do
+        local db = AklimeModDB and AklimeModDB.interfaceFade and AklimeModDB.interfaceFade[dbKey]
+        local delay = db and db.chatDelay
+        if delay and (duration == nil or delay > duration) then duration = delay end
+    end
+    return duration or CHAT_SHOW_DURATION
+end
+
+-- True while the mouse is over a shown frame of this element
+local function IsMouseOverElement(element)
+    local ok, frames = pcall(element.frames)
+    if not ok or not frames then return false end
+    for _, f in ipairs(frames) do
+        if f:IsShown() then
+            local okOver, isOver = pcall(f.IsMouseOver, f)
+            if okOver and isOver then return true end
+        end
+    end
+    return false
+end
+
+-- Keys of the interface elements under the mouse. The chat counts as an element of its own.
+local function GetHoveredKeys()
+    local hovered = {}
+    for _, el in ipairs(ELEMENTS) do
+        if IsMouseOverElement(el) then hovered[el.key] = true end
+    end
+    if IsMouseOverChat() then hovered.chat = true end
+    return hovered
+end
+
+local function ApplyUnified(alphaOnly)
     if inCombat then return end
+    -- The Hide Interface key (Alt+Z by default) hides UIParent. Nothing is touched meanwhile.
+    -- The update is made up for as soon as the interface is back.
+    if not UIParent:IsShown() then
+        updateSkippedWhileHidden = true
+        return
+    end
     local maxAlpha = nil
     for _, a in pairs(modeAlphas) do
         if maxAlpha == nil or a > maxAlpha then maxAlpha = a end
     end
     if maxAlpha == nil then maxAlpha = 1.0 end
 
+    -- With the hover option, an element under the mouse is shown while the rest stays faded
+    local hovered = IsHoverRevealOn() and GetHoveredKeys() or {}
+
     for _, el in ipairs(ELEMENTS) do
-        local alpha = IsExcluded(EXCLUDE_KEY[el.key]) and 1.0 or maxAlpha
+        local alpha = (IsExcluded(EXCLUDE_KEY[el.key]) or hovered[el.key]) and 1.0 or maxAlpha
         local ok, frames = pcall(el.frames)
         if ok and frames then
             for _, f in ipairs(frames) do FadeTo(f, alpha) end
         end
     end
-    local chatAlpha = IsExcluded("chat") and 1.0 or maxAlpha
+    -- The chat stays visible while the player types or points at it, and for the chat delay afterwards
+    local chatAlpha = (IsExcluded("chat") or IsTyping() or hovered.chat or GetTime() < chatHoldUntil) and 1.0 or maxAlpha
     for _, cf in ipairs(GetChatFrames()) do FadeTo(cf, chatAlpha) end
 
-    if maxAlpha == 0 and not IsExcluded("minimap") then
+    -- Showing or hiding the minimap parts changes the size of the minimap cluster. Right after the interface
+    -- came back, Blizzard is still busy with its own layout. So these parts are left to the next update.
+    if alphaOnly then return end
+
+    if maxAlpha == 0 and not IsExcluded("minimap") and not hovered.minimap then
         HideMinimapOverlays()
     else
         if Minimap then Minimap:SetAlpha(1.0) end
@@ -332,6 +452,8 @@ local function CreateMode(dbKey, zoneCheck)
         if not isEnabled() or inCombat or not zoneCheck() then return end
         if state ~= "idle" then return end
         chatTimer = CancelTimer(chatTimer)
+        -- The shared hold keeps the chat visible even if another update runs before the time is over
+        StartChatHold()
         for _, cf in ipairs(GetChatFrames()) do FadeTo(cf, 1.0) end
         local db = getDB()
         local delay = (db and db.chatDelay) or CHAT_SHOW_DURATION
@@ -472,6 +594,10 @@ ef:RegisterEvent("PLAYER_FLAGS_CHANGED")
 ef:RegisterEvent("ZONE_CHANGED_INDOORS")
 ef:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 for _, ev in ipairs(CHAT_EVENTS) do ef:RegisterEvent(ev) end
+for _, ev in ipairs(BN_CHAT_EVENTS) do
+    isChatEvent[ev] = true
+    pcall(ef.RegisterEvent, ef, ev)
+end
 
 ef:SetScript("OnEvent", function(_, event)
     if isChatEvent[event] then
@@ -507,6 +633,132 @@ ef:SetScript("OnEvent", function(_, event)
         or event == "ZONE_CHANGED_NEW_AREA" then
         for _, m in ipairs(ALL_MODES) do m:OnZoneChanged() end
     end
+end)
+
+-- ============================================================
+-- Chat windows created later and typing
+-- Whisper windows are created later and start at full alpha. They get the faded alpha right away.
+-- Typing starts or ends when an input box gains or loses focus. The chat is then shown or faded again.
+-- Without any wish from a mode there is nothing to fade, so the interface stays untouched.
+-- ============================================================
+local hookedEditBoxes = {}
+
+local function OnChatChanged()
+    if next(modeAlphas) then ApplyUnified() end
+end
+
+-- Keeps the chat visible for the chat delay. The timer applies the faded alpha again when the time is over.
+local chatHoldTimer = nil
+function StartChatHold()
+    if not next(modeAlphas) then return end
+    local duration = GetChatHoldDuration()
+    chatHoldUntil = GetTime() + duration
+    chatHoldTimer = CancelTimer(chatHoldTimer)
+    chatHoldTimer = C_Timer.NewTimer(duration, function()
+        chatHoldTimer = nil
+        chatHoldUntil = 0
+        ApplyUnified()
+    end)
+end
+
+local function OnChatInputClosed()
+    StartChatHold()
+    OnChatChanged()
+end
+
+local function HookEditBoxes()
+    for i = 1, MAX_CHAT_FRAMES do
+        local editBox = _G["ChatFrame" .. i .. "EditBox"]
+        if editBox and not hookedEditBoxes[editBox] then
+            hookedEditBoxes[editBox] = true
+            editBox:HookScript("OnEditFocusGained", OnChatChanged)
+            editBox:HookScript("OnEditFocusLost", OnChatInputClosed)
+        end
+    end
+end
+
+local hookFrame = CreateFrame("Frame")
+hookFrame:RegisterEvent("PLAYER_LOGIN")
+hookFrame:SetScript("OnEvent", function()
+    HookEditBoxes()
+    hooksecurefunc("FCF_OpenTemporaryWindow", function()
+        HookEditBoxes()
+        OnChatChanged()
+    end)
+end)
+
+-- The mouse position is polled instead of hooked, so elements created later need no extra hook.
+-- Only a change of the elements under the mouse triggers a new calculation.
+local HOVER_CHECK_INTERVAL = 0.1
+local hoverElapsed = 0
+local lastHoverSignature = ""
+local wasOverChat = false
+-- Blizzard sets the alpha of its managed frames, such as the objective tracker, back to 1 when the interface
+-- is shown again. The faded alpha is set again at once, so these frames do not stay bright.
+local interfaceWasShown = true
+local function OnInterfaceShown()
+    if not updateSkippedWhileHidden and not next(modeAlphas) then return end
+    -- The minimap parts follow in the next check, when Blizzard has finished its layout
+    updateSkippedWhileHidden = true
+    hoverElapsed = 0
+    ApplyUnified(true)
+    CompleteFades()
+end
+local hoverFrame = CreateFrame("Frame")
+
+-- Joins the hovered keys in a fixed order, so equal states give equal text.
+local function GetHoverSignature()
+    local hovered = GetHoveredKeys()
+    local parts = {}
+    for _, el in ipairs(ELEMENTS) do
+        if hovered[el.key] then parts[#parts + 1] = el.key end
+    end
+    if hovered.chat then parts[#parts + 1] = "chat" end
+    return table.concat(parts, ",")
+end
+
+hoverFrame:SetScript("OnUpdate", function(_, elapsed)
+    -- Checked in every frame, so the faded alpha is back before the first frame of the shown interface is drawn
+    local interfaceShown = UIParent:IsShown()
+    if interfaceShown and not interfaceWasShown then OnInterfaceShown() end
+    interfaceWasShown = interfaceShown
+    hoverElapsed = hoverElapsed + elapsed
+    if hoverElapsed < HOVER_CHECK_INTERVAL then return end
+    hoverElapsed = 0
+    if updateSkippedWhileHidden and UIParent:IsShown() then
+        updateSkippedWhileHidden = false
+        ApplyUnified()
+    end
+    if not next(modeAlphas) or not IsHoverRevealOn() then
+        lastHoverSignature = ""
+        wasOverChat = false
+        return
+    end
+    -- The chat stays visible for the chat delay after the mouse left it
+    local overChat = IsMouseOverChat()
+    if wasOverChat and not overChat then StartChatHold() end
+    wasOverChat = overChat
+    local signature = GetHoverSignature()
+    if signature ~= lastHoverSignature then
+        lastHoverSignature = signature
+        ApplyUnified()
+    end
+end)
+
+-- ============================================================
+-- Housing menu
+-- The menu belongs to the load on demand addon Blizzard_HousingControls. It can be created after the
+-- last fade and would then stay visible until the next change. So it is faded as soon as it appears.
+-- ============================================================
+local HOUSING_CONTROLS_ADDON = "Blizzard_HousingControls"
+local housingFrame = CreateFrame("Frame")
+housingFrame:RegisterEvent("ADDON_LOADED")
+for _, ev in ipairs({ "HOUSE_PLOT_ENTERED", "HOUSE_EDITOR_AVAILABILITY_CHANGED" }) do
+    pcall(housingFrame.RegisterEvent, housingFrame, ev)
+end
+housingFrame:SetScript("OnEvent", function(_, event, loadedAddon)
+    if event == "ADDON_LOADED" and loadedAddon ~= HOUSING_CONTROLS_ADDON then return end
+    if next(modeAlphas) then ApplyUnified() end
 end)
 
 -- ============================================================

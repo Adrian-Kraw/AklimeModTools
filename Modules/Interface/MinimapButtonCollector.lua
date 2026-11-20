@@ -302,7 +302,7 @@ local function CollectorOpen()
             elseif mouseWasDown then
                 mouseWasDown = false
                 -- A click on the addon's own button or on its menu keeps the
-                -- bar open, the menu hangs below that button
+                -- bar open, so a choice can be made in the menu
                 local onOwnMenu = AklimeMod_IsMouseOverMenu and AklimeMod_IsMouseOverMenu()
                 if not onOwnMenu then
                     closeDetector:SetScript("OnUpdate", nil)
@@ -318,7 +318,7 @@ CollectorClose = function()
     isOpen = false
     mouseWasDown = false
     closeDetector:SetScript("OnUpdate", nil)
-    -- The menu hangs below the addon button, which leaves with the bar
+    -- The menu belongs to the addon button, which leaves with the bar
     if AklimeMod_CloseRadialMenu then AklimeMod_CloseRadialMenu() end
     suppressHook = true
     for _, btn in ipairs(expandedButtons) do

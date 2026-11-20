@@ -266,6 +266,7 @@ function AklimeMod_InitDB()
         db.interfaceFade[k] = db.interfaceFade[k] or {}
         def(db.interfaceFade[k], "enabled", false)
         def(db.interfaceFade[k], "alpha",   60)
+        def(db.interfaceFade[k], "hoverReveal", false)
     end
     def(db.interfaceFade.mode1, "moveDelay", 1)
     def(db.interfaceFade.mode1, "idleDelay", 5)
@@ -290,6 +291,10 @@ function AklimeMod_InitDB()
         def(ex, "repBar",      false)
         def(ex, "damageMeter", false)
     end
+    def(db.interfaceFade.mode3.exclude, "housingMenu", false)
+
+    db.hideNamesWithUI = db.hideNamesWithUI or {}
+    def(db.hideNamesWithUI, "enabled", false)
 
     db.playedTime = db.playedTime or {}
     db.playedTime.chars = db.playedTime.chars or {}
