@@ -13,8 +13,11 @@ Interface
 * New: Battle.net whispers show the chat for a moment, like normal whispers.
 * Changed: The chat stays visible as long as the chat input is open, even if you do not type anything.
 * Changed: The time under Chat Visible For now also counts after you close the chat input and after the mouse left the chat. The chat stays visible for that time.
+* Changed: The times under Fade Out After and Chat Visible For can now be set up to 180 seconds, in steps of 5 seconds. Before, the limit was 60 seconds.
+* Fixed: The interface could stay visible instead of fading out after the time under Fade Out After. Events such as a zone change canceled the running time, and they can happen often. The time now runs to its end.
 * Fixed: The chat could fade out before the time under Chat Visible For was over, for example when the mouse moved over another element. The chat now stays visible for the full time.
 * Fixed: Chat tabs that were not shown while the interface faded, for example the tab of a Battle.net conversation or any other whisper tab, stayed visible. All chat tabs fade now.
+* Fixed: The name of a chat tab that you drag out of the chat window stayed visible while the interface faded. It fades out now as well.
 * Fixed: The minimap moved to the right when you pressed the key that hides the whole interface (Alt+Z by default) while the interface was faded. Interface Fading now leaves everything alone while the interface is hidden.
 * Fixed: The objective tracker on the right stayed bright after you hid the whole interface with that key and showed it again while Interface Fading was active. It now stays faded.
 
@@ -34,8 +37,11 @@ Interface
 * Neu: Battle.net-Flüstern blenden den Chat kurz ein, wie normales Flüstern.
 * Geändert: Der Chat bleibt sichtbar, solange die Chat-Eingabe offen ist, auch wenn du nichts tippst.
 * Geändert: Die Zeit unter Chat eingeblendet für gilt jetzt auch, nachdem du die Chat-Eingabe geschlossen hast und nachdem die Maus den Chat verlassen hat. Der Chat bleibt für diese Zeit sichtbar.
+* Geändert: Die Zeiten unter Ausblenden nach und Chat eingeblendet für lassen sich jetzt bis auf 180 Sekunden in Schritten von 5 Sekunden einstellen. Vorher lag die Grenze bei 60 Sekunden.
+* Behoben: Das Interface konnte sichtbar bleiben, statt nach der Zeit unter Ausblenden nach auszublenden. Ereignisse wie ein Zonenwechsel brachen die laufende Zeit ab, und sie kommen oft vor. Die Zeit läuft jetzt bis zum Ende.
 * Behoben: Der Chat konnte ausblenden, bevor die Zeit unter Chat eingeblendet für abgelaufen war, zum Beispiel wenn die Maus über ein anderes Element fuhr. Der Chat bleibt jetzt für die volle Zeit sichtbar.
 * Behoben: Chat-Tabs, die beim Ausblenden des Interface nicht angezeigt wurden, zum Beispiel der Tab einer Battle.net-Unterhaltung oder ein anderer Flüster-Tab, blieben sichtbar. Alle Chat-Tabs blenden jetzt aus.
+* Behoben: Der Name eines Chat-Tabs, den du aus dem Chatfenster herausgezogen hast, blieb sichtbar, während das Interface ausgeblendet war. Er blendet jetzt auch aus.
 * Behoben: Die Minimap rutschte nach rechts, wenn du die Taste zum Ausblenden der gesamten Benutzeroberfläche (standardmäßig Alt+Z) gedrückt hast, während das Interface ausgeblendet war. Die Interface Ausblendung lässt jetzt alles in Ruhe, solange die Benutzeroberfläche versteckt ist.
 * Behoben: Die Questverfolgung rechts blieb hell, nachdem du die gesamte Benutzeroberfläche mit dieser Taste versteckt und wieder gezeigt hast, während die Interface Ausblendung aktiv war. Sie bleibt jetzt ausgeblendet.
 

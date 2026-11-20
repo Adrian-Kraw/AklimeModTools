@@ -749,12 +749,12 @@ local function addInterfaceNodes(dp)
                     function(v) fade[k].moveDelay = v end,
                     function(v) return v == 0 and L["fmt_instant"] or v .. " s" end
                 )
-                addSlider(modeNode, L["slider_idle_delay"], 5, 60, 1,
+                addSlider(modeNode, L["slider_idle_delay"], 5, 180, 5,
                     function() return fade[k].idleDelay end,
                     function(v) fade[k].idleDelay = v end,
                     function(v) return v .. " s" end
                 )
-                addSlider(modeNode, L["slider_chat_delay"], 5, 60, 1,
+                addSlider(modeNode, L["slider_chat_delay"], 5, 180, 5,
                     function() return fade[k].chatDelay end,
                     function(v) fade[k].chatDelay = v end,
                     function(v) return v .. " s" end
@@ -1289,12 +1289,12 @@ local function BuildInterfaceContent(filter)
                     function(v) fade[k].moveDelay = v end,
                     function(v) return v == 0 and L["fmt_instant"] or v .. " s" end
                 )
-                addSlider(modeNode, L["slider_idle_delay"], 5, 60, 1,
+                addSlider(modeNode, L["slider_idle_delay"], 5, 180, 5,
                     function() return fade[k].idleDelay end,
                     function(v) fade[k].idleDelay = v end,
                     function(v) return v .. " s" end
                 )
-                addSlider(modeNode, L["slider_chat_delay"], 5, 60, 1,
+                addSlider(modeNode, L["slider_chat_delay"], 5, 180, 5,
                     function() return fade[k].chatDelay end,
                     function(v) fade[k].chatDelay = v end,
                     function(v) return v .. " s" end
