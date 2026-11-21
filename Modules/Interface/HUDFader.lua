@@ -135,7 +135,7 @@ end
 -- ============================================================
 local minimapIdleActive  = false
 local hookedOverlays     = {}
-local currentHidden      = {}
+local currentHidden      = {}  -- Set: every part hidden while the minimap is faded
 local minimapShowHooked  = false  -- One-time: hooksecurefunc on Minimap.Show in housing
 local clusterLayoutHooked = false  -- One-time: hooksecurefunc on MinimapCluster.Layout
 local idleClusterWidth, idleClusterHeight = nil, nil  -- Size of the cluster before its parts were hidden
@@ -183,10 +183,16 @@ local function HideMinimapOverlays()
                 if not hookedOverlays[child] then
                     hookedOverlays[child] = true
                     child:HookScript("OnShow", function(self)
-                        if minimapIdleActive then self:Hide() end
+                        if minimapIdleActive then
+                            -- The game shows some parts again while the minimap is faded, for example the
+                            -- layer of a tunnel. It is remembered here, otherwise it would stay hidden
+                            -- when the minimap comes back and the inner circle would stay empty.
+                            currentHidden[self] = true
+                            self:Hide()
+                        end
                     end)
                 end
-                currentHidden[#currentHidden + 1] = child
+                currentHidden[child] = true
                 child:Hide()
             end
         end
@@ -200,7 +206,7 @@ local function ShowMinimapOverlays()
     if Minimap and not Minimap:IsShown() then
         Minimap:Show()
     end
-    for _, child in ipairs(currentHidden) do
+    for child in pairs(currentHidden) do
         pcall(function() child:Show() end)
     end
     wipe(currentHidden)

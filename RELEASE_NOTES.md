@@ -18,6 +18,7 @@ Interface
 * Fixed: The name of a chat tab that you drag out of the chat window stayed visible while the interface faded. It fades out now as well.
 * Fixed: The minimap moved to the right when you pressed the key that hides the whole interface (Alt+Z by default) while the interface was faded. Interface Fading now leaves everything alone while the interface is hidden.
 * Fixed: The objective tracker on the right stayed bright after you hid the whole interface with that key and showed it again while Interface Fading was active. It now stays faded.
+* Fixed: With Interface Fading, parts of the minimap that the game showed again while the minimap was faded, for example the map of a tunnel, stayed hidden when the minimap came back. The inner circle stayed empty. They are shown again now.
 
 Minimap Button Collector
 
@@ -42,6 +43,7 @@ Interface
 * Behoben: Der Name eines Chat-Tabs, den du aus dem Chatfenster herausgezogen hast, blieb sichtbar, während das Interface ausgeblendet war. Er blendet jetzt auch aus.
 * Behoben: Die Minimap rutschte nach rechts, wenn du die Taste zum Ausblenden der gesamten Benutzeroberfläche (standardmäßig Alt+Z) gedrückt hast, während das Interface ausgeblendet war. Die Interface Ausblendung lässt jetzt alles in Ruhe, solange die Benutzeroberfläche versteckt ist.
 * Behoben: Die Questverfolgung rechts blieb hell, nachdem du die gesamte Benutzeroberfläche mit dieser Taste versteckt und wieder gezeigt hast, während die Interface Ausblendung aktiv war. Sie bleibt jetzt ausgeblendet.
+* Behoben: Bei der Interface Ausblendung blieben Teile der Minimap, die das Spiel während des Ausblendens neu anzeigte, zum Beispiel die Karte eines Tunnels, versteckt, wenn die Minimap zurückkam. Der innere Kreis blieb leer. Sie werden jetzt wieder angezeigt.
 
 Minimap Button Sammler
 
