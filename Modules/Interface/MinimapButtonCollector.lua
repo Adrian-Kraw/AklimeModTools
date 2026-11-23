@@ -467,6 +467,7 @@ end
 
 AklimeMod_MinimapCollector = {
     HostsOwnButton = HostsOwnButton,
+    IsOpen        = function() return isOpen end,
     IsEnabled     = function() return IsEnabled() end,
     IsLocked      = function() return IsLocked() end,
     SetLocked     = function(v)

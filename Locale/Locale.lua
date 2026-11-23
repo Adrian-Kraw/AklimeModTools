@@ -304,6 +304,14 @@ L["news_chat_title"]         = "Chat in Interface Fading"
 L["news_chat"]               = "All chat tabs fade now, also the tab of a Battle.net conversation. Before, such a tab stayed visible.\nBattle.net whispers show the chat for a moment, like normal whispers.\nThe chat stays visible as long as the chat input is open."
 L["news_collector_title"]    = "Menu in Minimap Button Collectors"
 L["news_collector"]          = "If the Aklime Mod Tools button sits in a minimap button collector, its menu opens as a row in the middle of the screen.\nThis works with our own collector and with the collectors of other addons.\nA click anywhere outside of the row closes it."
+L["news_mail_title"]         = "Automatic Subject"
+L["news_mail"]               = "The first item or the first amount of money in a mail is written into an empty subject.\nA subject you typed yourself stays as it is."
+L["news_cave_map_title"]     = "Map in Caves"
+L["news_cave_map"]           = "With Interface Fading, the map of a cave or a building is drawn at once now.\nThe minimap lights up for a moment when you go between outside and inside."
+L["news_minimap_fade_title"] = "Minimap Fading"
+L["news_minimap_fade"]       = "The minimap fades out and in like the other elements.\nThe arrow of your character goes when the fade is done."
+L["news_talent_title"]       = "Talent Reminder in Housing"
+L["news_talent"]             = "The Talent Reminder no longer appears in housing zones.\nThey count as instances, but talents do not matter there."
 
 -- Currency expansion categories
 L["curr_cat_season"] = "Season"
@@ -471,7 +479,7 @@ L["info_hide_micro_notify"] = "Hides the blue notification badge on Micro Menu b
 L["info_learn_filter"]     = "Hides system messages like:\n\"You have learned spell X.\"\n\"You have forgotten X.\""
 L["info_chat_icons"]       = "Shows the item icon before every item link.\nFor loot and currency messages also the currency icon."
 L["info_item_level"]       = "Appends the item level to every equippable link in chat.\nExample: [Hero's Sword (680)] or [Hero's Sword (One-Hand 680)]."
-L["info_mailbox"]          = "Shows an address book next to the compose window.\nClick an entry to set the recipient.\nRight-click an entry: Remove.\nStar: mark a favorite, favorites\nare listed first.\n\nContains your own characters,\neach one is added on its next login.\nThe character you sent mail to last\nis pinned to the top.\n\nLast recipient: automatically filled in\nwhen you next open the mailbox."
+L["info_mailbox"]          = "Shows an address book next to the compose window.\nClick an entry to set the recipient.\nRight-click an entry: Remove.\nStar: mark a favorite, favorites\nare listed first.\n\nContains your own characters,\neach one is added on its next login.\nThe character you sent mail to last\nis pinned to the top.\n\nLast recipient: automatically filled in\nwhen you next open the mailbox.\n\nSubject: the first item or the first\namount of money in the mail is\nwritten into an empty subject."
 L["info_merchant"]         = "Shows 20 instead of 10 items per vendor page.\nThe vendor frame is widened to two columns.\nCan be disabled at any time without restart."
 L["info_mana_warning"]     = "Sends a message in group/instance chat when your mana drops below 30% and again below 10%.\nEach warning is sent once and re-arms when your mana recovers above the threshold.\nWorks in and out of combat, only while you are in a group.\n\nNote: If Blizzard locks the mana values (Secret Values, 12.0) during instanced combat,\nthe warnings fall back to Blizzard's own low-mana and out-of-mana signals, once per fight."
 L["info_heroism_tracker"]  = "Shows \"BL ACTIVE\" on screen while Bloodlust,\nHeroism, Time Warp, Drums or the related\nexhaustion debuff is active (up to 10 minutes).\n\nFreely movable by drag. Position is saved.\nLock: prevents accidental movement."
@@ -520,7 +528,7 @@ if GetLocale() == "deDE" then
     L["menu_settings"]  = "Aklime Mod Tools Einstellungen"
 
     L["sec_chat"]        = "Chat"
-    L["sec_social"]      = "Social"
+    L["sec_social"]      = "Soziales"
     L["sec_group"]       = "Gruppenaktivitäten"
     L["sec_merchant"]    = "Händler"
     L["sec_blizzard_fixes"] = "Blizzard Bugfixes"
@@ -733,7 +741,7 @@ if GetLocale() == "deDE" then
 
     L["info_always_visible"] = "Immer bei 100% sichtbar:"
     L["info_interval"]       = "Intervall:"
-    L["info_modifier"]       = "Modifier:"
+    L["info_modifier"]       = "Modifikator:"
     L["info_fade_visible"]   = "Sichtbar (Sekunden):"
     L["info_fade_duration"]  = "Verblassdauer:"
 
@@ -756,6 +764,14 @@ if GetLocale() == "deDE" then
     L["news_chat"]               = "Alle Chat-Tabs blenden jetzt aus, auch der Tab einer Battle.net-Unterhaltung. Vorher blieb so ein Tab sichtbar.\nBattle.net-Flüstern blenden den Chat kurz ein, wie normales Flüstern.\nDer Chat bleibt sichtbar, solange die Chat-Eingabe offen ist."
     L["news_collector_title"]    = "Menü in Minimap-Button-Sammlern"
     L["news_collector"]          = "Sitzt der Aklime Mod Tools-Button in einem Minimap-Button-Sammler, öffnet sich sein Menü als Reihe in der Mitte des Bildschirms.\nDas funktioniert mit unserem eigenen Sammler und mit den Sammlern anderer Addons.\nEin Klick irgendwo außerhalb der Reihe schließt sie."
+    L["news_mail_title"]         = "Automatischer Betreff"
+    L["news_mail"]               = "Das erste Item oder der erste Geldbetrag in einer Post wird in einen leeren Betreff geschrieben.\nEin Betreff, den du selbst getippt hast, bleibt unverändert."
+    L["news_cave_map_title"]     = "Karte in Höhlen"
+    L["news_cave_map"]           = "Bei der Interface Ausblendung wird die Karte einer Höhle oder eines Gebäudes jetzt sofort gezeichnet.\nDie Minimap leuchtet kurz auf, wenn du zwischen draußen und drinnen wechselst."
+    L["news_minimap_fade_title"] = "Minimap ausblenden"
+    L["news_minimap_fade"]       = "Die Minimap blendet wie die anderen Elemente aus und ein.\nDer Pfeil deiner Spielfigur verschwindet, wenn das Ausblenden fertig ist."
+    L["news_talent_title"]       = "Talent-Erinnerung im Housing"
+    L["news_talent"]             = "Die Talent-Erinnerung erscheint nicht mehr in Housing-Zonen.\nSie zählen als Instanzen, aber Talente spielen dort keine Rolle."
 
     L["curr_cat_season"] = "Saison"
     L["curr_cat_raids"]  = "Dungeon & Schlachtzug"
@@ -850,7 +866,7 @@ if GetLocale() == "deDE" then
     L["info_learn_filter"]     = "Versteckt Systemmeldungen wie:\n\"Du hast den Zauber X gelernt.\"\n\"Du hast X verlernt.\""
     L["info_chat_icons"]       = "Zeigt vor jedem Item-Link das Item-Icon.\nBei Beute- und Währungsnachrichten auch das Währungs-Icon."
     L["info_item_level"]       = "Hängt das Itemlevel an jeden ausrüstbaren Link im Chat an.\nBeispiel: [Schwert des Helden (680)] oder [Schwert des Helden (Einhand 680)]."
-    L["info_mailbox"]          = "Zeigt ein Adressbuch neben dem Schreibfenster.\nKlick auf einen Eintrag setzt den Empfänger.\nRechtsklick auf einen Eintrag: Entfernen.\nStern: Favorit markieren, Favoriten\nstehen zuerst.\n\nEnthält deine eigenen Charaktere,\njeder kommt beim nächsten Login dazu.\nDer zuletzt beschickte Charakter\nsteht ganz oben.\n\nLetzter Empfänger: wird beim nächsten Öffnen\ndes Postfachs automatisch eingetragen."
+    L["info_mailbox"]          = "Zeigt ein Adressbuch neben dem Schreibfenster.\nKlick auf einen Eintrag setzt den Empfänger.\nRechtsklick auf einen Eintrag: Entfernen.\nStern: Favorit markieren, Favoriten\nstehen zuerst.\n\nEnthält deine eigenen Charaktere,\njeder kommt beim nächsten Login dazu.\nDer zuletzt beschickte Charakter\nsteht ganz oben.\n\nLetzter Empfänger: wird beim nächsten Öffnen\ndes Postfachs automatisch eingetragen.\n\nBetreff: Das erste Item oder der erste\nGeldbetrag in der Post wird in einen\nleeren Betreff geschrieben."
     L["info_merchant"]         = "Zeigt 20 statt 10 Gegenstände pro Händler-Seite.\nDer Händler-Rahmen wird auf zwei Spalten verbreitert.\nKann jederzeit ohne Neustart deaktiviert werden."
     L["info_mana_warning"]     = "Sendet eine Nachricht im Gruppen- / Instanz-Chat wenn dein Mana unter 30% und nochmal unter 10% fällt.\nJede Warnung kommt einmal und wird wieder scharf wenn das Mana über die Schwelle steigt.\nFunktioniert in und außerhalb des Kampfes, nur in einer Gruppe.\n\nHinweis: Sperrt Blizzard die Mana-Werte (Secret Values, 12.0) im instanzierten Kampf,\ngreifen Blizzards eigene Low-Mana- und Out-of-Mana-Signale, einmal pro Kampf."
     L["info_heroism_tracker"]  = "Zeigt \"HT AKTIV\" auf dem Bildschirm solange Heldentum,\nBloodlust, Zeitsprung, Trommeln oder der zugehörige\nErschöpfungs-Debuff aktiv ist (bis zu 10 Minuten).\n\nFrei verschiebbar per Drag. Position wird gespeichert.\nFestsetzenhaken: verhindert versehentliches Verschieben."
@@ -933,5 +949,13 @@ if GetLocale() == "deDE" then
     -- Todo list
     L["todo_empty"] = "Keine Einträge"
     L["todo_hint"]  = "Enter = Hinzufügen    |    Klick = Erledigt"
+
+    -- Names that were only available in English
+    L["mod_auto_repair"]   = "Automatisch reparieren"
+    L["mod_elite_frame"]   = "Elite-Rahmen"
+    L["mod_hud_openworld"] = "Offene Welt"
+    L["modifier_shift"]    = "Umschalt"
+    L["reload_label_rl"]   = "Neu laden:"
+    L["toggle_buffs"]      = "Stärkungs- / Schwächungszauber"
 
 end

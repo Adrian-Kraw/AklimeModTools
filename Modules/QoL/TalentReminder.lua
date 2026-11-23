@@ -50,12 +50,22 @@ function M:SetEnabled(v) GetDB().enabled = v and true or false end
 -- ============================================================
 -- Event
 -- ============================================================
+-- Housing zones report as instances, but talents do not matter there.
+local HOUSING_INSTANCE_TYPES = {
+    neighborhood = true, interior = true,
+}
+
+local function IsTalentRelevantInstance()
+    local inInstance, instanceType = IsInInstance()
+    return inInstance and not HOUSING_INSTANCE_TYPES[instanceType]
+end
+
 local wasInInstance = false
 
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 eventFrame:SetScript("OnEvent", function(_, _, isLogin, isReload)
-    local inInstance = IsInInstance()
+    local inInstance = IsTalentRelevantInstance()
 
     if not isLogin and not isReload and inInstance and not wasInInstance then
         if GetDB().enabled then

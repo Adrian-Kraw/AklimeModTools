@@ -5,6 +5,7 @@
 -- The character you sent mail to last is pinned to the top of the list.
 -- Favorites (star right of the realm) are listed above all other characters.
 -- The last recipient option remembers the last recipient per session.
+-- The first item or the first amount of money in the mail is written into an empty subject.
 
 local L = AklimeModL or {}
 
@@ -529,12 +530,94 @@ local function RestoreRecipient()
     end
 end
 
+-- ============================================================
+-- Subject from the first item or the first money
+-- ============================================================
+-- What is added to the mail first goes into an empty subject. An item gives its name, money gives the coin text.
+-- The text belongs to that kind, so it follows changes of the same thing. A subject the player typed stays as it is.
+local MAX_ATTACHMENTS_FALLBACK = 12
+local MONEY_SEPARATOR = " "
+local COPPER_PER_SILVER = 100
+local COPPER_PER_GOLD   = 10000
+local MONEY_BOX_NAMES = { "SendMailMoneyGold", "SendMailMoneySilver", "SendMailMoneyCopper" }
+
+local autoSubject, autoSubjectKind = nil, nil
+local subjectHooked = false
+
+local function GetFirstAttachmentName()
+    for i = 1, ATTACHMENTS_MAX_SEND or MAX_ATTACHMENTS_FALLBACK do
+        local name = GetSendMailItem(i)
+        if name and name ~= "" then return name end
+    end
+    return nil
+end
+
+local function GetTypedMoney()
+    if not SendMailMoney or not MoneyInputFrame_GetCopper then return 0 end
+    return MoneyInputFrame_GetCopper(SendMailMoney) or 0
+end
+
+-- The coin text is built from the texts of the game, for example "1 Silber"
+local function FormatMoney(copper)
+    local gold   = math.floor(copper / COPPER_PER_GOLD)
+    local silver = math.floor((copper % COPPER_PER_GOLD) / COPPER_PER_SILVER)
+    local rest   = copper % COPPER_PER_SILVER
+    local parts  = {}
+    if gold   > 0 then parts[#parts + 1] = (GOLD_AMOUNT   or "%d Gold"):format(gold) end
+    if silver > 0 then parts[#parts + 1] = (SILVER_AMOUNT or "%d Silver"):format(silver) end
+    if rest   > 0 then parts[#parts + 1] = (COPPER_AMOUNT or "%d Copper"):format(rest) end
+    return table.concat(parts, MONEY_SEPARATOR)
+end
+
+local function FillSubject(kind, text)
+    local current = SendMailSubjectEditBox:GetText()
+    local isOwnText = current == autoSubject and autoSubjectKind == kind
+    if current ~= "" and not isOwnText then return end
+    if current == text then return end
+    autoSubject, autoSubjectKind = text, kind
+    SendMailSubjectEditBox:SetText(text)
+end
+
+local function ClearOwnSubject(kind)
+    if autoSubjectKind ~= kind then return end
+    if SendMailSubjectEditBox:GetText() == autoSubject then SendMailSubjectEditBox:SetText("") end
+    autoSubject, autoSubjectKind = nil, nil
+end
+
+local function RefreshSubject()
+    if not GetDB().enabled or not SendMailSubjectEditBox then return end
+    local itemName = GetFirstAttachmentName()
+    local copper = GetTypedMoney()
+    -- Removed things go first, so that what is still in the mail can take over the subject
+    if not itemName then ClearOwnSubject("item") end
+    if copper == 0 then ClearOwnSubject("money") end
+    if itemName then FillSubject("item", itemName) end
+    if copper > 0 then FillSubject("money", FormatMoney(copper)) end
+end
+
+local function ForgetAutoSubject()
+    autoSubject, autoSubjectKind = nil, nil
+end
+
+-- The mail event reports items. Money has no event, so its input boxes are watched.
+local function HookSubjectFill()
+    if subjectHooked then return end
+    for _, name in ipairs(MONEY_BOX_NAMES) do
+        if not _G[name] then return end
+    end
+    for _, name in ipairs(MONEY_BOX_NAMES) do
+        _G[name]:HookScript("OnTextChanged", RefreshSubject)
+    end
+    subjectHooked = true
+end
+
 local function HookSendMail()
     if sendHooked then return end
     if type(SendMailFrame_SendMail) ~= "function" then return end
     if type(SendMailFrame_Reset)    ~= "function" then return end
     hooksecurefunc("SendMailFrame_SendMail", CaptureRecipient)
     hooksecurefunc("SendMailFrame_Reset",    RestoreRecipient)
+    hooksecurefunc("SendMailFrame_Reset",    ForgetAutoSubject)
     sendHooked = true
 end
 
@@ -607,13 +690,22 @@ local mailEventFrame = CreateFrame("Frame")
 mailEventFrame:RegisterEvent("MAIL_SHOW")
 mailEventFrame:RegisterEvent("MAIL_CLOSED")
 mailEventFrame:RegisterEvent("ADDON_LOADED")
+mailEventFrame:RegisterEvent("MAIL_SEND_INFO_UPDATE")
 mailEventFrame:SetScript("OnEvent", function(_, event, arg1)
     if event == "ADDON_LOADED" then
-        if arg1 == "Blizzard_MailFrame" then HookSendMail() end
+        if arg1 == "Blizzard_MailFrame" then
+            HookSendMail()
+            HookSubjectFill()
+        end
+        return
+    end
+    if event == "MAIL_SEND_INFO_UPDATE" then
+        RefreshSubject()
         return
     end
     if event == "MAIL_SHOW" then
         HookSendMail()
+        HookSubjectFill()
         HookMailFrameHide()
         HookMailTabs()
         EnsureFrame()

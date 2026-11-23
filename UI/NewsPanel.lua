@@ -42,6 +42,10 @@ local NEWS_ENTRIES = {
     { title = "news_housing_menu_title", tag = "new",   text = "news_housing_menu", where = "news_where_fading" },
     { title = "news_chat_title",         tag = "fixed", text = "news_chat",         where = "news_where_fading" },
     { title = "news_collector_title",    tag = "changed", text = "news_collector" },
+    { title = "news_mail_title",         tag = "new",     text = "news_mail" },
+    { title = "news_cave_map_title",     tag = "fixed",   text = "news_cave_map" },
+    { title = "news_minimap_fade_title", tag = "changed", text = "news_minimap_fade" },
+    { title = "news_talent_title",       tag = "fixed",   text = "news_talent" },
 }
 
 -- Same rounded look as the category buttons on the left
